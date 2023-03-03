@@ -1,0 +1,15 @@
+{
+  "name": "vii",
+  "version": "0.0.1",
+  "description": "Vi Upgraded to Discordjs v14",
+  "main": "vii.bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "👑 Ms.Voxxie#0001",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  }
+}
