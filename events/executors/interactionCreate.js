@@ -15,7 +15,8 @@ module.exports = {
 		}
 
 		try {
-			await command.execute(interaction, client);
+			const settings = await client.getGuild(interaction.guild);
+			await command.execute(interaction, client, settings);
 		} catch (error) {
 			Logger.error(`Error executing ${interaction.commandName}`);
 			Logger.error(error);

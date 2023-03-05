@@ -6,5 +6,6 @@ module.exports = {
 	runType: 'single',
 	execute(client) {
 		Logger.success(`Ready! Logged in as ${client.user.tag}`);
+		client.mongoose.init();
 	},
 };

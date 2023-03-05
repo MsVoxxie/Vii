@@ -14,6 +14,10 @@ const client = new Client({
 //Define Collections
 client.commands = new Collection();
 
+//Load Database
+client.mongoose = require('./core/mongooseLoader');
+require('./functions/database/util')(client);
+
 //Run Loaders
 require('./core/eventLoader')(client);
 require('./core/commandLoader')(client);

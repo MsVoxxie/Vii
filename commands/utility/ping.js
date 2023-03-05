@@ -1,9 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('ping')
-		.setDescription('Replies with Pong!'),
+	.setName('ping')
+	.setDescription('Replies with Pong!')
+	.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	async execute(interaction, client) {
 		await interaction.reply(`Pong!\n🏓Latency is ${Date.now() - interaction.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
 	},
