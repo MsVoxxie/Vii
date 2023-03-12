@@ -7,17 +7,17 @@ module.exports = {
 	async execute(interaction, client) {
 		if (!interaction.isChatInputCommand()) return;
 
+		// Get command, return if no command found.
 		const command = interaction.client.commands.get(interaction.commandName);
-
-		if (!command) {
-			Logger.error(`No command matching ${interaction.commandName} was found.`);
-			return;
-		}
+		if (!command) return Logger.error(`No command matching ${interaction.commandName} was found.`);
 
 		try {
+			// Define arguments
 			const settings = await client.getGuild(interaction.guild);
-			await command.execute(interaction, client, settings);
+
+			await command.execute(client, interaction, settings);
 		} catch (error) {
+			interaction.reply('An Error Occurred...')
 			Logger.error(`Error executing ${interaction.commandName}`);
 			Logger.error(error);
 		}

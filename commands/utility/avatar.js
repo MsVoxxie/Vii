@@ -6,7 +6,7 @@ module.exports = {
 		.setDescription('Get the avatar URL of the selected user, or your own avatar.')
 		.addUserOption((option) => option.setName('target').setDescription("The user's avatar to show"))
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
-	async execute(interaction, client, settings) {
+	async execute(client, interaction, settings) {
 		const user = interaction.options.getUser('target') || interaction.user;
 
 		const embed = new EmbedBuilder()
