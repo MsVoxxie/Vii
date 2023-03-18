@@ -8,6 +8,8 @@ module.exports = (client) => {
 		for (const file of events) {
 			const event = require(`../events/${dir}/${file}`);
 
+			if (event.name) client.events.set(event.name, event);
+
 			switch (event.runType) {
 				case 'single':
 					client.once(event.name, (...args) => event.execute(...args, client));

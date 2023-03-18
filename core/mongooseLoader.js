@@ -16,11 +16,11 @@ module.exports = {
 		mongoose.Promise = global.Promise;
 
 		mongoose.connection.on('connected', () => {
-			Logger.success('Mongo DB Connected!');
+			Logger.success('Mongo DB Connected');
 		});
 
 		mongoose.connection.on('err', (err) => {
-			Logger.error('Mongo DB Ran into an error!');
+			Logger.error('Mongo DB Ran into an error');
 		});
 
 		mongoose.connection.on('disconnect', () => {
