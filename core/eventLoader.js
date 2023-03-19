@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 const ascii = require('ascii-table');
-const eventTable = new ascii().setHeading('Events', 'Load Status', 'Run Type');
+const eventTable = new ascii().setTitle('Event Loader').setHeading('Directory', 'Event', 'Load Status', 'Run Type');
 
 module.exports = (client) => {
 	readdirSync('./events/').forEach((dir) => {
@@ -13,16 +13,16 @@ module.exports = (client) => {
 			switch (event.runType) {
 				case 'single':
 					client.once(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(`${dir} | ${event.name}`, '✔ » Loaded', '«  Once  »');
+					eventTable.addRow(dir, event.name, '✔ » Loaded', '«  Once  »');
 					break;
 
 				case 'infinite':
 					client.on(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(`${dir} | ${event.name}`, '✔ » Loaded', '«Infinite»');
+					eventTable.addRow(dir, event.name, '✔ » Loaded', '«Infinite»');
 					break;
 
 				default:
-					eventTable.addRow(`${dir} | ${file}`, '✕ » Errored');
+					eventTable.addRow(dir, event.name, '✕ » Errored');
 					continue;
 			}
 		}

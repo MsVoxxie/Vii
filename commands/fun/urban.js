@@ -1,35 +1,33 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonStyle, ButtonBuilder, EmbedBuilder } = require('discord.js');
-const google = require('googlethis');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('imagesearch')
-		.setDescription('Search google for a query to retrieve images.')
-		.addStringOption((option) => option.setName('query').setDescription('Query to search images for.').setRequired(true))
+		.setName('urban')
+		.setDescription('Search Urban Dictonary for a definition!')
+		.addStringOption((option) => option.setName('query').setDescription('What would you like to search for?').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	async execute(client, interaction, settings) {
 		const searchQuery = interaction.options.getString('query');
-		const safeMode = interaction.channel.nsfw ? false : true;
-		const initialResults = await google.image(searchQuery, { safe: safeMode });
-		const imageResults = initialResults.filter((u) => u.url.replace(/\?.*/g, ''));
-		if (!imageResults) return interaction.reply(`No results found for \`${searchQuery}\``);
+		const { list } = await fetch(`https://api.urbandictionary.com/v0/define?term=${searchQuery}`).then((response) => response.json());
+		if (!list) return interaction.reply(`No results found for \`${searchQuery}\``);
+		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 
 		// Arrays
 		const embeds = [];
 		let curPage = 0;
 
 		// Build Embeds
-		for (result of imageResults) {
-			const resultURL = result.url.replace(/\?.*/g, '');
-			if (resultURL.includes(' ')) continue;
-
+		for (result of list) {
 			const embed = new EmbedBuilder()
-				.setDescription(`**Search Query»** ${searchQuery}\n**Result»** ${result.origin.title}`)
-				.setURL(result.origin.website.url)
+				.setTitle('**Urban Dictionary Search**')
+				.setDescription(`**Search Query»** [${searchQuery}](${result.permalink})`)
 				.setColor(settings.guildColorHex)
-				.setTitle(result.origin.title)
-				.setTimestamp(Date.now())
-				.setImage(resultURL);
+				.addFields(
+					{ name: '**Definition»**', value: trim(result.definition, 1024) },
+					{ name: '**Example»**', value: trim(result.example, 1024) },
+					{ name: '**Rating»**', value: `👍 ${result.thumbs_up} | 👎 ${result.thumbs_down}` }
+				)
+				.setTimestamp(Date.now());
 			embeds.push(embed);
 		}
 

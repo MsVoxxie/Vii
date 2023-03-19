@@ -3,13 +3,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Discord Classes
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const SECRET = process.env.DISCORD_TOKEN;
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const TOKEN = process.env.DISCORD_TOKEN;
 
 //Define Client
-const client = new Client({
-	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences],
-});
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
 
 //Define Collections
 client.commands = new Collection();
@@ -20,9 +18,9 @@ client.mongoose = require('./core/mongooseLoader');
 require('./functions/database/util')(client);
 
 //Run Loaders
-require('./core/internalAPI')(client);
-require('./core/eventLoader')(client);
 require('./core/commandLoader')(client);
+require('./core/eventLoader')(client);
+require('./core/internalAPI')(client);
 
 //Login
-client.login(SECRET);
+client.login(TOKEN);

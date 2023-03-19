@@ -1,7 +1,7 @@
 const ascii = require('ascii-table');
 const { readdirSync } = require('fs');
 const Logger = require('../functions/logging/logger');
-const commandTable = new ascii().setHeading('Commands', 'Load Status');
+const commandTable = new ascii().setTitle('Command Loader').setHeading('Category', 'Command', 'Load Status');
 
 module.exports = (client) => {
 	readdirSync('./commands/').forEach((dir) => {
@@ -12,12 +12,12 @@ module.exports = (client) => {
 			switch ('data' in command && 'execute' in command) {
 				case true:
 					client.commands.set(command.data.name, command);
-					commandTable.addRow(`${dir} | ${file}`, '✔ » Loaded');
+					commandTable.addRow(dir, command.data.name, '✔ » Loaded');
 					break;
 
 				case false:
 					Logger.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-					commandTable.addRow(`${dir} | ${file}`, '✕ » Errored');
+					commandTable.addRow(dir, command.data.name, '✕ » Errored');
 					continue;
 			}
 		}
