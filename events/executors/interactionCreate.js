@@ -1,4 +1,5 @@
 const { Events } = require('discord.js');
+const { botData } = require('../../models');
 const Logger = require('../../functions/logging/logger');
 
 module.exports = {
@@ -14,12 +15,14 @@ module.exports = {
 		try {
 			// Define arguments
 			const settings = await client.getGuild(interaction.guild);
-
 			await command.execute(client, interaction, settings);
+			await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 		} catch (error) {
-			interaction.reply('An Error Occurred...')
+			interaction.reply(`An error occurred executing ${interaction.commandName}`);
 			Logger.error(`Error executing ${interaction.commandName}`);
 			Logger.error(error);
+
+			await botData.findOneAndUpdate({}, { $inc: { commandsFailed: 1 } }, { upsert: true });
 		}
 	},
 };
