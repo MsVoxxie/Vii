@@ -3,27 +3,47 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Discord Classes
+const { DisTube } = require('distube');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { Player } = require('discord-player');
 const TOKEN = process.env.DISCORD_TOKEN;
 
-//Define Client
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildVoiceStates] });
-client.player = new Player(client);
+//D efine Client
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildPresences,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildVoiceStates,
+	],
+});
 
-//Define Collections
+// Music Client
+client.distube = new DisTube(client, {
+	leaveOnStop: false,
+	leaveOnEmpty: true,
+	leaveOnFinish: true,
+	emitNewSongOnly: true,
+	emitAddSongWhenCreatingQueue: true,
+	emitAddListWhenCreatingQueue: false,
+	plugins: [new YtDlpPlugin()],
+});
+
+// Define Collections
 client.commands = new Collection();
 client.events = new Collection();
 
-//Load Database
+// Load Database
 client.mongoose = require('./core/mongooseLoader');
 require('./functions/database/util')(client);
 
-//Run Loaders
+// Run Loaders
 require('./core/musicEventLoader')(client);
 require('./core/commandLoader')(client);
 require('./core/eventLoader')(client);
 require('./core/internalAPI')(client);
 
-//Login
+// Login
 client.login(TOKEN);

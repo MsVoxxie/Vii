@@ -4,25 +4,25 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Play a song!')
-		.addStringOption((option) => option.setName('uri').setDescription('URI of the song to play!').setRequired(true))
+		.addStringOption((option) => option.setName('query').setDescription('URI of the song to play!').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	async execute(client, interaction, settings) {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.reply("You're not in a voice channel!");
-		const uri = interaction.options.getString('uri');
+		const query = interaction.options.getString('query');
 
 		// Defer, Things take time.
-		await interaction.deferReply();
+		await interaction.reply({ content: 'Searching...', ephemeral: true });
 
 		try {
-			const { track } = await client.player.play(channel, uri, {
-				nodeOptions: {
-					metadata: interaction,
-				},
+			client.distube.play(channel, query, {
+				member: interaction.member,
+				textChannel: interaction.channel,
+				interaction,
 			});
-			return interaction.followUp(`**${track.title}** has been added to queue!`);
-		} catch (e) {
-			return interaction.followUp('Something went wrong.');
+			return interaction.editReply({ content: 'Song Queued.', ephemeral: true });
+		} catch (error) {
+			return interaction.editReply({ content: 'Something went wrong', ephemeral: true });
 		}
 	},
 };

@@ -11,14 +11,9 @@ module.exports = (client) => {
 			if (event.name) client.events.set(event.name, event);
 
 			switch (event.runType) {
-				case 'single':
-					client.once(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(dir, event.name, '✔ » Loaded', '«  Once  »');
-					break;
-
-				case 'infinite':
-					client.on(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(dir, event.name, '✔ » Loaded', '«Infinite»');
+				case 'on':
+					client.distube.on(event.name, (...args) => event.execute(...args, client));
+					eventTable.addRow(dir, event.name, '✔ » Loaded', '«  On  »');
 					break;
 
 				default:
