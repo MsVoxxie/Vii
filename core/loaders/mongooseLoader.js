@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Key = process.env.DATABASE_TOKEN;
-const Logger = require('../functions/logging/logger');
+const Logger = require('../../functions/logging/logger');
 
 module.exports = {
 	init: () => {

@@ -6,7 +6,7 @@ module.exports = (client) => {
 	readdirSync('./eventsMusic/').forEach((dir) => {
 		const events = readdirSync(`./eventsMusic/${dir}/`).filter((file) => file.endsWith('.js'));
 		for (const file of events) {
-			const event = require(`../eventsMusic/${dir}/${file}`);
+			const event = require(`../../eventsMusic/${dir}/${file}`);
 
 			if (event.name) client.events.set(event.name, event);
 

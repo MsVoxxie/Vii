@@ -31,11 +31,11 @@ client.distube = new DisTube(client, {
 	emitAddSongWhenCreatingQueue: true,
 	emitAddListWhenCreatingQueue: false,
 	plugins: [
+		new YtDlpPlugin(),
+		new SoundCloudPlugin(),
 		new SpotifyPlugin({
 			emitEventsAfterFetching: true,
 		}),
-		new SoundCloudPlugin(),
-		new YtDlpPlugin(),
 	],
 });
 
@@ -44,14 +44,14 @@ client.commands = new Collection();
 client.events = new Collection();
 
 // Load Database
-client.mongoose = require('./core/mongooseLoader');
+client.mongoose = require('./core/loaders/mongooseLoader');
 require('./functions/database/util')(client);
 
 // Run Loaders
-require('./core/musicEventLoader')(client);
-require('./core/commandLoader')(client);
-require('./core/eventLoader')(client);
-require('./core/internalAPI')(client);
+require('./core/loaders/musicEventLoader')(client);
+require('./core/loaders/commandLoader')(client);
+require('./core/loaders/eventLoader')(client);
+require('./core/api/internalAPI')(client);
 
 // Login
 client.login(TOKEN);

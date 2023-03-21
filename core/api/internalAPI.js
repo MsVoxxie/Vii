@@ -1,4 +1,4 @@
-const Logger = require('../functions/logging/logger');
+const Logger = require('../../functions/logging/logger');
 const Port = process.env.API_PORT;
 const moment = require('moment');
 require('moment-duration-format');
