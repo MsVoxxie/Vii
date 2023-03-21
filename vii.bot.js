@@ -4,6 +4,8 @@ dotenv.config();
 
 // Discord Classes
 const { DisTube } = require('distube');
+const { SpotifyPlugin } = require('@distube/spotify');
+const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const TOKEN = process.env.DISCORD_TOKEN;
@@ -28,7 +30,13 @@ client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
 	emitAddSongWhenCreatingQueue: true,
 	emitAddListWhenCreatingQueue: false,
-	plugins: [new YtDlpPlugin()],
+	plugins: [
+		new SpotifyPlugin({
+			emitEventsAfterFetching: true,
+		}),
+		new SoundCloudPlugin(),
+		new YtDlpPlugin(),
+	],
 });
 
 // Define Collections
