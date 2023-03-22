@@ -27,7 +27,7 @@ module.exports = {
 
 		// Setup collector
 		const filter = (interaction) => interaction.member.voice.channelId === interaction.guild.members.me.voice.channelId;
-		const collector = await playing.createMessageComponentCollector({ filter, time: song.duration * 1000 });
+		const collector = await playing.createMessageComponentCollector({ filter, time: song.duration * 1200 });
 		collector.on('collect', async (int) => {
 			switch (int.customId) {
 				case 'PP':
@@ -36,13 +36,13 @@ module.exports = {
 						await int.deferUpdate();
 						client.distube.pause(int.guild);
 						await queue.textChannel.send(`${int.member} paused the music.`).then((m) => {
-							setTimeout(() => m.delete(), 30 * 1000);
+							setTimeout(() => m.delete(), 60 * 1000);
 						});
 					} else {
 						await int.deferUpdate();
 						client.distube.resume(int.guild);
 						await queue.textChannel.send(`${int.member} resumed the music.`).then((m) => {
-							setTimeout(() => m.delete(), 30 * 1000);
+							setTimeout(() => m.delete(), 60 * 1000);
 						});
 					}
 					break;
@@ -51,7 +51,7 @@ module.exports = {
 					if (!queue) return await int.deferUpdate();
 					client.distube.skip(int.guild);
 					await queue.textChannel.send(`${int.member} skipped the current song.`).then((m) => {
-						setTimeout(() => m.delete(), 30 * 1000);
+						setTimeout(() => m.delete(), 60 * 1000);
 					});
 					break;
 
@@ -60,7 +60,7 @@ module.exports = {
 					client.distube.stop(int.guild);
 					await playing.delete();
 					await queue.textChannel.send(`${int.member} stopped the music.`).then((m) => {
-						setTimeout(() => m.delete(), 30 * 1000);
+						setTimeout(() => m.delete(), 60 * 1000);
 					});
 					break;
 			}

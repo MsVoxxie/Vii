@@ -9,6 +9,8 @@ module.exports = {
 
 		const embed = new EmbedBuilder().setColor(settings.guildColorHex).setTitle('**Queue Empty**').setDescription(`Queue is empty. Goodbye!`);
 
-		queue.textChannel.send({ embeds: [embed] });
+		queue.textChannel.send({ embeds: [embed] }).then((m) => {
+			setTimeout(() => m.delete(), 60 * 1000);
+		});
 	},
 };

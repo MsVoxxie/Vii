@@ -11,6 +11,8 @@ module.exports = {
 			.setTitle('**Channel Empty**')
 			.setDescription(`Voice channel is empty. Goodbye!`);
 
-		channel.send({ embeds: [embed] });
+		channel.send({ embeds: [embed] }).then((m) => {
+			setTimeout(() => m.delete(), 60 * 1000);
+		});
 	},
 };

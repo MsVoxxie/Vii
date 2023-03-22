@@ -9,9 +9,11 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(settings.guildColorHex)
 			.setTitle('**Media added to Queue**')
-            .setThumbnail(song.thumbnail)
+			.setThumbnail(song.thumbnail)
 			.setDescription(`**Queued»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Added By»** ${song.user}`);
 
-		queue.textChannel.send({ embeds: [embed] });
+		queue.textChannel.send({ embeds: [embed] }).then((m) => {
+			setTimeout(() => m.delete(), 60 * 1000);
+		});
 	},
 };
