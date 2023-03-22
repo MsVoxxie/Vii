@@ -2,20 +2,20 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('queue')
-		.setDescription('Return the current media queue.')
+		.setName('nowplaying')
+		.setDescription('Return the currently playing media.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	async execute(client, interaction, settings) {
 		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		await interaction.deferReply();
 		const queue = await client.distube.getQueue(interaction);
-		if (!queue) return interaction.followUp('No media is currently playing!')
+		if (!queue) return interaction.followUp('No media is currently playing!');
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setTitle(`**${interaction.guild.name}'s Current Queue**`)
-			.setDescription(trim(queue.songs.map((song, id) => `**${id + 1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\``).join('\n'), 2000))
+			.setTitle(`**Currently playing Media**`)
+			.setDescription(trim(queue.songs.map((song) => `[${song.name}](${song.url}) - \`${song.formattedDuration}\``)[0], 2000))
 			.setColor(settings.guildColorHex);
-		return interaction.followUp({embeds: [embed]})
+		return interaction.followUp({ embeds: [embed] });
 	},
 };

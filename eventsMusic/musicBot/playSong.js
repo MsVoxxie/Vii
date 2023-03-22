@@ -35,13 +35,13 @@ module.exports = {
 					if (!queue.paused) {
 						await int.deferUpdate();
 						client.distube.pause(int.guild);
-						await queue.textChannel.send(`${int.member} paused the music.`).then((m) => {
+						await queue.textChannel.send(`${int.member} paused the current media.`).then((m) => {
 							setTimeout(() => m.delete(), 60 * 1000);
 						});
 					} else {
 						await int.deferUpdate();
 						client.distube.resume(int.guild);
-						await queue.textChannel.send(`${int.member} resumed the music.`).then((m) => {
+						await queue.textChannel.send(`${int.member} resumed the current media.`).then((m) => {
 							setTimeout(() => m.delete(), 60 * 1000);
 						});
 					}
@@ -50,7 +50,7 @@ module.exports = {
 				case 'SKIP':
 					if (!queue) return await int.deferUpdate();
 					client.distube.skip(int.guild);
-					await queue.textChannel.send(`${int.member} skipped the current song.`).then((m) => {
+					await queue.textChannel.send(`${int.member} skipped the current media.`).then((m) => {
 						setTimeout(() => m.delete(), 60 * 1000);
 					});
 					break;
@@ -59,7 +59,7 @@ module.exports = {
 					if (!queue) return await int.deferUpdate();
 					client.distube.stop(int.guild);
 					await playing.delete();
-					await queue.textChannel.send(`${int.member} stopped the music.`).then((m) => {
+					await queue.textChannel.send(`${int.member} stopped the current media.`).then((m) => {
 						setTimeout(() => m.delete(), 60 * 1000);
 					});
 					break;
