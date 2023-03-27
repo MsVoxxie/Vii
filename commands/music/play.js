@@ -26,9 +26,13 @@ module.exports = {
 				.setTitle('**Searching Query**')
 				.setDescription(`**Searching»** ${query}`);
 
-			return interaction.followUp({ embeds: [embed], ephemeral: true });
+			return interaction.followUp({ embeds: [embed], ephemeral: true }).then((m) => {
+				setTimeout(() => m.delete(), 60 * 1000);
+			});
 		} catch (error) {
-			return interaction.followUp({ content: 'Something went wrong, Please try again!' });
+			return interaction.followUp({ content: 'Something went wrong, Please try again!' }).then((m) => {
+				setTimeout(() => m.delete(), 60 * 1000);
+			});
 		}
 	},
 };
