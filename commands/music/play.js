@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
 		const query = interaction.options.getString('query');
 
 		// Defer, Things take time.
-		await interaction.reply({ content: 'Searching...', ephemeral: true });
+		await interaction.deferReply();
 
 		try {
 			client.distube.play(channel, query, {
@@ -20,9 +20,15 @@ module.exports = {
 				textChannel: interaction.channel,
 				interaction,
 			});
-			return interaction.editReply({ content: 'Song Queued.', ephemeral: true });
+
+			const embed = new EmbedBuilder()
+				.setColor(settings.guildColorHex)
+				.setTitle('**Searching Query**')
+				.setDescription(`**Searching»** ${query}`);
+
+			return interaction.followUp({ embeds: [embed], ephemeral: true });
 		} catch (error) {
-			return interaction.editReply({ content: 'Something went wrong', ephemeral: true });
+			return interaction.followUp({ content: 'Something went wrong, Please try again!' });
 		}
 	},
 };
