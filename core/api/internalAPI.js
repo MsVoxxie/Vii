@@ -21,6 +21,9 @@ module.exports = (client) => {
 				DISCORD_API_LATENCY: `${Math.round(client.ws.ping)}ms`,
 				CLIENT_MEMORY_USAGE: formatMemoryUsage(process.memoryUsage().heapUsed),
 			},
+			MUSIC: {
+				CURRENT_CONNECTIONS: client.distube.voices.size,
+			},
 			HANDLERS: {
 				COMMANDS: {
 					TOTAL_COMMANDS: client.commands.size,
