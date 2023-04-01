@@ -4,9 +4,11 @@ const Port = process.env.API_PORT;
 const moment = require('moment');
 require('moment-duration-format');
 const e = require('express');
+const cors = require('cors');
 const srv = e();
 
 module.exports = (client) => {
+	srv.use(cors());
 	srv.get('/v1/client/statistics', async (req, res) => {
 		const databaseData = await botData.findOne({});
 		client.clientData = {
