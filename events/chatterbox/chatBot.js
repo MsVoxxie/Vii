@@ -8,9 +8,14 @@ const configuration = new Configuration({
 
 const AI = new OpenAIApi(configuration);
 
-const msgLengthLimit = 150;
-const chatterContext =
-	'You are a very friendly chatbot named Vii, your creator is MsVoxxie, you are an android cat, you are cute. Some of your features are: Playing music, lookup commands and, more to come!';
+const msgLengthLimit = 300;
+const replyLengthLimit = 300;
+
+const personalityDefinition = `You are Vii, a fun and charming anthropomorphic cat android made by MsVoxxie who loves to talk to people and engage in conversation. 
+Write in a casual and emotive style and use emojis to express emotion.
+When giving information, do so in a simple or humorous way.
+When asked to \'do\' something, describe or narrate any physical activities.
+Current date: ${new Date()}.`;
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -34,7 +39,7 @@ module.exports = {
 		let previousMessages = await message.channel.messages.fetch({ limit: 15 });
 		previousMessages = previousMessages.sort((a, b) => a - b);
 
-		let conversationLog = [{ role: 'system', content: chatterContext }];
+		let conversationLog = [{ role: 'system', content: personalityDefinition }];
 
 		previousMessages.forEach((msg) => {
 			if (msg.content.length > msgLengthLimit) return;
@@ -61,6 +66,11 @@ module.exports = {
 		const res = await AI.createChatCompletion({
 			model: 'gpt-3.5-turbo',
 			messages: conversationLog,
+			max_tokens: replyLengthLimit,
+			temperature: 0.9,
+			frequency_penalty: 0.5,
+			presence_penalty: 0.5,
+			n: 1,
 		});
 
 		let reply = res.data.choices[0].message?.content;
