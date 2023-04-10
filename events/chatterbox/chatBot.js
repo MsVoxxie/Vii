@@ -33,7 +33,7 @@ module.exports = {
 		const serverOwner = fetchOwner.user.username;
 
 		// Personality
-		const personalityDefinition = `You are Vii, a fun and charming anthropomorphic cat android made by MsVoxxie who loves to talk to people and engage in conversation. 
+		const personalityDefinition = `You are Vii, a fun and charming android made by MsVoxxie who loves to talk to people and engage in conversation. 
 			Write in a casual, emotive and, cheerful style.
 			When giving information, do so in a simple or humorous way.
 			Describe or narrate any physical activities.
@@ -42,58 +42,63 @@ module.exports = {
 			The server is called ${message.guild.name}
 			The server owner is ${serverOwner}`;
 
-		// Hold a conversation
-		let previousMessages = await message.channel.messages.fetch({ limit: 15 });
-		previousMessages = previousMessages.sort((a, b) => a - b);
+		// Try catch
+		try {
+			// Hold a conversation
+			let previousMessages = await message.channel.messages.fetch({ limit: 15 });
+			previousMessages = previousMessages.sort((a, b) => a - b);
 
-		let conversationLog = [{ role: 'system', content: personalityDefinition }];
+			let conversationLog = [{ role: 'system', content: personalityDefinition }];
 
-		previousMessages.forEach((msg) => {
-			if (msg.content.length > msgLengthLimit) return;
-			if (msg.author.id !== client.user.id && message.author.bot) return;
-			if (message.content.startsWith('!shh')) return;
+			previousMessages.forEach((msg) => {
+				if (msg.content.length > msgLengthLimit) return;
+				if (msg.author.id !== client.user.id && message.author.bot) return;
+				if (message.content.startsWith('!shh')) return;
 
-			// If msg is from the bot (client) itself
-			if (msg.author.id === client.user.id) {
-				conversationLog.push({
-					role: 'assistant',
-					content: `${msg.content}`,
+				// If msg is from the bot (client) itself
+				if (msg.author.id === client.user.id) {
+					conversationLog.push({
+						role: 'assistant',
+						content: `${msg.content}`,
+					});
+				} else {
+					if (msg.author.id !== message.author.id) return;
+
+					conversationLog.push({
+						role: 'user',
+						content: `${msg.content}`,
+					});
+				}
+			});
+
+			// Generate response
+			const res = await AI.createChatCompletion({
+				model: 'gpt-3.5-turbo',
+				messages: conversationLog,
+				max_tokens: replyLengthLimit,
+				temperature: 0.9,
+				frequency_penalty: 0.5,
+				presence_penalty: 0.5,
+				n: 1,
+			});
+
+			let reply = res.data.choices[0].message?.content;
+
+			if (reply?.length > 2000) {
+				// If the reply length is over 2000 characters, send a txt file.
+				const buffer = Buffer.from(reply, 'utf8');
+				const txtFile = new AttachmentBuilder(buffer, { name: `${message.author.tag}_response.txt` });
+
+				message.reply({ files: [txtFile] }).catch(() => {
+					message.channel.send({ content: `${message.author}`, files: [txtFile] });
 				});
 			} else {
-				if (msg.author.id !== message.author.id) return;
-
-				conversationLog.push({
-					role: 'user',
-					content: `${msg.content}`,
+				message.reply(reply).catch(() => {
+					message.channel.send(`${message.author} ${reply}`);
 				});
 			}
-		});
-
-		// Generate response
-		const res = await AI.createChatCompletion({
-			model: 'gpt-3.5-turbo',
-			messages: conversationLog,
-			max_tokens: replyLengthLimit,
-			temperature: 0.9,
-			frequency_penalty: 0.5,
-			presence_penalty: 0.5,
-			n: 1,
-		});
-
-		let reply = res.data.choices[0].message?.content;
-
-		if (reply?.length > 2000) {
-			// If the reply length is over 2000 characters, send a txt file.
-			const buffer = Buffer.from(reply, 'utf8');
-			const txtFile = new AttachmentBuilder(buffer, { name: `${message.author.tag}_response.txt` });
-
-			message.reply({ files: [txtFile] }).catch(() => {
-				message.channel.send({ content: `${message.author}`, files: [txtFile] });
-			});
-		} else {
-			message.reply(reply).catch(() => {
-				message.channel.send(`${message.author} ${reply}`);
-			});
+		} catch (err) {
+			return console.error(err);
 		}
 	},
 };
