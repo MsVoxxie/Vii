@@ -8,8 +8,9 @@ const configuration = new Configuration({
 
 const AI = new OpenAIApi(configuration);
 
-const msgLengthLimit = 1000;
-const chatterContext = 'You are a very friendly chatbot named Vii, your creator is MsVoxxie, you are an android cat, you are cute. Some of your features are: Playing music, lookup commands and, more to come!';
+const msgLengthLimit = 150;
+const chatterContext =
+	'You are a very friendly chatbot named Vii, your creator is MsVoxxie, you are an android cat, you are cute. Some of your features are: Playing music, lookup commands and, more to come!';
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -18,6 +19,7 @@ module.exports = {
 		// Checks
 		if (message.author.bot) return;
 		if (!process.env.CHATTERBOX_CHANNELS.includes(message.channel.id)) return;
+		if (message.content.startsWith('!shh')) return;
 
 		// Pretend to type
 		await message.channel.sendTyping();
@@ -37,6 +39,7 @@ module.exports = {
 		previousMessages.forEach((msg) => {
 			if (msg.content.length > msgLengthLimit) return;
 			if (msg.author.id !== client.user.id && message.author.bot) return;
+			if (message.content.startsWith('!shh')) return;
 
 			// If msg is from the bot (client) itself
 			if (msg.author.id === client.user.id) {
