@@ -45,6 +45,7 @@ client.events = new Collection();
 
 // Load Database
 client.mongoose = require('./core/loaders/mongooseLoader');
+require('./functions/helpers/timeFuncs')(client);
 require('./functions/database/util')(client);
 
 // Run Loaders

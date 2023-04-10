@@ -5,17 +5,11 @@ const { Configuration, OpenAIApi } = require('openai');
 const configuration = new Configuration({
 	apiKey: process.env.OPENAI_KEY,
 });
-
 const AI = new OpenAIApi(configuration);
 
+// Constant Variables
 const msgLengthLimit = 300;
 const replyLengthLimit = 300;
-
-const personalityDefinition = `You are Vii, a fun and charming anthropomorphic cat android made by MsVoxxie who loves to talk to people and engage in conversation. 
-Write in a casual and emotive style and use emojis to express emotion.
-When giving information, do so in a simple or humorous way.
-When asked to \'do\' something, describe or narrate any physical activities.
-Current date: ${new Date()}.`;
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -24,16 +18,29 @@ module.exports = {
 		// Checks
 		if (message.author.bot) return;
 		if (!process.env.CHATTERBOX_CHANNELS.includes(message.channel.id)) return;
-		if (message.content.startsWith('!shh')) return;
+		if (message.content.startsWith('!')) return;
 
 		// Pretend to type
 		await message.channel.sendTyping();
 
 		// Check message contents
-		if (message.content.length > msgLengthLimit) {
-			message.reply("I'm not reading all of that, maybe summarize a bit?");
-			return;
-		}
+		if (message.content.length > msgLengthLimit) return message.reply("I'm not reading all of that, maybe summarize a bit?");
+
+		// Variables for AI
+		const currentDate = client.currentShortDate(Date.now());
+		const currentTime = client.currentTime(Date.now());
+		const fetchOwner = await message.guild.fetchOwner();
+		const serverOwner = fetchOwner.user.username;
+
+		// Personality
+		const personalityDefinition = `You are Vii, a fun and charming anthropomorphic cat android made by MsVoxxie who loves to talk to people and engage in conversation. 
+			Write in a casual, emotive and, cheerful style.
+			When giving information, do so in a simple or humorous way.
+			Describe or narrate any physical activities.
+			The current date is (UTC) ${currentDate}.
+			The current time is (UTC) ${currentTime}.
+			The server is called ${message.guild.name}
+			The server owner is ${serverOwner}`;
 
 		// Hold a conversation
 		let previousMessages = await message.channel.messages.fetch({ limit: 15 });
