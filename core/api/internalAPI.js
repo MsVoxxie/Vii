@@ -1,4 +1,5 @@
 const Logger = require('../../functions/logging/logger');
+const RateLimit = require('express-rate-limit');
 const { botData } = require('../../models');
 const Port = process.env.API_PORT;
 const moment = require('moment');
@@ -8,7 +9,17 @@ const cors = require('cors');
 const srv = e();
 
 module.exports = (client) => {
+	// Rate Limit
+	const limiter = RateLimit({
+		windowMs: 1 * 60 * 1000,
+		max: 5,
+	});
+
+	// Set "Use"
+	srv.use(limiter);
 	srv.use(cors());
+
+	// Statistics Route
 	srv.get('/v1/client/statistics', async (req, res) => {
 		const databaseData = await botData.findOne({});
 		client.clientData = {
