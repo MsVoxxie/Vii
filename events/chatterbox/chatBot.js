@@ -9,7 +9,7 @@ const AI = new OpenAIApi(configuration);
 
 // Constant Variables
 const msgLengthLimit = 300;
-const replyLengthLimit = 300;
+const replyLengthLimit = 500;
 
 module.exports = {
 	name: Events.MessageCreate,
