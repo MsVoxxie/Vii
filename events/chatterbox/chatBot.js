@@ -52,11 +52,12 @@ module.exports = {
 
 			previousMessages.forEach((msg) => {
 				if (msg.content.length > msgLengthLimit) return;
-				if (msg.author.id !== client.user.id && message.author.bot) return;
-				if (message.content.startsWith('!shh')) return;
+				if (msg.author.id !== client.user.id && msg.author.bot) return;
+				if (msg.content.startsWith('!')) return;
 
 				// If msg is from the bot (client) itself
 				if (msg.author.id === client.user.id) {
+					if (msg.mentions.repliedUser.id !== message.author.id) return;
 					conversationLog.push({
 						role: 'assistant',
 						content: `${msg.content}`,
