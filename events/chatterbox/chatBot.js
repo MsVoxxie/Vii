@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, AttachmentBuilder } = require('discord.js');
 const Logger = require('../../functions/logging/logger');
 const { Configuration, OpenAIApi } = require('openai');
 
@@ -9,7 +9,7 @@ const AI = new OpenAIApi(configuration);
 
 // Constant Variables
 const msgLengthLimit = 300;
-const replyLengthLimit = 500;
+const replyLengthLimit = 2000;
 
 module.exports = {
 	name: Events.MessageCreate,

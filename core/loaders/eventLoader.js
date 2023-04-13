@@ -21,6 +21,10 @@ module.exports = (client) => {
 					eventTable.addRow(dir, event.name, '✔ » Loaded', '«Infinite»');
 					break;
 
+				case 'disabled':
+					eventTable.addRow(dir, event.name, '✕ » Skipped', '«Disabled»');
+					continue;
+
 				default:
 					eventTable.addRow(dir, event.name, '✕ » Errored');
 					continue;
