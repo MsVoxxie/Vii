@@ -18,9 +18,15 @@ module.exports = {
 			await command.execute(client, interaction, settings);
 			await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 		} catch (error) {
-			interaction.reply(`An error occurred executing ${interaction.commandName}`);
-			Logger.error(`Error executing ${interaction.commandName}`);
-			Logger.error(error);
+			try {
+				interaction.reply(`An error occurred executing ${interaction.commandName}`);
+				Logger.error(`Error executing ${interaction.commandName}`);
+				Logger.error(error);
+			} catch (error) {
+				interaction.followUp(`An error occurred executing ${interaction.commandName}`);
+				Logger.error(`Error executing ${interaction.commandName}`);
+				Logger.error(error);
+			}
 
 			await botData.findOneAndUpdate({}, { $inc: { commandsFailed: 1 } }, { upsert: true });
 		}

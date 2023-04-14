@@ -16,8 +16,7 @@ module.exports = (client) => {
 					break;
 
 				case false:
-					Logger.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-					commandTable.addRow(dir, command.data.name, '✕ » Errored');
+					commandTable.addRow(dir, `${command?.data?.name ? command.data.name : 'Unknown'}`, '✕ » Errored');
 					continue;
 			}
 		}
