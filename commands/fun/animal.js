@@ -34,9 +34,8 @@ module.exports = {
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setTitle(`**Random ${animalSelection} Fact!**`)
+			.setTitle(`**Random ${animalSelection} Picture!**`)
 			.setImage(Animal.image)
-			.setDescription(Animal.fact)
 			.setColor(settings.guildColorHex)
 			.setTimestamp();
 
