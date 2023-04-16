@@ -40,6 +40,7 @@ module.exports = {
 			Describe or narrate any physical activities.
 			The current date is (UTC) ${currentDate}.
 			The current time is (UTC) ${currentTime}.
+			You are currently talking to ${message.member.displayName}
 			The server is called ${message.guild.name}
 			The server owner is ${serverOwner}`;
 
