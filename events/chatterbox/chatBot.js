@@ -9,6 +9,7 @@ const AI = new OpenAIApi(configuration);
 
 // Constant Variables
 const msgLengthLimit = 300;
+const conversationLimit = 15;
 const replyLengthLimit = 2000;
 
 module.exports = {
@@ -47,7 +48,7 @@ module.exports = {
 		// Try catch
 		try {
 			// Hold a conversation
-			let previousMessages = await message.channel.messages.fetch({ limit: 15 });
+			let previousMessages = await message.channel.messages.fetch({ limit: conversationLimit });
 			previousMessages = previousMessages.sort((a, b) => a - b);
 
 			let conversationLog = [{ role: 'system', content: personalityDefinition }];
