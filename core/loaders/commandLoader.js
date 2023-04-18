@@ -1,6 +1,5 @@
 const ascii = require('ascii-table');
 const { readdirSync } = require('fs');
-const Logger = require('../../functions/logging/logger');
 const commandTable = new ascii().setTitle('Command Loader').setHeading('Category', 'Command', 'Load Status');
 
 module.exports = (client) => {

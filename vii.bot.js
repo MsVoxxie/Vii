@@ -20,6 +20,9 @@ const client = new Client({
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildVoiceStates,
 	],
+	allowedMentions: {
+		parse: [],
+	},
 });
 
 // Music Client
