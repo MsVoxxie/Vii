@@ -16,6 +16,8 @@ module.exports = {
 			.setTitle(`**${interaction.guild.name}'s Current Queue**`)
 			.setDescription(trim(queue.songs.map((song, id) => `**${id + 1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\``).join('\n'), 2000))
 			.setColor(settings.guildColorHex);
-		return interaction.followUp({embeds: [embed]})
+		return interaction.followUp({embeds: [embed]}).then((m) => {
+			setTimeout(() => m.delete(), 60 * 1000);
+		});
 	},
 };

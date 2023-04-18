@@ -2,8 +2,8 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('shuffle')
-		.setDescription('Shuffle the current queue.')
+		.setName('skip')
+		.setDescription('Skip the current song!')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	async execute(client, interaction, settings) {
 		const channel = interaction.member.voice.channel;
@@ -14,12 +14,16 @@ module.exports = {
 		// Defer, Things take time.
 		await interaction.deferReply();
 
-		await client.distube.shuffle(interaction);
+		// Check if there is only one song in the queue
+		if (queue.songs.length === 1) return interaction.followUp('There is only one song in the queue!');
+
+		// Skip the song
+		await client.distube.skip(interaction);
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setTitle(`**Queue Shuffled!**`)
-			.setDescription(`${interaction.member} shuffled the queue.`)
+			.setTitle(`**Song Skipped!**`)
+			.setDescription(`${interaction.member} skipped the current song.`)
 			.setColor(settings.guildColorHex);
 		return interaction.followUp({ embeds: [embed] }).then((m) => {
 			setTimeout(() => m.delete(), 60 * 1000);

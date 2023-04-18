@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, messageLink } = require('discord.js');
 
 module.exports = {
 	name: 'playSong',
@@ -49,6 +49,7 @@ module.exports = {
 
 				case 'SKIP':
 					if (!queue) return await int.deferUpdate();
+					if (queue.songs.length === 1) return queue.textChannel.send('There is only one song in the queue!');
 					client.distube.skip(int.guild);
 					await queue.textChannel.send(`${int.member} skipped the current media.`).then((m) => {
 						setTimeout(() => m.delete(), 60 * 1000);
