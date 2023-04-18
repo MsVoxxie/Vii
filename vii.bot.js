@@ -21,7 +21,7 @@ const client = new Client({
 		GatewayIntentBits.GuildVoiceStates,
 	],
 	allowedMentions: {
-		parse: [],
+		parse: ['users', 'roles'],
 	},
 });
 
