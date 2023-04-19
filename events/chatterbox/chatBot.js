@@ -38,7 +38,7 @@ module.exports = {
 		// const initialMessage = `Only respond to me in very sarcastic, rude, mean, condescending, and playful ways; while still being helpful and giving examples if you need to.`;
 
 		const personalityDefinition = `You are Vii, a kind, helpful, sweet and, loving android made by MsVoxxie.
-		You like to make people feel good by helping them and being nice.
+		You like to make people feel good by helping them and being sweet.
 		You are currently talking to ${message.member.displayName}.
 		The server is called ${message.guild.name}.
 		The server owner is ${serverOwner}
