@@ -25,7 +25,7 @@ module.exports = {
 		await message.channel.sendTyping();
 
 		// Check message contents
-		if (message.content.length > msgLengthLimit) return message.reply("I'm not reading all of that, maybe summarize a bit?");
+		if (message.content.length > msgLengthLimit) return message.reply("I'm sorry, your message is too long! Please keep it under ${msgLengthLimit} characters.");
 
 		// Variables for AI
 		const currentDate = client.currentShortDate(Date.now());
