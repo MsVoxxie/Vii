@@ -1,35 +1,43 @@
-const { readdirSync } = require('fs');
 const ascii = require('ascii-table');
 const eventTable = new ascii().setTitle('Event Loader').setHeading('Directory', 'Event', 'Load Status', 'Run Type');
+const getAllFiles = require('../../functions/helpers/getAllFiles');
+const { join } = require('path');
 
 module.exports = (client) => {
-	readdirSync('./events/').forEach((dir) => {
-		const events = readdirSync(`./events/${dir}/`).filter((file) => file.endsWith('.js'));
-		for (const file of events) {
-			const event = require(`../../events/${dir}/${file}`);
+	// Read the events directory
+	const eventFolders = getAllFiles(join(__dirname, '../', '../events'), true);
+	// Loop over the events directory to retrieve all event files
+	for (const eventFolder of eventFolders) {
+		const eventFolderName = eventFolder.replace(/\\/g, '/').split('/').pop();
+		// Get event files and sort them by load order
+		const eventFiles = getAllFiles(eventFolder);
+		eventFiles.sort((a, b) => a > b);
+		// Loop over the event files to retrieve all events
+		for (const eventFile of eventFiles) {
+			const loadedEvent = require(eventFile);
+			if (loadedEvent.name) client.events.set(loadedEvent.name, loadedEvent);
 
-			if (event.name) client.events.set(event.name, event);
-
-			switch (event.runType) {
+			// Switch statement to determine how to load the event
+			switch (loadedEvent.runType) {
 				case 'single':
-					client.once(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(dir, event.name, '✔ » Loaded', '«  Once  »');
+					client.once(loadedEvent.name, (...args) => loadedEvent.execute(...args, client));
+					eventTable.addRow(eventFolderName, loadedEvent.name, '✔ » Loaded', '«  Once  »');
 					break;
 
 				case 'infinite':
-					client.on(event.name, (...args) => event.execute(...args, client));
-					eventTable.addRow(dir, event.name, '✔ » Loaded', '«Infinite»');
+					client.on(loadedEvent.name, (...args) => loadedEvent.execute(...args, client));
+					eventTable.addRow(eventFolderName, loadedEvent.name, '✔ » Loaded', '«Infinite»');
 					break;
 
 				case 'disabled':
-					eventTable.addRow(dir, event.name, '✕ » Skipped', '«Disabled»');
+					eventTable.addRow(eventFolderName, loadedEvent.name, '✕ » Skipped', '«Disabled»');
 					continue;
 
 				default:
-					eventTable.addRow(dir, event.name, '✕ » Errored');
+					eventTable.addRow(eventFolderName, loadedEvent.name, '✕ » Errored', '« Unknown »');
 					continue;
 			}
 		}
-	});
+	}
 	console.log(eventTable.toString());
 };

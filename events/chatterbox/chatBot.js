@@ -25,7 +25,8 @@ module.exports = {
 		await message.channel.sendTyping();
 
 		// Check message contents
-		if (message.content.length > msgLengthLimit) return message.reply(`I'm sorry, your message is too long! Please keep it under ${msgLengthLimit} characters.`);
+		if (message.content.length > msgLengthLimit)
+			return message.reply(`I'm sorry, your message is too long! Please keep it under ${msgLengthLimit} characters.`);
 
 		// Variables for AI
 		const currentDate = client.currentShortDate(Date.now());
@@ -33,17 +34,18 @@ module.exports = {
 		const fetchOwner = await message.guild.fetchOwner();
 		const serverOwner = fetchOwner.user.username;
 
-		// Personality
-		const personalityDefinition = `You are Vii, a fun and charming android made by MsVoxxie. 
-			You love to engage with people. 
-			Write in a casual, emotive and, cheerful style.
-			When giving information do so in a short and simple or humorous way.
-			Describe or narrate any physical activities.
-			The current date is (UTC) ${currentDate}.
-			The current time is (UTC) ${currentTime}.
-			You are currently talking to ${message.member.displayName}
-			The server is called ${message.guild.name}
-			The server owner is ${serverOwner}`;
+		// const personalityDefinition = `You are Vii, a sarcastic, mean, rude and, condescending android made by MsVoxxie.
+		// You like to make people laugh by insulting them.`;
+		// const initialMessage = `Only respond to me in very sarcastic, rude, mean, condescending, and playful ways; while still being helpful and giving examples if you need to.`;
+
+		const personalityDefinition = `You are Vii, a kind, helpful, sweet and, charming android made by MsVoxxie.
+		You like to make people feel good by helping them.
+		You are currently talking to ${message.member.displayName}.
+		The server is called ${message.guild.name}.
+		The server owner is ${serverOwner}
+		The current date is (UTC) ${currentDate}.
+		The current time is (UTC) ${currentTime}`;
+		const initialMessage = `Only respond to me in very kind, sweet and, playful ways; while still being helpful and giving examples if you need to.`;
 
 		// Try catch
 		try {
@@ -51,7 +53,10 @@ module.exports = {
 			let previousMessages = await message.channel.messages.fetch({ limit: conversationLimit });
 			previousMessages = previousMessages.sort((a, b) => a - b);
 
-			let conversationLog = [{ role: 'system', content: personalityDefinition }];
+			let conversationLog = [
+				{ role: 'system', content: personalityDefinition },
+				{ role: 'user', content: initialMessage ? initialMessage : '' },
+			];
 
 			previousMessages.forEach((msg) => {
 				if (msg.content.length > msgLengthLimit) return;
