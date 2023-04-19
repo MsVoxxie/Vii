@@ -6,6 +6,10 @@ module.exports = {
 		.setDescription('Play some media!')
 		.addStringOption((option) => option.setName('query').setDescription('Query to search for.').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.reply("You're not in a voice channel!");

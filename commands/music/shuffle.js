@@ -5,6 +5,10 @@ module.exports = {
 		.setName('shuffle')
 		.setDescription('Shuffle the current queue.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.reply("You're not in a voice channel!");

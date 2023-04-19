@@ -5,6 +5,10 @@ module.exports = {
 		.setName('nowplaying')
 		.setDescription('Return the currently playing media.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		await interaction.deferReply();

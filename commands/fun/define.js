@@ -7,6 +7,10 @@ module.exports = {
 		.setDescription('Search the Dictonary for a definition!')
 		.addStringOption((option) => option.setName('query').setDescription('What would you like to search for?').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const searchQuery = interaction.options.getString('query').replace(/\s/g, '');
 

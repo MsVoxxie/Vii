@@ -5,15 +5,18 @@ module.exports = {
 		.setName('inspire')
 		.setDescription("AI Generated 'Inspirational' Quotes.")
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
-
-        // Defer, Things take time.
+		// Defer, Things take time.
 		await interaction.deferReply();
 
-        // Get Quote
+		// Get Quote
 		const inspirationalQuote = await fetch('https://inspirobot.me/api?generate=true').then((res) => res.text());
 
-        // Send
+		// Send
 		return interaction.followUp({ content: inspirationalQuote });
 	},
 };

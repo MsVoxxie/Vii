@@ -22,6 +22,10 @@ module.exports = {
 				.setRequired(true)
 		)
 		.setDefaultMemberPermissions(PermissionsBitField.SendMessages),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const animalSelection = interaction.options.getString('choice');
 		const animalEndpoint = `https://some-random-api.ml/animal/${animalSelection}`;

@@ -13,21 +13,26 @@ module.exports = {
 		if (!command) return Logger.error(`No command matching ${interaction.commandName} was found.`);
 
 		try {
-			// Define arguments
+			// Check if command is dev only
+			if (command.options.devOnly) {
+				if (!process.env.DEVELOPERS.includes(interaction.user.id)) {
+					return interaction.reply({ content: 'This command is for developers only.', ephemeral: true });
+				}
+			}
+
+			// Check if command is disabled
+			if (command.options.disabled) {
+				return interaction.reply({ content: 'This command is disabled.', ephemeral: true });
+			}
+
+			// Execute Command
 			const settings = await client.getGuild(interaction.guild);
 			await command.execute(client, interaction, settings);
 			await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 		} catch (error) {
-			try {
-				interaction.reply(`An error occurred executing ${interaction.commandName}`);
-				Logger.error(`Error executing ${interaction.commandName}`);
-				Logger.error(error);
-			} catch (error) {
-				interaction.followUp(`An error occurred executing ${interaction.commandName}`);
-				Logger.error(`Error executing ${interaction.commandName}`);
-				Logger.error(error);
-			}
-
+			interaction.reply({ content: `An error occurred executing ${interaction.commandName}`, ephemeral: true });
+			Logger.error(`Error executing ${interaction.commandName}`);
+			Logger.error(error);
 			await botData.findOneAndUpdate({}, { $inc: { commandsFailed: 1 } }, { upsert: true });
 		}
 	},

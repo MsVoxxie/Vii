@@ -6,9 +6,15 @@ module.exports = {
 		.setDescription('Search Urban Dictonary for a definition!')
 		.addStringOption((option) => option.setName('query').setDescription('What would you like to search for?').setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
+	options: {
+		devOnly: false,
+		disabled: false,
+	},
 	async execute(client, interaction, settings) {
 		const searchQuery = interaction.options.getString('query');
-		const { list } = await fetch(`https://api.urbandictionary.com/v0/define?term=${searchQuery}`).then((response) => response.json()).catch((e) => console.error(e));
+		const { list } = await fetch(`https://api.urbandictionary.com/v0/define?term=${searchQuery}`)
+			.then((response) => response.json())
+			.catch((e) => console.error(e));
 		if (!list) return interaction.reply(`No results found for \`${searchQuery}\``);
 		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 
