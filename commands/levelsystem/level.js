@@ -5,7 +5,7 @@ const { Rank } = require('canvacord');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('getlevel')
+		.setName('level')
 		.setDescription('Get current level of a user or yourself')
 		.addUserOption((option) => option.setName('user').setDescription('User to get level of').setRequired(false))
 		.setDefaultMemberPermissions(PermissionsBitField.SendMessages),
