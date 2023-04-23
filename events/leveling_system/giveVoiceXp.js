@@ -4,6 +4,6 @@ module.exports = {
 	name: 'everyMinute',
 	runType: 'infinite',
 	async execute(client) {
-		grantVoiceXp(client);
+		await grantVoiceXp(client);
 	},
 };
