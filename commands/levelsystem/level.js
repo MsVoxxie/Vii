@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionsBitField, AttachmentBuilder } = require('discord.js');
-const calculateLevelXp = require('../../functions/helpers/calculateLevelXp');
+const calculateLevelXp = require('../../functions/xpFuncs/calculateLevelXp');
 const { Level } = require('../../models/index');
 const { Rank } = require('canvacord');
 
