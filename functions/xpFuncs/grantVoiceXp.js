@@ -39,7 +39,7 @@ module.exports = async (client, min = 5, max = 25) => {
 				}
 
 				// Check if the user has leveled up
-				const hasUserLeveled = grantVoiceLevel(guild, member, dbResult);
+				const hasUserLeveled = grantVoiceLevel(client, guild, member, dbResult);
 
 				// Return true if the user has leveled up
 				return hasUserLeveled;
