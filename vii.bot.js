@@ -65,7 +65,7 @@ require('./core/api/internalAPI')(client);
 
 // Every Minute
 cron.schedule('* * * * *', () => {
-	// client.emit('everyMinute');
+	client.emit('everyMinute');
 });
 
 // Login
