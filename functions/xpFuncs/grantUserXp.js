@@ -2,7 +2,7 @@ const Logger = require('../logging/logger');
 const { Level } = require('../../models/index');
 const giveRandomXp = require('./giveRandomXp');
 
-module.exports = async (interaction, min = 15, max = 25) => {
+module.exports = async (client, interaction, min = 15, max = 25) => {
 	// Check that the interaction is in a guild
 	if (!interaction.inGuild()) throw new Error('Invalid Interaction: Not in a guild');
 	// Check that the interaction author is not a bot
@@ -19,7 +19,9 @@ module.exports = async (interaction, min = 15, max = 25) => {
 	);
 
 	// Logger
-	Logger.info(`User ${interaction.author.tag} has been given ${xpToGive} Xp in guild ${interaction.guild.name}`);
+	if (client.debug) {
+		Logger.info(`User ${interaction.author.tag} has been given ${xpToGive} Xp in guild ${interaction.guild.name}`);
+	}
 
 	// Return the database result
 	return dbResult;

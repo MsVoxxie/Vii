@@ -26,6 +26,9 @@ const client = new Client({
 	},
 });
 
+// Client Properties
+client.debug = false;
+
 // Music Client
 client.distube = new DisTube(client, {
 	leaveOnStop: false,

@@ -34,7 +34,9 @@ module.exports = async (client, min = 5, max = 25) => {
 				);
 
 				// Logger
-				Logger.info(`User ${member.user.tag} has been given ${xpToGive} VoiceXp in guild ${guild.name}`);
+				if (client.debug) {
+					Logger.info(`User ${member.user.tag} has been given ${xpToGive} VoiceXp in guild ${guild.name}`);
+				}
 
 				// Check if the user has leveled up
 				const hasUserLeveled = grantVoiceLevel(guild, member, dbResult);

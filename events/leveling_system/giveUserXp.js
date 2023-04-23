@@ -13,10 +13,10 @@ module.exports = {
 		if (xpTimeout.has(message.author.id)) return;
 
 		// Grant the user xp
-		const dbResults = await grantUserXp(message, 15, 25);
+		const dbResults = await grantUserXp(client, message, 15, 25);
 
 		// Check if the user leveled up
-		const didUserLevel = await grantUserLevel(message, dbResults);
+		const didUserLevel = await grantUserLevel(client, message, dbResults);
 
 		// TODO: Add a level up message
 		if (didUserLevel) {
