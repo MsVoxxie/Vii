@@ -27,7 +27,7 @@ const client = new Client({
 });
 
 // Client Properties
-client.debug = true;
+client.debug = false;
 
 // Music Client
 client.distube = new DisTube(client, {

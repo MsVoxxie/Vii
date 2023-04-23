@@ -25,8 +25,6 @@ module.exports = async (client, min = 5, max = 25) => {
 				// Check if member is in afk channel
 				if (member.voice.channel.id === guild.afkChannelId) continue;
 
-				console.log(member.user.tag);
-
 				// Calculate the amount of xp to give
 				const xpToGive = await giveRandomXp(min, max);
 
