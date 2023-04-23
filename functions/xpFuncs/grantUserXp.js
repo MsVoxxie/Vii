@@ -19,7 +19,7 @@ module.exports = async (interaction, min = 15, max = 25) => {
 	);
 
 	// Logger
-	Logger.info(`User ${interaction.author.tag} has been given ${xpToGive} xp in guild ${interaction.guild.name}`);
+	Logger.info(`User ${interaction.author.tag} has been given ${xpToGive} Xp in guild ${interaction.guild.name}`);
 
 	// Return the database result
 	return dbResult;

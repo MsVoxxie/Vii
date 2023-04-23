@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Discord Classes
+const cron = require('node-cron');
 const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
@@ -56,6 +57,13 @@ require('./core/loaders/musicEventLoader')(client);
 require('./core/loaders/commandLoader')(client);
 require('./core/loaders/eventLoader')(client);
 require('./core/api/internalAPI')(client);
+
+// Time based functions
+
+// Every Minute
+cron.schedule('* * * * *', () => {
+	client.emit('everyMinute');
+});
 
 // Login
 client.login(TOKEN);

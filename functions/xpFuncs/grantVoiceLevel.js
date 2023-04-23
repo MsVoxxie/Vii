@@ -2,7 +2,7 @@ const { Level } = require('../../models/index');
 const Logger = require('../logging/logger');
 const calculateLevelXp = require('./calculateLevelXp');
 
-module.exports = async (interaction, dbResults) => {
+module.exports = async (guild, member, dbResults) => {
 	// Check that dbResults is an object
 	if (typeof dbResults !== 'object') throw new Error('Invalid Argument: dbResults is not an object');
 
@@ -20,12 +20,12 @@ module.exports = async (interaction, dbResults) => {
 	xp -= xpNeeded;
 
 	// Logger
-	Logger.info(`User ${interaction.author.tag} has leveled up to level ${level} in guild ${interaction.guild.name}`);
+	Logger.info(`User ${member.user.tag} has leveled up to level ${level} in guild ${guild.name}`);
 
 	// Update the user's level and xp in the database
 	await Level.findOneAndUpdate(
-		{ userId: interaction.author.id, guildId: interaction.guild.id },
-		{ userId: interaction.author.id, guildId: interaction.guild.id, xp, level },
+		{ userId: member.id, guildId: guild.id },
+		{ userId: member.id, guildId: guild.id, xp, level },
 		{ upsert: true, new: true }
 	);
 

@@ -1,5 +1,8 @@
+const grantVoiceXp = require('../../functions/xpFuncs/grantVoiceXp');
+
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { runInNewContext } = require('vm');
+let evaluatedCode;
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,7 +29,7 @@ module.exports = {
 
 		// Try Evaluation
 		try {
-			const evaluatedCode = await runInNewContext(runThis, { client, interaction, settings });
+			evaluatedCode = await runInNewContext(runThis, { client, interaction, settings, grantVoiceXp });
 
 			// Success Embed
 			const embed = new EmbedBuilder()
