@@ -5,7 +5,13 @@ module.exports = {
 	runType: 'on',
 	async execute(queue, song, client) {
 		const settings = await client.getGuild(queue.textChannel.guild);
-		if (queue.lastPlaying) await queue.lastPlaying.delete(); // Delete last playing if there is one, reduces spam.
+		if (queue.lastPlaying) {
+			try {
+				await queue.lastPlaying.delete(); // Delete last playing if there is one, reduces spam.
+			} catch (error) {
+				console.log('Error deleting last playing message');
+			}
+		}
 
 		// Build Embed
 		const embed = new EmbedBuilder()
@@ -36,13 +42,17 @@ module.exports = {
 						await int.deferUpdate();
 						client.distube.pause(int.guild);
 						await queue.textChannel.send(`${int.member} paused the current media.`).then((m) => {
-							setTimeout(() => m.delete(), 60 * 1000);
+							setTimeout(() => m.delete(), 120 * 1000);
+						}).catch((error) => {
+							console.log('Unable to clean up message.');
 						});
 					} else {
 						await int.deferUpdate();
 						client.distube.resume(int.guild);
 						await queue.textChannel.send(`${int.member} resumed the current media.`).then((m) => {
-							setTimeout(() => m.delete(), 60 * 1000);
+							setTimeout(() => m.delete(), 120 * 1000);
+						}).catch((error) => {
+							console.log('Unable to clean up message.');
 						});
 					}
 					break;
@@ -52,7 +62,9 @@ module.exports = {
 					if (queue.songs.length === 1) return queue.textChannel.send('There is only one song in the queue!');
 					client.distube.skip(int.guild);
 					await queue.textChannel.send(`${int.member} skipped the current media.`).then((m) => {
-						setTimeout(() => m.delete(), 60 * 1000);
+						setTimeout(() => m.delete(), 120 * 1000);
+					}).catch((error) => {
+						console.log('Unable to clean up message.');
 					});
 					break;
 
@@ -61,7 +73,9 @@ module.exports = {
 					client.distube.stop(int.guild);
 					await playing.delete();
 					await queue.textChannel.send(`${int.member} stopped the current media.`).then((m) => {
-						setTimeout(() => m.delete(), 60 * 1000);
+						setTimeout(() => m.delete(), 120 * 1000);
+					}).catch((error) => {
+						console.log('Unable to clean up message.');
 					});
 					break;
 			}

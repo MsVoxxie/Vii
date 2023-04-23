@@ -11,7 +11,9 @@ module.exports = {
 			.setDescription(`Sorry about that!`);
 		if (channel) {
 			channel.send({ embeds: [embed] }).then((m) => {
-				setTimeout(() => m.delete(), 60 * 1000);
+				setTimeout(() => m.delete(), 120 * 1000);
+			}).catch((error) => {
+				console.log('Unable to clean up message.');
 			});
 		} else {
 			console.error(e);

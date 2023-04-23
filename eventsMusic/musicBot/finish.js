@@ -6,7 +6,13 @@ module.exports = {
 	runType: 'on',
 	async execute(queue, client) {
 		const settings = await client.getGuild(queue.textChannel.guild);
-		if (queue.lastPlaying) await queue.lastPlaying.delete(); // Delete last playing if there is one, reduces spam.
+		if (queue.lastPlaying) {
+			try {
+				await queue.lastPlaying.delete(); // Delete last playing if there is one, reduces spam.
+			} catch (error) {
+				console.log('Error deleting last playing message');
+			}
+		}
 
 		const attachment = new AttachmentBuilder(`${join(__dirname, '../../images/vi/Goodbye.gif')}`, { name: 'Goodbye.gif' });
 		const embed = new EmbedBuilder()
@@ -15,8 +21,10 @@ module.exports = {
 			.setDescription(`Queue is empty. Goodbye!`)
 			.setThumbnail('attachment://Goodbye.gif');
 
-		queue.textChannel.send({ embeds: [embed], files: [attachment] }).then((m) => {
+		await queue.textChannel.send({ embeds: [embed], files: [attachment] }).then((m) => {
 			setTimeout(() => m.delete(), 120 * 1000);
+		}).catch((error) => {
+			console.log('Unable to clean up message.');
 		});
 	},
 };

@@ -19,11 +19,13 @@ module.exports = {
 		await interaction.deferReply();
 
 		try {
-			client.distube.play(channel, query, {
+			await client.distube.play(channel, query, {
 				member: interaction.member,
 				textChannel: interaction.channel,
 				interaction,
 			});
+
+			await client.distube.setVolume(interaction, 25);
 
 			const embed = new EmbedBuilder()
 				.setColor(settings.guildColorHex)
