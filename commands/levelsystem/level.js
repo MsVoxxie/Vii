@@ -29,7 +29,7 @@ module.exports = {
 		if (!userLevel) return interaction.followUp(mentioneduserId ? `${fetchedMember.user.tag} does not have a level` : 'You do not have a level');
 
 		// Get all levels and sort by rankings
-		const allUserLevels = await Level.find({ guildId: interaction.guild.id }).sort({ level: -1, xp: -1 }).limit(10).lean();
+		const allUserLevels = await Level.find({ guildId: interaction.guild.id }).sort({ level: -1, xp: -1 }).lean();
 
 		// Set Ranks
 		for await (const user of allUserLevels) {
