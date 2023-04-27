@@ -23,7 +23,7 @@ module.exports = async (client, min = 5, max = 25) => {
 				// Check if member is a bot
 				if (member.user.bot) continue;
 				// Check if member is in afk channel
-				if (member.voice.channel.id === guild.afkChannelId) continue;
+				if (member?.voice?.channel?.id === guild.afkChannelId) continue;
 
 				// Calculate the amount of xp to give
 				const xpToGive = await giveRandomXp(min, max);
