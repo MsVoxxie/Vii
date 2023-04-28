@@ -26,8 +26,12 @@ module.exports = {
 			}
 
 			// Execute Command
-			const settings = await client.getGuild(interaction.guild);
-			await command.execute(client, interaction, settings);
+			if (interaction.guild) {
+				const settings = await client.getGuild(interaction.guild);
+				await command.execute(client, interaction, settings);
+			} else {
+				await command.execute(client, interaction);
+			}
 			await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 		} catch (error) {
 			interaction.reply({ content: `An error occurred executing ${interaction.commandName}`, ephemeral: true });

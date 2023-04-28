@@ -4,6 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('inspire')
 		.setDescription("AI Generated 'Inspirational' Quotes.")
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,

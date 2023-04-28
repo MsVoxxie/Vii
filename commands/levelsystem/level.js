@@ -8,6 +8,7 @@ module.exports = {
 		.setName('level')
 		.setDescription('Get current level of a user or yourself')
 		.setDefaultMemberPermissions(PermissionsBitField.SendMessages)
+		.setDMPermission(false)
 		.addSubcommand((subCommand) => subCommand.setName('leaderboard').setDescription('Get the leaderboard of the server'))
 		.addSubcommand((subCommand) =>
 			subCommand

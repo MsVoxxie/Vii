@@ -5,6 +5,7 @@ module.exports = {
 		.setName('urban')
 		.setDescription('Search Urban Dictonary for a definition!')
 		.addStringOption((option) => option.setName('query').setDescription('What would you like to search for?').setRequired(true))
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,

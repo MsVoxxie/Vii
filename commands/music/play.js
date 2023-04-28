@@ -5,6 +5,7 @@ module.exports = {
 		.setName('play')
 		.setDescription('Play some media!')
 		.addStringOption((option) => option.setName('query').setDescription('Query to search for.').setRequired(true))
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
 		devOnly: false,

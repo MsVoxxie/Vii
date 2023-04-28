@@ -5,6 +5,7 @@ module.exports = {
 		.setName('avatar')
 		.setDescription('Get the avatar URL of the selected user, or your own avatar.')
 		.addUserOption((option) => option.setName('target').setDescription("The user's avatar to show"))
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,

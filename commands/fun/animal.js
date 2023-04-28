@@ -21,6 +21,7 @@ module.exports = {
 				)
 				.setRequired(true)
 		)
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionsBitField.SendMessages),
 	options: {
 		devOnly: false,

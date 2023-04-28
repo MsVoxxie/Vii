@@ -6,6 +6,7 @@ module.exports = {
 		.setName('imagesearch')
 		.setDescription('Search google for a query to retrieve images.')
 		.addStringOption((option) => option.setName('query').setDescription('Query to search images for.').setRequired(true))
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,

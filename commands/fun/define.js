@@ -6,6 +6,7 @@ module.exports = {
 		.setName('define')
 		.setDescription('Search the Dictonary for a definition!')
 		.addStringOption((option) => option.setName('query').setDescription('What would you like to search for?').setRequired(true))
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,
