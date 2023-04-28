@@ -59,7 +59,7 @@ module.exports = {
 					.setAvatar(fetchedMember.user.displayAvatarURL({ format: 'png', size: 512 }))
 					.setDiscriminator(fetchedMember.user.discriminator)
 					.setRequiredXP(calculateLevelXp(userLevel.level))
-					.setProgressBar(`#${settings.guildColorHex}`, 'COLOR')
+					.setProgressBar([`#${settings.guildColorHex}`, '#1abef3'], 'GRADIENT')
 					.setUsername(fetchedMember.user.username)
 					.setRank(mentionedUserLevel.rank)
 					.setCurrentXP(userLevel.xp)
