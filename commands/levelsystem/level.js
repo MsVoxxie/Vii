@@ -2,6 +2,7 @@ const { SlashCommandBuilder, PermissionsBitField, AttachmentBuilder, EmbedBuilde
 const calculateLevelXp = require('../../functions/xpFuncs/calculateLevelXp');
 const { Level } = require('../../models/index');
 const { Rank } = require('canvacord');
+const { join } = require('path');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,6 +24,9 @@ module.exports = {
 	async execute(client, interaction, settings) {
 		// Get subcommand
 		const subCommand = interaction.options.getSubcommand();
+
+		// Get Background image
+		const backgroundImage = join(__dirname, '../../images/level/background.png');
 
 		// Defer, Things take time.
 		await interaction.deferReply();
@@ -58,11 +62,13 @@ module.exports = {
 				const rankCard = new Rank()
 					.setStatus(fetchedMember?.presence?.status ? fetchedMember.presence.status : 'offline')
 					.setAvatar(fetchedMember.user.displayAvatarURL({ format: 'png', size: 512 }))
+					.setProgressBar([`#${settings.guildColorHex}`, '#1abef3'], 'GRADIENT')
 					.setDiscriminator(fetchedMember.user.discriminator)
 					.setRequiredXP(calculateLevelXp(userLevel.level))
-					.setProgressBar([`#${settings.guildColorHex}`, '#1abef3'], 'GRADIENT')
 					.setUsername(fetchedMember.user.username)
+					.setBackground('IMAGE', backgroundImage)
 					.setRank(mentionedUserLevel.rank)
+					.setOverlay('#000000', 0, false)
 					.setCurrentXP(userLevel.xp)
 					.setLevel(userLevel.level);
 
