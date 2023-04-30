@@ -21,21 +21,53 @@ module.exports = {
 		if (!pollEmbed) return interaction.reply({ content: 'An error occurred.', ephemeral: true });
 
 		// Get the current values
-		const yesVotes = pollEmbed.fields[0];
-		const noVotes = pollEmbed.fields[1];
+		const firstChoice = pollEmbed.fields[0];
+		const secondChoice = pollEmbed.fields[1];
+		const thirdChoice = pollEmbed.fields?.[2];
+		const fourthChoice = pollEmbed.fields?.[3];
+		const fifthChoice = pollEmbed.fields?.[4];
+		const sixthChoice = pollEmbed.fields?.[5];
 
 		// Update the embed
 		switch (customID[1]) {
-			case 'Yes':
-				const newYesCount = parseInt(yesVotes.value) + 1;
-				yesVotes.value = newYesCount;
+			case 'C1':
+				const newFirstCount = parseInt(firstChoice.value) + 1;
+				firstChoice.value = newFirstCount;
 
 				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
 				interaction.message.edit({ embeds: [pollEmbed] });
 				break;
-			case 'No':
-				const newNoCount = parseInt(noVotes.value) + 1;
-				noVotes.value = newNoCount;
+			case 'C2':
+				const newSecondCount = parseInt(secondChoice.value) + 1;
+				secondChoice.value = newSecondCount;
+
+				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
+				interaction.message.edit({ embeds: [pollEmbed] });
+				break;
+			case 'C3':
+				const newThirdCount = parseInt(thirdChoice.value) + 1;
+				thirdChoice.value = newThirdCount;
+
+				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
+				interaction.message.edit({ embeds: [pollEmbed] });
+				break;
+			case 'C4':
+				const newFourthCount = parseInt(fourthChoice.value) + 1;
+				fourthChoice.value = newFourthCount;
+
+				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
+				interaction.message.edit({ embeds: [pollEmbed] });
+				break;
+			case 'C5':
+				const newFifthCount = parseInt(fifthChoice.value) + 1;
+				fifthChoice.value = newFifthCount;
+
+				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
+				interaction.message.edit({ embeds: [pollEmbed] });
+				break;
+			case 'C6':
+				const newSixthCount = parseInt(sixthChoice.value) + 1;
+				sixthChoice.value = newSixthCount;
 
 				interaction.reply({ content: 'Your vote has been counted.', ephemeral: true });
 				interaction.message.edit({ embeds: [pollEmbed] });
