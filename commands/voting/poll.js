@@ -1,5 +1,5 @@
 const { PermissionFlagsBits, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { join } = require('path');
+const { pollData } = require('../../models/index')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,12 +32,11 @@ module.exports = {
 		const pollEmbed = new EmbedBuilder()
 			.setDescription(`**Question:**\n${question}`)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setColor(settings.guildColorHex)
-			.addFields([
-				{ name: choice1, value: '0', inline: true },
-				{ name: choice2, value: '0', inline: true },
-			]);
+			.setColor(settings.guildColorHex);
 
+		// Add the fields
+		if (choice1) pollEmbed.addFields({ name: choice1, value: '0', inline: true });
+		if (choice2) pollEmbed.addFields({ name: choice2, value: '0', inline: true });
 		if (choice3) pollEmbed.addFields({ name: choice3, value: '0', inline: true });
 		if (choice4) pollEmbed.addFields({ name: choice4, value: '0', inline: true });
 		if (choice5) pollEmbed.addFields({ name: choice5, value: '0', inline: true });
@@ -63,5 +62,8 @@ module.exports = {
 		if (secondButtons.components.length > 0) actionRows.push(secondButtons);
 
 		await interaction.editReply({ components: actionRows });
+
+		// Add the poll to the database
+		await pollData.create({ guildId: interaction.guild.id, pollId: replyObject.id });
 	},
 };

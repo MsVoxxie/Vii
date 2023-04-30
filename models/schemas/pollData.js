@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const pollDataSchema = mongoose.Schema({
-	userId: {
-		type: String,
-		required: true,
-	},
 	guildId: {
 		type: String,
 		required: true,
@@ -13,9 +9,29 @@ const pollDataSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	voted: {
-		type: Boolean,
-		default: false,
+	choice1: {
+		type: Number,
+		default: 0,
+	},
+	choice2: {
+		type: Number,
+		default: 0,
+	},
+	choice3: {
+		type: Number,
+		default: 0,
+	},
+	choice4: {
+		type: Number,
+		default: 0,
+	},
+	choice5: {
+		type: Number,
+		default: 0,
+	},
+	choice6: {
+		type: Number,
+		default: 0,
 	},
 });
 

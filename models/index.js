@@ -3,4 +3,5 @@ module.exports = {
 	botData: require('./schemas/botData'),
 	Level: require('./schemas/levelSchema'),
 	pollData: require('./schemas/pollData'),
+	pollVoterData: require('./schemas/pollVoterData'),
 };
