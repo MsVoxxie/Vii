@@ -4,6 +4,7 @@ const { botData } = require('../../models');
 const Port = process.env.API_PORT;
 const moment = require('moment');
 require('moment-duration-format');
+const { join } = require('path');
 const e = require('express');
 const cors = require('cors');
 const srv = e();
@@ -18,6 +19,11 @@ module.exports = (client) => {
 	// Set "Use"
 	srv.use(limiter);
 	srv.use(cors());
+
+	// Get the static data
+	const staticPath = join(__dirname, '../../images');
+	// Send the static data
+	srv.use('/v1/client/static', e.static(staticPath));
 
 	// Statistics Route
 	srv.get('/v1/client/statistics', async (req, res) => {
