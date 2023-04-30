@@ -1,5 +1,5 @@
 const { Events } = require('discord.js');
-const voterList = new Set();
+const { pollData } = require('../../models/index');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -12,9 +12,9 @@ module.exports = {
 		if (customID[0] !== 'Poll') return;
 
 		// Get Voters
-		if (voterList.has(`${interaction.user.id}-${interaction.message.id}`))
-			return interaction.reply({ content: 'You have already voted on this poll.', ephemeral: true });
-		voterList.add(`${interaction.user.id}-${interaction.message.id}`);
+		const voterList = await pollData.findOne({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id });
+		if (voterList) return interaction.reply({ content: 'You have already voted on this poll.', ephemeral: true });
+		await pollData.create({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id, voted: true });
 
 		// Rebuild the embed
 		const pollEmbed = interaction.message.embeds[0];
