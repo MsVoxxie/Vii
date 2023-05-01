@@ -13,7 +13,11 @@ module.exports = {
 		if (message.author.bot) return;
 		// Check that the user is not in the timeout set
 		if (xpTimeout.has(message.author.id)) return;
-
+		// Get the guild level channel
+		const guildSettings = await Guild.findOne({ guildId: message.guild.id });
+		// Check if the guild has a level channel
+		if (!guildSettings.levelChannelId) return;
+		
 		// Grant the user xp
 		const dbResults = await grantUserXp(client, message, 15, 25);
 
@@ -22,10 +26,6 @@ module.exports = {
 
 		// TODO: Add a level up message
 		if (didUserLevel.leveled) {
-			// Get the guild level channel
-			const guildSettings = await Guild.findOne({ guildId: message.guild.id });
-			// Check if the guild has a level channel
-			if (!guildSettings.levelChannelId) return;
 			// Get the level channel
 			const levelChannel = await client.channels.cache.get(guildSettings.levelChannelId);
 			// Calculate the amount of xp needed to level up
@@ -35,7 +35,9 @@ module.exports = {
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setTitle('Level Up!')
-				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level}!\n[Jump to Level Message](${message.url})`)
+				.setDescription(
+					`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!\n[Jump to Level Message](${message.url})`
+				)
 				.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setThumbnail(message.member.displayAvatarURL({ dynamic: true }))
