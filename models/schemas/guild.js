@@ -12,6 +12,9 @@ const guildSchema = mongoose.Schema({
 	modLogId: {
 		type: String,
 	},
+	levelChannelId: {
+		type: String,
+	},
 
 	// Colors
 	guildColorHex: {
