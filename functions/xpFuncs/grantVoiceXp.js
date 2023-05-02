@@ -1,6 +1,6 @@
 const Logger = require('../logging/logger');
 const { Level, Guild } = require('../../models/index');
-const calculateLevelXp = require('./calculateLevelXp');
+const calculateLevelXp = require('.//calculateLevelXp');
 const grantVoiceLevel = require('./grantVoiceLevel');
 const giveRandomXp = require('./giveRandomXp');
 const { EmbedBuilder } = require('discord.js');
@@ -56,7 +56,7 @@ module.exports = async (client, min = 5, max = 25) => {
 					// Get the guild level channel
 					const levelChannel = await guild.channels.cache.get(guildSettings.levelChannelId);
 					// Calculate the amount of xp needed to level up
-					const xpNeeded = await calculateLevelXp(dbResults.level + 1);
+					const xpNeeded = calculateLevelXp(dbResults.level + 1);
 					const calcXp = xpNeeded - didUserLevel.xp;
 
 					// Build embed
