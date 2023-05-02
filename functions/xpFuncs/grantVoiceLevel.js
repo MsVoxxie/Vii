@@ -13,7 +13,7 @@ module.exports = async (client, guild, member, dbResults) => {
 	const xpNeeded = calculateLevelXp(level);
 
 	// Check if the user has leveled up
-	if (xp < xpNeeded) return false;
+	if (xp < xpNeeded) return { leveled: false };
 
 	// Level up the user
 	++level;
@@ -32,5 +32,5 @@ module.exports = async (client, guild, member, dbResults) => {
 	);
 
 	// Return true for external use
-	return true;
+	return { leveled: true, xp };
 };
