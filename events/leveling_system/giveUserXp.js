@@ -2,6 +2,7 @@ const { Events, EmbedBuilder } = require('discord.js');
 const { Guild } = require('../../models/index');
 const grantUserXp = require('../../functions/xpFuncs/grantUserXp');
 const grantUserLevel = require('../../functions/xpFuncs/grantUserLevel');
+const checkLevelRoles = require('../../functions/xpFuncs/checkLevelRoles');
 const calculateLevelXp = require('../../functions/xpFuncs/calculateLevelXp');
 const xpTimeout = new Set();
 
@@ -32,10 +33,13 @@ module.exports = {
 			const xpNeeded = calculateLevelXp(dbResults.level + 1);
 			const calcXp = xpNeeded - didUserLevel.xp;
 
+			// Check for level roles
+			const roleCheck = await checkLevelRoles(message.guild, message.member, dbResults.level + 1);
+			const roleText = `${roleCheck.addedRoles.length ? `Awarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}${roleCheck.removedRoles.length ? `Revoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setTitle('Level Up!')
-				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!\n[Jump to Level Message](${message.url})`)
+				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!\n${roleText}\n[Jump to Level Message](${message.url})`)
 				.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setThumbnail(message.member.displayAvatarURL({ dynamic: true }))

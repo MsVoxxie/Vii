@@ -2,6 +2,7 @@ const Logger = require('../logging/logger');
 const { Level, Guild } = require('../../models/index');
 const calculateLevelXp = require('.//calculateLevelXp');
 const grantVoiceLevel = require('./grantVoiceLevel');
+const checkLevelRoles = require('./checkLevelRoles');
 const giveRandomXp = require('./giveRandomXp');
 const { EmbedBuilder } = require('discord.js');
 
@@ -59,10 +60,14 @@ module.exports = async (client, min = 5, max = 25) => {
 					const xpNeeded = calculateLevelXp(dbResults.level + 1);
 					const calcXp = xpNeeded - didUserLevel.xp;
 
+					// Check for level roles
+					const roleCheck = await checkLevelRoles(guild, member, dbResults.level + 1);
+					const roleText = `${roleCheck.addedRoles.length ? `Awarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}${roleCheck.removedRoles.length ? `Revoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
+
 					// Build embed
 					const embed = new EmbedBuilder()
 						.setTitle('Level Up!')
-						.setDescription(`Congratulations ${member}!\nYou have leveled up to level ${dbResults.level + 1}!\nXp granted for being in a voice channel!`)
+						.setDescription(`Congratulations ${member}!\nYou have leveled up to level ${dbResults.level + 1}!\n${roleText}\nXp granted for being in a voice channel!`)
 						.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 						.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 						.setThumbnail(member.displayAvatarURL({ dynamic: true }))
