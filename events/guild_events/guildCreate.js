@@ -4,8 +4,8 @@ const Logger = require('../../functions/logging/logger');
 
 module.exports = {
 	name: Events.GuildCreate,
-	runType: 'infinite',
-	async execute(guild, client) {
+	runType: 'infinity',
+	async execute(client, guild) {
 		await Guild.findOneAndUpdate({ guildId: guild.id }, { guildId: guild.id }, { upsert: true });
 
 		if (client.debug) {

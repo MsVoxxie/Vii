@@ -3,8 +3,8 @@ const { pollData, pollVoterData } = require('../../models/index');
 
 module.exports = {
 	name: Events.InteractionCreate,
-	runType: 'infinite',
-	async execute(interaction, client) {
+	runType: 'infinity',
+	async execute(client, interaction) {
 		if (!interaction.isButton()) return;
 
 		// Split the custom ID

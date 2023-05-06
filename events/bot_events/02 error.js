@@ -3,7 +3,7 @@ const Logger = require('../../functions/logging/logger');
 
 module.exports = {
 	name: Events.Error,
-	runType: 'infinite',
+	runType: 'infinity',
 	async execute(error) {
 		Logger.error(error);
 	},

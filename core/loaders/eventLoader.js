@@ -20,13 +20,13 @@ module.exports = (client) => {
 			// Switch statement to determine how to load the event
 			switch (loadedEvent.runType) {
 				case 'single':
-					client.once(loadedEvent.name, (...args) => loadedEvent.execute(...args, client));
+					client.once(loadedEvent.name, (...args) => loadedEvent.execute(client, ...args));
 					eventTable.addRow(eventFolderName, loadedEvent.name, '✔ » Loaded', '«  Once  »');
 					break;
 
-				case 'infinite':
-					client.on(loadedEvent.name, (...args) => loadedEvent.execute(...args, client));
-					eventTable.addRow(eventFolderName, loadedEvent.name, '✔ » Loaded', '«Infinite»');
+				case 'infinity':
+					client.on(loadedEvent.name, (...args) => loadedEvent.execute(client, ...args));
+					eventTable.addRow(eventFolderName, loadedEvent.name, '✔ » Loaded', '«infinity»');
 					break;
 
 				case 'disabled':

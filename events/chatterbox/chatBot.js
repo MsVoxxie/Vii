@@ -13,8 +13,8 @@ const replyLengthLimit = 2000;
 
 module.exports = {
 	name: Events.MessageCreate,
-	runType: 'infinite',
-	async execute(message, client) {
+	runType: 'infinity',
+	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
 		if (!process.env.CHATTERBOX_CHANNELS.includes(message.channel.id)) return;

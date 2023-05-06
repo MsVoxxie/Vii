@@ -8,8 +8,8 @@ const xpTimeout = new Set();
 
 module.exports = {
 	name: Events.MessageCreate,
-	runType: 'infinite',
-	async execute(message, client) {
+	runType: 'infinity',
+	async execute(client, message) {
 		// Check that the user is not a bot
 		if (message.author.bot) return;
 		// Check that the user is not in the timeout set

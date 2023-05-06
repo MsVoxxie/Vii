@@ -14,7 +14,7 @@ module.exports = (client) => {
 		return moment(date).format('MMMM Do YYYY');
 	};
 
-	client.relativeTimestamp = (date) => {
+	client.relTimestamp = (date) => {
 		return `<t:${Math.floor(date / 1000)}:R>`;
 	};
 };
