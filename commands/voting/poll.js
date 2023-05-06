@@ -32,7 +32,7 @@ module.exports = {
 		const pollEmbed = new EmbedBuilder()
 			.setDescription(`**Question:**\n${question}`)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setFooter({ text: 'Note› All votes are anonymous.' })
+			.setFooter({ text: 'All votes are anonymous.' })
 			.setColor(settings.guildColorHex);
 
 		// Add the fields
