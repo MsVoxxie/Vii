@@ -20,6 +20,7 @@ const client = new Client({
 		GatewayIntentBits.GuildPresences,
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildEmojisAndStickers,
 	],
 	allowedMentions: {
 		parse: ['users', 'roles'],
@@ -52,6 +53,7 @@ client.events = new Collection();
 
 // Load Database
 client.mongoose = require('./core/loaders/mongooseLoader');
+require('./functions/helpers/arrayUtils')(client);
 require('./functions/helpers/timeFuncs')(client);
 require('./functions/database/util')(client);
 

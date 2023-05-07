@@ -6,7 +6,7 @@ module.exports = {
 	name: Events.ChannelDelete,
 	runType: 'infinity',
 	async execute(client, channel) {
-		// Get guild  settings
+		// Get guild settings
 		const settings = await client.getGuild(channel.guild);
 		if (settings.auditLogId === null) return;
 
