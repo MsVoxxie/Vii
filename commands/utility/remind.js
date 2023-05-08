@@ -52,7 +52,7 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
-			.setTitle('📨 Reminder Set')
+			.setTitle('Reminder Set 📨')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.setDescription(`Your reminder has been set for ${client.relTimestamp(reminderTime)} from now.\n**Reminder›** ${reminder}`);
 

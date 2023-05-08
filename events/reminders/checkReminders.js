@@ -20,7 +20,7 @@ module.exports = {
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setColor('#3cdefc')
-				.setTitle('📬 Reminder!')
+				.setTitle('Reminder 📬')
 				.setDescription(`**Reminder›** ${reminder.remindData}`)
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 
