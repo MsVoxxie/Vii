@@ -29,7 +29,7 @@ module.exports = {
 			await client.distube.setVolume(interaction, 25);
 
 			const embed = new EmbedBuilder()
-				.setColor(settings.guildColorHex)
+				.setColor(client.colors.vii)
 				.setTitle('**Searching Query**')
 				.setDescription(`**Searching»** ${query}`);
 

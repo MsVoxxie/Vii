@@ -43,7 +43,7 @@ module.exports = {
 				.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setThumbnail(message.member.displayAvatarURL({ dynamic: true }))
-				.setColor(guildSettings.guildColorHex);
+				.setColor(guildclient.colors.vii);
 
 			// Send the level up message
 			await levelChannel.send({ embeds: [embed] });

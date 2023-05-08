@@ -25,7 +25,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle(`**Queue Shuffled!**`)
 			.setDescription(`${interaction.member} shuffled the queue.`)
-			.setColor(settings.guildColorHex);
+			.setColor(client.colors.vii);
 		return interaction.followUp({ embeds: [embed] }).then((m) => {
 			setTimeout(() => m.delete(), 60 * 1000);
 		});

@@ -62,7 +62,7 @@ module.exports = {
 				const rankCard = new Rank()
 					.setStatus(fetchedMember?.presence?.status ? fetchedMember.presence.status : 'offline')
 					.setAvatar(fetchedMember.user.displayAvatarURL({ format: 'png', size: 512 }))
-					.setProgressBar([`#${settings.guildColorHex}`, '#1abef3'], 'GRADIENT')
+					.setProgressBar([`#${client.colors.vii}`, '#1abef3'], 'GRADIENT')
 					.setDiscriminator(fetchedMember.user.discriminator)
 					.setRequiredXP(calculateLevelXp(userLevel.level))
 					.setUsername(fetchedMember.user.username)
@@ -99,7 +99,7 @@ module.exports = {
 				// Build leaderboard embed
 				const embed = new EmbedBuilder()
 					.setAuthor({ name: `${interaction.guild.name}'s Top 10 Members` })
-					.setColor(settings.guildColorHex)
+					.setColor(client.colors.vii)
 					.setThumbnail(interaction.guild.iconURL({ dynamic: true }))
 					.addFields(
 						{ name: 'Guild Member', value: guildTop.map((m) => `<@${m.userId}> | Level» ${m.level}`).join('\n'), inline: true },

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const levelRolesSchema = mongoose.Schema({
+const levelRolesSchema = Schema({
 	guildId: {
 		type: String,
 		required: true,
@@ -19,4 +19,4 @@ const levelRolesSchema = mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('levelRoles', levelRolesSchema);
+module.exports = model('levelRoles', levelRolesSchema);

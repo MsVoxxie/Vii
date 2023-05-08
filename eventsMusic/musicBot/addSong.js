@@ -7,7 +7,7 @@ module.exports = {
 		const settings = await client.getGuild(queue.textChannel.guild);
 
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTitle('**Media added to Queue**')
 			.setThumbnail(song.thumbnail)
 			.setDescription(`**Queued»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Added By»** ${song.user}`);

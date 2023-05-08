@@ -41,7 +41,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle(`**Random ${animalSelection} Picture!**`)
 			.setImage(Animal.image)
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTimestamp();
 
 		// Send it

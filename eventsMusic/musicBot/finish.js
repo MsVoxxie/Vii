@@ -16,7 +16,7 @@ module.exports = {
 
 		const attachment = new AttachmentBuilder(`${join(__dirname, '../../images/vi/Goodbye.gif')}`, { name: 'Goodbye.gif' });
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTitle('**Queue Empty**')
 			.setDescription(`Queue is empty. Goodbye!`)
 			.setThumbnail('attachment://Goodbye.gif');

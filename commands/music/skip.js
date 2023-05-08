@@ -29,7 +29,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle(`**Song Skipped!**`)
 			.setDescription(`${interaction.member} skipped the current song.`)
-			.setColor(settings.guildColorHex);
+			.setColor(client.colors.vii);
 		return interaction.followUp({ embeds: [embed] }).then((m) => {
 			setTimeout(() => m.delete(), 60 * 1000);
 		});

@@ -22,7 +22,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setTitle('**Dictionary Search**')
 				.setDescription(`**Search Query»** ${definition.word}`)
-				.setColor(settings.guildColorHex)
+				.setColor(client.colors.vii)
 				.addFields({ name: '**Category»**', value: definition.category }, { name: '**Definition»**', value: definition.definition });
 
 			interaction.reply({ embeds: [embed] });

@@ -15,7 +15,7 @@ module.exports = {
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTitle('**Now Playing**')
 			.setThumbnail(song.thumbnail)
 			.setDescription(`**Playing»** [${song.name}](${song.url})\n**Duration»** \`${song.formattedDuration}\`\n**Requested By»** ${song.user}`);

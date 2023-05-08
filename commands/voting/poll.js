@@ -33,7 +33,7 @@ module.exports = {
 			.setDescription(`**Question:**\n${question}`)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.setFooter({ text: 'All votes are anonymous.' })
-			.setColor(settings.guildColorHex);
+			.setColor(client.colors.vii);
 
 		// Add the fields
 		if (choice1) pollEmbed.addFields({ name: choice1, value: '0', inline: true });

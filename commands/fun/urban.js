@@ -28,7 +28,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setTitle('**Urban Dictionary Search**')
 				.setDescription(`**Search Query»** [${searchQuery}](${result.permalink})`)
-				.setColor(settings.guildColorHex)
+				.setColor(client.colors.vii)
 				.addFields(
 					{ name: '**Definition»**', value: trim(result.definition, 1024) },
 					{ name: '**Example»**', value: trim(result.example, 1024) },

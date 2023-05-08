@@ -26,7 +26,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle(`**Queue Stopped!**`)
 			.setDescription(`${interaction.member} stopped the current queue.`)
-			.setColor(settings.guildColorHex);
+			.setColor(client.colors.vii);
 		return interaction.followUp({ embeds: [embed] }).then((m) => {
 			setTimeout(() => m.delete(), 60 * 1000);
 		});

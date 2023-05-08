@@ -1,22 +1,18 @@
 const { Schema, model } = require('mongoose');
 
-const pollVoterDataSchema = Schema({
+const reminderDataSchema = Schema({
 	userId: {
 		type: String,
 		required: true,
 	},
-	guildId: {
+	timeData: {
 		type: String,
 		required: true,
 	},
-	pollId: {
+	remindData: {
 		type: String,
 		required: true,
-	},
-	voted: {
-		type: Boolean,
-		default: false,
 	},
 });
 
-module.exports = model('PollVoterData', pollVoterDataSchema);
+module.exports = model('ReminderData', reminderDataSchema);

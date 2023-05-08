@@ -31,7 +31,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setDescription(`**Search Query»** ${searchQuery}\n**Result»** ${result.origin.title}`)
 				.setURL(result.origin.website.url)
-				.setColor(settings.guildColorHex)
+				.setColor(client.colors.vii)
 				.setTitle(result.origin.title)
 				.setTimestamp(Date.now())
 				.setImage(resultURL);

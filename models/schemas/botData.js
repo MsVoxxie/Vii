@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const botSchema = mongoose.Schema({
+const botSchema = Schema({
 	// ID's
 	clientId: {
 		type: String,
@@ -35,4 +35,4 @@ const botSchema = mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('botData', botSchema);
+module.exports = model('botData', botSchema);

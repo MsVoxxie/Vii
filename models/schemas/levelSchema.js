@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const levelSchema = mongoose.Schema({
+const levelSchema = Schema({
 	userId: {
 		type: String,
 		required: true,
@@ -19,4 +19,4 @@ const levelSchema = mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('Level', levelSchema);
+module.exports = model('Level', levelSchema);

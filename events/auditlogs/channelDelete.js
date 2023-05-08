@@ -20,7 +20,7 @@ module.exports = {
 
 		// Build Embed
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTitle('Channel Deleted')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 

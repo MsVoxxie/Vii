@@ -5,4 +5,5 @@ module.exports = {
 	levelRoles: require('./schemas/levelRoles'),
 	pollData: require('./schemas/pollData'),
 	pollVoterData: require('./schemas/pollVoterData'),
+	reminderData: require('./schemas/reminderData'),
 };

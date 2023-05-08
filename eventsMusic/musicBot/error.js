@@ -6,7 +6,7 @@ module.exports = {
 	async execute(channel, e, client) {
 		const settings = await client.getGuild(channel.guild);
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setTitle('**An error was encountered.**')
 			.setDescription(`Sorry about that!`);
 		if (channel) {

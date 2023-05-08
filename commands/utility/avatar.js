@@ -15,7 +15,7 @@ module.exports = {
 		const user = interaction.options.getUser('target') || interaction.user;
 
 		const embed = new EmbedBuilder()
-			.setColor(settings.guildColorHex)
+			.setColor(client.colors.vii)
 			.setAuthor({ name: `${user.username}'s Avatar`, iconURL: user.displayAvatarURL({ dynamic: true }) })
 			.setImage(user.displayAvatarURL({ dynamic: true, format: 'png', size: 1024 }));
 
