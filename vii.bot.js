@@ -20,6 +20,7 @@ const client = new Client({
 		GatewayIntentBits.GuildPresences,
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildMessageReactions,
 		GatewayIntentBits.GuildEmojisAndStickers,
 	],
 	allowedMentions: {
@@ -31,6 +32,9 @@ const client = new Client({
 client.debug = false;
 client.colors = {
 	vii: '#3cdefc',
+	success: '#00ff00',
+	error: '#ff0000',
+	warning: '#ffff00',
 };
 
 // Music Client
@@ -48,6 +52,17 @@ client.distube = new DisTube(client, {
 			emitEventsAfterFetching: true,
 		}),
 	],
+});
+
+// Giveaway Client
+const GiveawaysManager = require('./functions/database/giveaways');
+client.giveawayManager = new GiveawaysManager(client, {
+	default: {
+		botsCanWin: false,
+		embedColor: client.colors.vii,
+		embedColorEnd: client.colors.vii,
+		reaction: '🎁',
+	},
 });
 
 // Define Collections

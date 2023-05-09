@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField, AttachmentBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const calculateLevelXp = require('../../functions/xpFuncs/calculateLevelXp');
 const { Level } = require('../../models/index');
 const { Rank } = require('canvacord');
@@ -8,8 +8,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('level')
 		.setDescription('Get current level of a user or yourself')
-		.setDefaultMemberPermissions(PermissionsBitField.SendMessages)
 		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
 		.addSubcommand((subCommand) => subCommand.setName('leaderboard').setDescription('Get the leaderboard of the server'))
 		.addSubcommand((subCommand) =>
 			subCommand

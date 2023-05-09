@@ -6,4 +6,5 @@ module.exports = {
 	pollData: require('./schemas/pollData'),
 	pollVoterData: require('./schemas/pollVoterData'),
 	reminderData: require('./schemas/reminderData'),
+	giveawaysData: require('./schemas/giveawayData'),
 };

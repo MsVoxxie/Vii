@@ -1,12 +1,12 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { Guild } = require('../../models/index');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('configure')
 		.setDescription('Configure the bot for your server')
-		.setDefaultMemberPermissions(PermissionsBitField.ManageGuild)
 		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
 				.setName('auditlog')

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,7 +22,7 @@ module.exports = {
 				.setRequired(true)
 		)
 		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionsBitField.SendMessages),
+		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,
 		disabled: false,
