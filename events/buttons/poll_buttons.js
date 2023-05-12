@@ -19,7 +19,7 @@ module.exports = {
 
 		// Rebuild the embed
 		const pollEmbed = interaction.message.embeds[0];
-		if (!pollEmbed) return interaction.reply({ content: 'An error occurred.', ephemeral: true });
+		if (!pollEmbed) return interaction.reply({ content: 'An error occurred while retrieving data.', ephemeral: true });
 
 		// Get the current values
 		const firstChoice = pollEmbed.fields[0];
@@ -31,6 +31,7 @@ module.exports = {
 
 		// Retreive data from the database
 		const pollDataObject = await pollData.findOne({ guildId: interaction.guild.id, pollId: pollId });
+		if (!pollDataObject) return interaction.reply({ content: 'An error occurred while retrieving data.', ephemeral: true });
 
 		// Update the embed
 		switch (customID[1]) {
