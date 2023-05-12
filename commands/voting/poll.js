@@ -1,69 +1,57 @@
-const { PermissionFlagsBits, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { pollData } = require('../../models/index')
+const { SlashCommandBuilder, PermissionFlagsBits, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('poll')
-		.setDescription('Create a poll')
-		.addStringOption((option) => option.setName('question').setDescription('The question to ask').setRequired(true))
-		.addStringOption((option) => option.setName('choice1').setDescription('The text to use for the first button (Default Yes)').setRequired(false) )
-		.addStringOption((option) => option.setName('choice2').setDescription('The text to use for the second button (Default No)').setRequired(false) )
-		.addStringOption((option) => option.setName('choice3').setDescription('The text to use for the third button (Default None)').setRequired(false) )
-		.addStringOption((option) => option.setName('choice4').setDescription('The text to use for the fourth button (Default None)').setRequired(false) )
-		.addStringOption((option) => option.setName('choice5').setDescription('The text to use for the fifth button (Default None)').setRequired(false) )
-		.addStringOption((option) => option.setName('choice6').setDescription('The text to use for the sixth button (Default None)').setRequired(false) )
+		.setDescription('Poll Builder')
 		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+		.addSubcommand((subcommand) => subcommand.setName('create').setDescription('Create a poll')),
 	options: {
 		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
-		// Variables
-		const question = interaction.options.getString('question');
-		const choice1 = interaction.options.getString('choice1') || 'Yes';
-		const choice2 = interaction.options.getString('choice2') || 'No';
-		const choice3 = interaction.options.getString('choice3') || null;
-		const choice4 = interaction.options.getString('choice4') || null;
-		const choice5 = interaction.options.getString('choice5') || null;
-		const choice6 = interaction.options.getString('choice6') || null;
+		// Create Modal
+		const pollModal = new ModalBuilder().setCustomId('PollModal').setTitle('Poll Builder');
 
-		// Create the embed
-		const pollEmbed = new EmbedBuilder()
-			.setDescription(`**Question:**\n${question}`)
-			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setColor(client.colors.vii);
+		// Add Components to Modal
+		const pollTitle = new TextInputBuilder()
+			.setCustomId('Poll-Title')
+			.setLabel('Poll Title')
+			.setPlaceholder('Enter the title of the poll')
+			.setStyle(TextInputStyle.Short);
 
-		// Add the fields
-		if (choice1) pollEmbed.addFields({ name: choice1, value: '0', inline: true });
-		if (choice2) pollEmbed.addFields({ name: choice2, value: '0', inline: true });
-		if (choice3) pollEmbed.addFields({ name: choice3, value: '0', inline: true });
-		if (choice4) pollEmbed.addFields({ name: choice4, value: '0', inline: true });
-		if (choice5) pollEmbed.addFields({ name: choice5, value: '0', inline: true });
-		if (choice6) pollEmbed.addFields({ name: choice6, value: '0', inline: true });
+		const pollDescription = new TextInputBuilder()
+			.setCustomId('Poll-Description')
+			.setLabel('Poll Description')
+			.setPlaceholder('Enter the description of the poll')
+			.setStyle(TextInputStyle.Short);
 
-		// Send the embed
-		const replyObject = await interaction.reply({ embeds: [pollEmbed] });
+		const pollChoices = new TextInputBuilder()
+			.setCustomId('Poll-Choices')
+			.setLabel('Poll Choices (One per Line, Max 9)')
+			.setPlaceholder('Option 1\nOption 2\nOption 3\nOption 4\nOption 5\nOption 6\nOption 7\nOption 8\nOption 9')
+            .setMaxLength(200)
+			.setStyle(TextInputStyle.Paragraph);
 
-		// Add Buttons
-		const firstButtons = new ActionRowBuilder();
-		const secondButtons = new ActionRowBuilder();
-		
-		if (choice1) firstButtons.addComponents(new ButtonBuilder().setLabel(choice1).setCustomId(`Poll-C1-${replyObject.id}`).setStyle(ButtonStyle.Success));
-		if (choice2) firstButtons.addComponents(new ButtonBuilder().setLabel(choice2).setCustomId(`Poll-C2-${replyObject.id}`).setStyle(ButtonStyle.Success));
-		if (choice3) firstButtons.addComponents(new ButtonBuilder().setLabel(choice3).setCustomId(`Poll-C3-${replyObject.id}`).setStyle(ButtonStyle.Success));
-		if (choice4) secondButtons.addComponents(new ButtonBuilder().setLabel(choice4).setCustomId(`Poll-C4-${replyObject.id}`).setStyle(ButtonStyle.Success));
-		if (choice5) secondButtons.addComponents(new ButtonBuilder().setLabel(choice5).setCustomId(`Poll-C5-${replyObject.id}`).setStyle(ButtonStyle.Success));
-		if (choice6) secondButtons.addComponents(new ButtonBuilder().setLabel(choice6).setCustomId(`Poll-C6-${replyObject.id}`).setStyle(ButtonStyle.Success));
+		const pollChannel = new TextInputBuilder()
+			.setCustomId('Poll-Channel')
+			.setLabel('Poll Channel')
+			.setPlaceholder('Channel Id or leave blank for current channel')
+            .setRequired(false)
+			.setStyle(TextInputStyle.Short);
 
-		// Try and figure out which rows to send
-		const actionRows = [];
-		if (firstButtons.components.length > 0) actionRows.push(firstButtons);
-		if (secondButtons.components.length > 0) actionRows.push(secondButtons);
+		// Create Action Rows
+		const titleRow = new ActionRowBuilder().addComponents(pollTitle);
+		const descriptionRow = new ActionRowBuilder().addComponents(pollDescription);
+		const choicesRow = new ActionRowBuilder().addComponents(pollChoices);
+		const channelRow = new ActionRowBuilder().addComponents(pollChannel);
 
-		await interaction.editReply({ components: actionRows });
+		// Add Action Rows to Modal
+		pollModal.addComponents(titleRow, descriptionRow, choicesRow, channelRow);
 
-		// Add the poll to the database
-		await pollData.create({ guildId: interaction.guild.id, pollId: replyObject.id });
+		// Send Modal
+		await interaction.showModal(pollModal);
 	},
 };

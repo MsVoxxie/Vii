@@ -9,29 +9,13 @@ const pollDataSchema = Schema({
 		type: String,
 		required: true,
 	},
-	choice1: {
-		type: Number,
-		default: 0,
+	pollChoices: {
+		type: Array,
+		required: true,
 	},
-	choice2: {
-		type: Number,
-		default: 0,
-	},
-	choice3: {
-		type: Number,
-		default: 0,
-	},
-	choice4: {
-		type: Number,
-		default: 0,
-	},
-	choice5: {
-		type: Number,
-		default: 0,
-	},
-	choice6: {
-		type: Number,
-		default: 0,
+	pollVotes: {
+		type: Array,
+		required: true,
 	},
 });
 
