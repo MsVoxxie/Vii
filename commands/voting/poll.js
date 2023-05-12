@@ -30,16 +30,17 @@ module.exports = {
 
 		const pollChoices = new TextInputBuilder()
 			.setCustomId('Poll-Choices')
-			.setLabel('Poll Choices (One per Line, Max 9)')
-			.setPlaceholder('Option 1\nOption 2\nOption 3\nOption 4\nOption 5\nOption 6\nOption 7\nOption 8\nOption 9')
-            .setMaxLength(200)
-			.setStyle(TextInputStyle.Paragraph);
+			.setLabel('Poll Choices (One per Line)')
+			.setPlaceholder('Option 1\nOption 2\nOption 3\nOption 4\nOption 5\nOption 6\nOption 7\nOption 8\nOption 9\nEtc...')
+			.setStyle(TextInputStyle.Paragraph)
+			.setMinLength(1)
+			.setMaxLength(200);
 
 		const pollChannel = new TextInputBuilder()
 			.setCustomId('Poll-Channel')
 			.setLabel('Poll Channel')
 			.setPlaceholder('Channel Id or leave blank for current channel')
-            .setRequired(false)
+			.setRequired(false)
 			.setStyle(TextInputStyle.Short);
 
 		// Create Action Rows
