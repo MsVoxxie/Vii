@@ -17,16 +17,15 @@ module.exports = {
         const userChoice = interaction.values[0];
 
         // Get Voters
-        const newVoterData = await pollVoterData.findOneAndUpdate({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id }, { voted: true, lastVote: userChoice }, { new: true });
-        console.log(newVoterData);
+        const voterList = await pollVoterData.findOne({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id });
+        if (voterList) return interaction.reply({ content: 'You have already voted on this poll.', ephemeral: true });
+        await pollVoterData.create({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id, voted: true });
 
         // Retreive data from the database
         const pollDataObject = await pollData.findOne({ guildId: interaction.guild.id, pollId: pollId }).lean();
         if (!pollDataObject) return interaction.reply({ content: 'An error occurred while retrieving data.', ephemeral: true });
 
         // Update the database votes
-        const lastCount = pollDataObject.pollVotes[userChoice.lastVote] - 1;
-        pollDataObject.pollVotes[userChoice.lastVote] = lastCount;
         const newCount = pollDataObject.pollVotes[userChoice] + 1;
         pollDataObject.pollVotes[userChoice] = newCount;
 
