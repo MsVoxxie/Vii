@@ -16,19 +16,27 @@ module.exports = {
         // Get Values
         const userChoice = interaction.values[0];
 
-        // Get Voters
-        const voterList = await pollVoterData.findOne({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id });
-        if (voterList) return interaction.reply({ content: 'You have already voted on this poll.', ephemeral: true });
-        await pollVoterData.create({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: interaction.message.id, voted: true });
-
         // Retreive data from the database
         const pollDataObject = await pollData.findOne({ guildId: interaction.guild.id, pollId: pollId }).lean();
         if (!pollDataObject) return interaction.reply({ content: 'An error occurred while retrieving data.', ephemeral: true });
 
+        // Get the user's previous vote
+        let userVoteData = await pollVoterData.findOne({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: pollId }).lean();
+        if (!userVoteData) userVoteData = await pollVoterData.create({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: pollId, lastVote: null });    
+        
         // Update the database votes
-        const newCount = pollDataObject.pollVotes[userChoice] + 1;
-        pollDataObject.pollVotes[userChoice] = newCount;
-
+        const updatedSelection = pollDataObject.pollVotes[userChoice] + 1;
+        pollDataObject.pollVotes[userChoice] = updatedSelection;
+        
+        // If the user has already voted, update their old vote
+        if (userVoteData.lastVote !== null) {
+            const oldSelection = pollDataObject.pollVotes[userVoteData.lastVote] - 1;
+            pollDataObject.pollVotes[userVoteData.lastVote] = oldSelection;
+            userVoteData = await pollVoterData.findOneAndUpdate({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: pollId }, { lastVote: userChoice }, { new: true });
+        } else {
+            userVoteData = await pollVoterData.findOneAndUpdate({ userId: interaction.user.id, guildId: interaction.guild.id, pollId: pollId }, { lastVote: userChoice }, { new: true });
+        }
+        
         // Update the database
         await pollData.updateOne({ guildId: interaction.guild.id, pollId: pollId }, { pollVotes: pollDataObject.pollVotes }, { new: true });
 

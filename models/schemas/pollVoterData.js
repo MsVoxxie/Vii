@@ -13,9 +13,9 @@ const pollVoterDataSchema = Schema({
 		type: String,
 		required: true,
 	},
-	voted: {
-		type: Boolean,
-		default: false,
+	lastVote: {
+		type: Number,
+		default: null,
 	},
 });
 
