@@ -20,6 +20,7 @@ module.exports = {
 		const weatherData = await fetch(`https://wttr.in/${locale}?format=j1`).then((response) => {
 			return response.json();
 		});
+		if (!weatherData) return interaction.reply({ content: 'Unable to fetch weather data.', ephemeral: true });
 		const currentConditions = weatherData.current_condition[0];
 
 		// Create the embed
