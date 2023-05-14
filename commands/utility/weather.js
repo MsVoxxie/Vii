@@ -26,17 +26,19 @@ module.exports = {
 		// Create the embed
 		const embed = new EmbedBuilder()
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+			.setThumbnail(`https:${weatherData.current.condition.icon}`)
 			.setTitle(`Current Weather in ${weatherData.location.name}`)
 			.setColor(client.colors.vii)
+			.setDescription(`**Currently›** ${weatherData.current.condition.text}\n**Last Updated›** <t:${weatherData.current.last_updated_epoch}:R>`)
 			.addFields(
 				{
 					name: 'Temperature',
-					value: `${weatherData.current.temp_f}°F / ${weatherData.current.temp_c}°C`,
+					value: `${weatherData.current.temp_f}°F\n${weatherData.current.temp_c}°C`,
 					inline: true,
 				},
 				{
 					name: 'Feels Like',
-					value: `${weatherData.current.feelslike_f}°F / ${weatherData.current.feelslike_c}°C`,
+					value: `${weatherData.current.feelslike_f}°F\n${weatherData.current.feelslike_c}°C`,
 					inline: true,
 				},
 				{
@@ -46,7 +48,7 @@ module.exports = {
 				},
 				{
 					name: 'Wind',
-					value: `${weatherData.current.wind_mph} MPH / ${weatherData.current.wind_kph} KPH`,
+					value: `${weatherData.current.wind_mph} MPH\n${weatherData.current.wind_kph} KPH`,
 					inline: true,
 				},
 				{
@@ -61,17 +63,17 @@ module.exports = {
 				},
 				{
 					name: 'Precipitation',
-					value: `${weatherData.current.precip_in} in / ${weatherData.current.precip_mm} mm`,
+					value: `${weatherData.current.precip_in} in\n${weatherData.current.precip_mm} mm`,
 					inline: true,
 				},
 				{
 					name: 'Pressure',
-					value: `${weatherData.current.pressure_in} in / ${weatherData.current.pressure_mb} mb`,
+					value: `${weatherData.current.pressure_in} in\n${weatherData.current.pressure_mb} mb`,
 					inline: true,
 				},
 				{
 					name: 'Visibility',
-					value: `${weatherData.current.vis_miles} mi / ${weatherData.current.vis_km} km`,
+					value: `${weatherData.current.vis_miles} mi\n${weatherData.current.vis_km} km`,
 					inline: true,
 				}
 			);
