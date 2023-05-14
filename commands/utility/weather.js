@@ -2,24 +2,28 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('wttr')
+		.setName('weather')
 		.setDescription('Fetch weather data on a specified region.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
-		.addStringOption((option) => option.setName('location').setDescription('The location to fetch weather data for.').setRequired(true)),
+		.addStringOption((option) => option.setName('location').setDescription('Use Long Location Format').setRequired(true)),
 	options: {
 		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Get the locale
+		let locale = interaction.options.getString('location');
+		locale = locale.toLowerCase();
+		locale = locale.charAt(0).toUpperCase() + locale.slice(1);
+
 		// Fetch the weather data
-		const locale = interaction.options.getString('location');
-		const weatherData = await fetch(`https://wttr.in/${locale}/?v=j1`).then((response) => {
+		const weatherData = await fetch(`https://wttr.in/${locale}?format=j1`).then((response) => {
 			return response.json();
 		});
 		const currentConditions = weatherData.current_condition[0];
 
 		// Create the embed
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.setTitle(`Current Weather in ${locale}`)
 			.setColor(client.colors.vii)
@@ -42,10 +46,11 @@ module.exports = {
 				{
 					name: 'Precipitation',
 					value: `${currentConditions.precipInches}in / ${currentConditions.precipMM}mm`,
+					inline: true,
 				},
 				{
 					name: 'Wind',
-					value: `${currentConditions.windspeedMiles}mph / ${currentConditions.windspeedKmph}kmph`,
+					value: `${currentConditions.windspeedMiles}mph / ${currentConditions.windspeedKmph}kph`,
 					inline: true,
 				},
 				{
