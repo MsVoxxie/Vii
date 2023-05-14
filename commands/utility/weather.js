@@ -7,7 +7,7 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
 		.addStringOption((option) => option.setName('location').setDescription('Use Long Location Format').setRequired(true)),
 	options: {
-		devOnly: true,
+		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
