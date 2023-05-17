@@ -5,7 +5,8 @@ module.exports = {
 		.setName('weather')
 		.setDescription('Fetch weather data on a specified region.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
-		.addStringOption((option) => option.setName('location').setDescription('Use Long Location Format').setRequired(true)),
+		.addStringOption((option) => option.setName('location').setDescription('Use Long Location Format').setRequired(true))
+		.addBooleanOption((option) => option.setName('ephemeral').setDescription('Make the response ephemeral (Private)')),
 	options: {
 		devOnly: false,
 		disabled: false,
@@ -16,6 +17,7 @@ module.exports = {
 
 		// Get the locale
 		const locale = interaction.options.getString('location');
+		const ephemeral = interaction.options.getBoolean('ephemeral') || false;
 
 		// Fetch the weather data
 		const weatherData = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locale}&aqi=no`).then((response) =>
@@ -79,6 +81,6 @@ module.exports = {
 			);
 
 		// Send the embed
-		await interaction.reply({ embeds: [embed] });
+		await interaction.reply({ embeds: [embed], ephemeral: ephemeral });
 	},
 };

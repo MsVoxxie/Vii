@@ -15,7 +15,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 // and deploy your commands!
 (async () => {
 	try {
-		Logger.info(`Started refreshing ${commands.length} application (/) commands.`);
+		Logger.info(`Started clearing application (/) commands.`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
