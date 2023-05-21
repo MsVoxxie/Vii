@@ -1,6 +1,6 @@
 const { pollData } = require('../../models/index');
 const generatePieChart = require('../../functions/helpers/generatePieChart');
-const { Events, EmbedBuilder, StringSelectMenuBuilder, ActionRowBuilder } = require('discord.js');
+const { Events, EmbedBuilder, StringSelectMenuBuilder, ActionRowBuilder, codeBlock } = require('discord.js');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -46,9 +46,10 @@ module.exports = {
 		const pollSelectMenuRow = new ActionRowBuilder().addComponents(pollSelectMenu);
         
 		// Build Embed
+		const pollDesc = `${codeBlock(pollDescription)}\n> There are **${pollChoices.length}** choices.\n> Total Votes› **0**`;
 		const pollEmbed = new EmbedBuilder()
 			.setTitle(pollTitle)
-			.setDescription(`\`\`\`${pollDescription}\`\`\`\n> There are **${pollChoices.length}** choices available for this poll.\n\n${pollChoices.map((choice, index) => `${index + 1}. ${choice}`).join('\n')}`)
+			.setDescription(pollDesc)
 			.setImage(pieChart)
 			.setColor(client.colors.vii)
 			.setFooter({ text: `Poll created by ${interaction.user.tag}`, iconURL: interaction.member.displayAvatarURL({ dynamic: true }) });
@@ -57,6 +58,11 @@ module.exports = {
         await pollData.create({
             guildId: interaction.guild.id,
             pollId: interaction.id,
+			pollData: {
+				title: pollTitle,
+				description: pollDescription,
+				channel: pollChannel.id,
+			},
             pollChoices: pollChoices,
             pollVotes: pollValues,
         });

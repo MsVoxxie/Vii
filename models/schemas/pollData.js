@@ -9,6 +9,22 @@ const pollDataSchema = Schema({
 		type: String,
 		required: true,
 	},
+	pollData: {
+		type: Object,
+		required: true,
+		title: {
+			type: String,
+			required: true,
+		},
+		description: {
+			type: String,
+			required: true,
+		},
+		channel: {
+			type: String,
+			required: true,
+		},
+	},
 	pollChoices: {
 		type: Array,
 		required: true,
@@ -16,6 +32,10 @@ const pollDataSchema = Schema({
 	pollVotes: {
 		type: Array,
 		required: true,
+	},
+	pollVoters: {
+		type: Array,
+		default: [],
 	},
 });
 
