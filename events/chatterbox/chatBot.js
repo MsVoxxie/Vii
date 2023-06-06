@@ -13,7 +13,7 @@ const replyLengthLimit = 2000;
 
 module.exports = {
 	name: Events.MessageCreate,
-	runType: 'infinity',
+	runType: 'disabled',
 	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
