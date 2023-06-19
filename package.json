@@ -31,7 +31,7 @@
     "mongoose": "^7.0.4",
     "nanoid": "^4.0.2",
     "node-cron": "^3.0.2",
-    "openai": "^3.2.1",
+    "openai": "^3.3.0",
     "quickchart-js": "^3.1.2",
     "vm": "^0.1.0",
     "word-definition": "^2.1.6"
