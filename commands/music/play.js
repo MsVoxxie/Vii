@@ -37,7 +37,7 @@ module.exports = {
 				setTimeout(() => m.delete(), 60 * 1000);
 			});
 		} catch (error) {
-			return interaction.followUp({ content: 'Something went wrong, Please try again!' }).then((m) => {
+			return interaction.followUp({ content: `${error.message}` }).then((m) => {
 				setTimeout(() => m.delete(), 60 * 1000);
 			});
 		}
