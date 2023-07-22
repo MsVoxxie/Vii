@@ -4,6 +4,7 @@ module.exports = {
 	name: 'error',
 	runType: 'on',
 	async execute(channel, e, client) {
+		console.error(e.message);
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
 			.setTitle('**An error was encountered.**')
