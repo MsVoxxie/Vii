@@ -21,6 +21,7 @@ const unitList = new Map([
 		{
 			regex: /([0-9,.]+)(lbs|lb|pounds|pound)/gm,
 			convert: (t) => t * 0.45359237,
+			decimals: 3,
 			conversionUnit: 'kg',
 		},
 	],
@@ -29,7 +30,24 @@ const unitList = new Map([
 		{
 			regex: /([0-9,.]+)(kgs|kg|kilograms|kilogram)/gm,
 			convert: (t) => t * 2.205,
+			decimals: 3,
 			conversionUnit: 'pounds',
+		},
+	],
+	[
+		'milligrams',
+		{
+			regex: /([0-9,.]+)(mg|mgs|milligram|milligrams)/gm,
+			convert: (t) => t / 1000,
+			conversionUnit: 'grams',
+		},
+	],
+	[
+		'grams',
+		{
+			regex: /([0-9,.]+)(gram|grams)/gm,
+			convert: (t) => t * 1000,
+			conversionUnit: 'miligrams',
 		},
 	],
 	[
@@ -85,7 +103,7 @@ const unitList = new Map([
 	[
 		'miles',
 		{
-			regex: /([0-9,.]+)(mi|miles|mile)/gm,
+			regex: /([0-9,.]+)(mi |miles|mile)/gm,
 			convert: (t) => t * 1.609,
 			conversionUnit: 'km',
 		},
