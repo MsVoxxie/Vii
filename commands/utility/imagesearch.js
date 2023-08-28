@@ -10,7 +10,7 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 	options: {
 		devOnly: false,
-		disabled: false,
+		disabled: true,
 	},
 	async execute(client, interaction, settings) {
 		const searchQuery = interaction.options.getString('query');
