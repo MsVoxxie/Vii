@@ -10,31 +10,34 @@ module.exports = {
 	async execute(client, interaction, settings) {
 		// Message Parser
 		const parseMessage = (data, user) => {
-			const concatenated = data.replace('°', '').replace(/(?<=\d) /gm, '').toLowerCase() + ' ';
+			const fieldData = [];
+			const concatenated =
+				data
+					.replace('°', '')
+					.replace(/(?<=\d) /gm, '')
+					.toLowerCase() + ' ';
 			const result = doConversions(concatenated, user);
 			if (!result) return { success: false };
 
 			const embed = new EmbedBuilder();
-			for (let i = 0; i < result.length; i++) {
-				if (i >= 25) break;
-				embed.addFields({ name: `Conversion #${i + 1}`, value: `${result[i].from} **➟** ${result[i].to}` });
-			}
 			embed
+				.addFields(
+					{ name: `From`, value: `${result.map((f) => f.from).join('\n')}`, inline: true },
+					{ name: 'To', value: `${result.map((f) => f.to).join('\n')}`, inline: true }
+				)
 				.setTitle(`${interaction.targetMessage.author.username}`)
 				.setDescription(data)
 				.setColor(client.colors.vii)
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-				.setFooter({ text: 'Automatic Unit Conversion' });
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 			return { embed, success: true };
 		};
 
-        const parseResult = parseMessage(interaction.targetMessage.content, interaction.user)
-        
-        if(parseResult.success){
-            interaction.reply({ embeds: [parseResult.embed] });
-        } else {
-            interaction.reply({ content: 'Nothing to Convert!', ephemeral: true })
-        }
+		const parseResult = parseMessage(interaction.targetMessage.content, interaction.user);
 
+		if (parseResult.success) {
+			interaction.reply({ embeds: [parseResult.embed] });
+		} else {
+			interaction.reply({ content: 'Nothing to Convert!', ephemeral: true });
+		}
 	},
 };

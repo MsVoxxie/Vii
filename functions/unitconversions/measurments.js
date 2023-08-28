@@ -67,6 +67,14 @@ const unitList = new Map([
 		},
 	],
 	[
+		'yards',
+		{
+			regex: /([0-9,.]+)(yards|yard|yd|yds)/gm,
+			convert: (t) => t * 0.9144,
+			conversionUnit: 'meters',
+		},
+	],
+	[
 		'kilometers',
 		{
 			regex: /([0-9,.]+)(kilometers|kilometer|km |kms )/gm,
@@ -148,7 +156,7 @@ const doConversions = (data, user) => {
 	const converted = [];
 	for (const [name, value] of unitList) {
 		const matches = data.matchAll(value.regex);
-		for (const match of matches) {;
+		for (const match of matches) {
 			const unitConversion = value.convert(match[1], match, user);
 			if (!unitConversion) continue;
 			converted.push({
