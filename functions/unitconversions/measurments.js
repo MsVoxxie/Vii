@@ -85,7 +85,7 @@ const unitList = new Map([
 	[
 		'miles',
 		{
-			regex: /([0-9,.]+)(miles|mile)/gm,
+			regex: /([0-9,.]+)(mi|miles|mile)/gm,
 			convert: (t) => t * 1.609,
 			conversionUnit: 'km',
 		},
