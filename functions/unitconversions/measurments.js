@@ -17,6 +17,22 @@ const metersToFeet = (m) => {
 
 const unitList = new Map([
 	[
+		'milliliter',
+		{
+			regex: /([0-9,.]+)(ml|milliliter|lillileters)/gm,
+			convert: (t) => t / 1000,
+			conversionUnit: 'liter',
+		},
+	],
+	[
+		'liter',
+		{
+			regex: /([0-9,.]+)(l|liter|liters)/gm,
+			convert: (t) => t * 1000,
+			conversionUnit: 'milliliter',
+		},
+	],
+	[
 		'pounds',
 		{
 			regex: /([0-9,.]+)(lbs|lb|pounds|pound)/gm,
