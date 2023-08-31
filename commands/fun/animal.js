@@ -29,7 +29,7 @@ module.exports = {
 	},
 	async execute(client, interaction, settings) {
 		const animalSelection = interaction.options.getString('choice');
-		const animalEndpoint = `https://some-random-api.ml/animal/${animalSelection}`;
+		const animalEndpoint = `https://some-random-api.com/animal/${animalSelection}`;
 
 		// Defer, Things take time.
 		await interaction.deferReply();
