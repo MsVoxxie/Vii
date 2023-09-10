@@ -13,11 +13,12 @@ module.exports = {
 	},
 	async execute(client, interaction, settings) {
 		const user = interaction.options.getUser('target') || interaction.user;
+		const member = interaction.guild.members.cache.get(user.id);
 
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
-			.setAuthor({ name: `${user.username}'s Avatar`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-			.setImage(user.displayAvatarURL({ dynamic: true, format: 'png', size: 1024 }));
+			.setAuthor({ name: `${member.displayName}'s Avatar`, iconURL: member.displayAvatarURL({ dynamic: true }) })
+			.setImage(member.displayAvatarURL({ dynamic: true, format: 'png', size: 1024 }));
 
 		return interaction.reply({ embeds: [embed] });
 	},

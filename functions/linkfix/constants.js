@@ -15,10 +15,6 @@ module.exports.URLRegexes = {
 	X_DOT_COM: /https?:\/\/(?:(?:www|m(?:obile)?)\.)?()x\.com\/(?:(?:i\/web|[^/]+)\/status|statuses)\/(\d+)/,
 };
 
-module.exports.Favicons = {
-	TWITTER: 'https://abs.twimg.com/icons/apple-touch-icon-192x192.png',
-};
-
 module.exports.Colors = {
 	TWITTER: 0x1da1f2,
 };
