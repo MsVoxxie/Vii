@@ -1,6 +1,7 @@
 const { Events } = require('discord.js');
 const { botData } = require('../../models');
 const Logger = require('../../functions/logging/logger');
+const { ViiEmojis } = require('../../images/icons/emojis');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -27,7 +28,7 @@ module.exports = {
 				// Execute Command
 				if (interaction.guild) {
 					const settings = await client.getGuild(interaction.guild);
-					await command.execute(client, interaction, settings);
+					await command.execute(client, interaction, settings, ViiEmojis);
 				} else {
 					await command.execute(client, interaction);
 				}

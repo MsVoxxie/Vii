@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const { Favicons } = require('../../images/favicons/favs');
+const { Favicons } = require('../../images/icons/favs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
