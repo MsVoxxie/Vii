@@ -16,7 +16,7 @@ module.exports = {
 				`Uwaah! I'm awake!\nDoing my best with ${wsPing} response times!`,
 				`${client.user.username}, Reporting for Duty!\nOperating within ${wsPing} response times!`,
 				`I'm here, I'm here!\nMy response time is ${wsPing}!`,
-				`Sorry ${msg.member.displayName}, I'm here now!\nResponse time is ${wsPing}!`,
+				`Ah! Sorry ${msg.member.displayName}, I'm here now!\nResponse time is ${wsPing}!`,
 			];
 			const randReply = replies[Math.floor(Math.random() * replies.length)];
 			msg.reply(randReply);

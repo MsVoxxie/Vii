@@ -10,7 +10,7 @@ module.exports = {
 		const randEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 		const tyRegex = /((thank you|thank?s|) vii)/;
 
-		if (tyRegex.test(message.content)) {
+		if (tyRegex.test(message.content.toLowerCase())) {
 			await message.react(randEmoji);
 		}
 	},
