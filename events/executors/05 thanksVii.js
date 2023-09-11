@@ -8,7 +8,7 @@ module.exports = {
 		//People were nice to me, show them a nice emoji.
 		const emojis = [ViiEmojis['VIIAWE'], ViiEmojis['VIIHAPPY']];
 		const randEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-		const tyRegex = /((thank you|thank?s|) vii)/;
+		const tyRegex = /((thank you|thank?s) vii)/i;
 
 		if (tyRegex.test(message.content.toLowerCase())) {
 			await message.react(randEmoji);

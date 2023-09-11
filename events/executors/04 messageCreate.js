@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, messageLink } = require('discord.js');
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -20,6 +20,13 @@ module.exports = {
 			];
 			const randReply = replies[Math.floor(Math.random() * replies.length)];
 			msg.reply(randReply);
+		}
+
+		//Fish!
+		if (command === 'fish') {
+			msg.channel.send(
+				'[Fi.sh](https://fish.voxxie.me/the/carp/is/a/hardy/greenish/brown/fish/it/is/native/to/eurasia/but/has/been/introduced/into/northamerica/and/elsewhere/a/large-scaled/fish/with/two/barbels/on/each/side/of/its/upper/jaw/the/carp/lives/alone/or/in/small/schools/in/quiet/weedy/mud-bottomed/ponds/lakes/and/rivers/carp.mp4)'
+			);
 		}
 	},
 };
