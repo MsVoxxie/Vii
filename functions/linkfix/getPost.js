@@ -1,17 +1,11 @@
 const { URLRegexes } = require('./constants');
-const { TwitterApi } = require('twitter-api-v2');
-const appLogin = new TwitterApi({
-	appKey: process.env.TWITTER_API_KEY,
-	appSecret: process.env.TWITTER_API_SECRET,
-	accessToken: process.env.TWITTER_ACCESS_TOKEN,
-	accessSecret: process.env.TWITTER_ACCESS_SECRET,
-});
+// const { Auth } = require('rettiwt-auth');
+const { Rettiwt } = require('rettiwt-api');
 
+const twitClient = new Rettiwt(process.env.TWITTER_API);
 
 async function getPost(tweetID) {
-	const appClient = await appLogin.appLogin();
-	const tweetData = await appClient.v1.singleTweet(tweetID);
-	// const tweetData = await appClient.v1.verifyCredentials();
+	const tweetData = twitClient.tweet.details(tweetID).then((res) => res);
 	return tweetData;
 }
 
