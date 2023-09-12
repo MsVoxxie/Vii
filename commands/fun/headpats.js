@@ -4,7 +4,7 @@ const Canvas = require('canvas');
 const path = require('path');
 
 module.exports = {
-	data: new ContextMenuCommandBuilder().setName('Head Pat!').setType(ApplicationCommandType.User),
+	data: new ContextMenuCommandBuilder().setName('Headpat!').setType(ApplicationCommandType.User),
 	options: {
 		devOnly: false,
 		disabled: false,
