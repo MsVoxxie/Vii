@@ -2,7 +2,7 @@ const { Events, AttachmentBuilder } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 
 const configuration = new Configuration({
-	apiKey: process.env.OPENAI_KEY,
+	basePath: 'http://192.168.50.226:8888/v1',
 });
 const AI = new OpenAIApi(configuration);
 
@@ -86,7 +86,7 @@ module.exports = {
 
 			// Generate response
 			const res = await AI.createChatCompletion({
-				model: 'gpt-3.5-turbo',
+				model: 'lunademo',
 				messages: conversationLog,
 				max_tokens: replyLengthLimit,
 				temperature: 0.9,
