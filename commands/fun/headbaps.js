@@ -4,7 +4,7 @@ const Canvas = require('canvas');
 const path = require('path');
 
 module.exports = {
-	data: new ContextMenuCommandBuilder().setName('Head Pat!').setType(ApplicationCommandType.User),
+	data: new ContextMenuCommandBuilder().setName('Head Bap!').setType(ApplicationCommandType.User),
 	options: {
 		devOnly: false,
 		disabled: false,
@@ -14,14 +14,14 @@ module.exports = {
 		const intTarget = await interaction.targetMember;
 		const avatarURL = intTarget.displayAvatarURL({ extension: 'png' });
 
-		//Generate PetPet
-		const petpet = await generatePetPet(avatarURL, { resolution: 128, delay: 25, backgroundColor: null });
+		//Generate BapBap
+		const petpet = await generatePetPet(avatarURL, { resolution: 128, delay: 40, backgroundColor: null });
 
 		//Send it!
-		await interaction.reply({ files: [{ name: 'petpet.gif', attachment: petpet }] });
+		await interaction.reply({ files: [{ name: 'bap.gif', attachment: petpet }] });
 
-		// Was it vibot who got patted?
-		const randRep = ['Hey that tickles!', 'Myow!', 'Meow!', 'Mrah!', 'Hehe!', 'Aah, stop that!'];
+		// Was it vibot who got bapped?
+		const randRep = ['Hey! That hurts!', 'Waah!', 'Uweh!', 'Whyy!', 'Meaaan!', 'Aah, stop that!'];
 		const randQuip = randRep[Math.floor(Math.random() * randRep.length)];
 		if (intTarget.id === client.user.id) {
 			interaction.channel.send(randQuip);
@@ -32,7 +32,7 @@ module.exports = {
 //Generate PetPet Function
 async function generatePetPet(avatarURL, options = {}) {
 	//Definitions
-	const FRAMES = 10;
+	const FRAMES = 4;
 
 	const petGifCache = [];
 
@@ -61,12 +61,12 @@ async function generatePetPet(avatarURL, options = {}) {
 
 		const j = i < FRAMES / 2 ? i : FRAMES - i;
 
-		const width = 0.8 + j * 0.02;
-		const height = 0.8 - j * 0.05;
-		const offsetX = (1 - width) * 0.5 + 0.1;
+		const width = 0.8 - j * 0.02;
+		const height = 0.7 - j * 0.05;
+		const offsetX = (1 - width) * -0.5 + 0.1;
 		const offsetY = 1 - height - 0.08;
 
-		if (i == petGifCache.length) petGifCache.push(await Canvas.loadImage(path.resolve(__dirname, `../../images/headpats/pet${i}.gif`)));
+		if (i == petGifCache.length) petGifCache.push(await Canvas.loadImage(path.resolve(__dirname, `../../images/headbaps/bap${i}.gif`)));
 
 		ctx.drawImage(avatar, options.resolution * offsetX, options.resolution * offsetY, options.resolution * width, options.resolution * height);
 		ctx.drawImage(petGifCache[i], 0, 0, options.resolution, options.resolution);
