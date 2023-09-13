@@ -43,7 +43,6 @@ module.exports = {
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the level channel'))
 		),
-
 	options: {
 		devOnly: true,
 		disabled: false,

@@ -8,7 +8,7 @@ const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const TOKEN = process.env.DISCORD_TOKEN;
 
 //D efine Client
@@ -23,6 +23,7 @@ const client = new Client({
 		GatewayIntentBits.GuildMessageReactions,
 		GatewayIntentBits.GuildEmojisAndStickers,
 	],
+	partials: [Partials.Message, Partials.Reaction, Partials.Channel],
 	allowedMentions: {
 		parse: ['users', 'roles'],
 	},
@@ -32,6 +33,7 @@ const client = new Client({
 client.debug = false;
 client.colors = {
 	vii: '#3cdefc',
+	starboard: '#eba834',
 	success: '#00ff00',
 	error: '#ff0000',
 	warning: '#ffff00',

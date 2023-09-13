@@ -16,12 +16,16 @@ module.exports = (client) => {
 		max: 5,
 	});
 
+	// Set Proxy
+	srv.set('trust proxy', process.env.API_PROXY);
+
 	// Set "Use"
 	srv.use(limiter);
 	srv.use(cors());
 
 	// Get the static data
 	const staticPath = join(__dirname, '../../images');
+
 	// Send the static data
 	srv.use('/v1/client/static', e.static(staticPath));
 

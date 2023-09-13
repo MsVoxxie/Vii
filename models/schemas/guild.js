@@ -15,12 +15,20 @@ const guildSchema = Schema({
 	levelChannelId: {
 		type: String,
 	},
-
-	// Colors
-	guildColorHex: {
+	starboardChannelId: {
 		type: String,
-		default: '3cdefc',
-		required: true,
+	},
+	// Emojis
+	starboardEmoji: {
+		type: String,
+		default: '',
+		required: false,
+	},
+	// Numbers
+	starboardLimit: {
+		type: Number,
+		default: 3,
+		required: false,
 	},
 });
 
