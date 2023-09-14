@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { getReplies } = require('../../functions/helpers/msgFuncs');
+const { getReplies, buildStarEmbed } = require('../../functions/starboard/msgFuncs');
 const { starboardData } = require('../../models/index');
 
 module.exports = {
@@ -24,11 +24,11 @@ module.exports = {
 
 		// Arrays
 		const embedList = [];
-		const buttonList = [];
 
 		// Temporary Definitions
 		let starDbData;
 		let starredMessage;
+		let referenceEmbed;
 
 		//! Check if this message is already a star or not.
 		const existingStar = await starboardData.findOne({ guildId: message.guild.id, messageId: message.id });
@@ -50,74 +50,26 @@ module.exports = {
 		// Get message data
 		const starMessageData = await getReplies(message);
 
-		//! Handle the reference message if one exists
+		// Build Embeds
 		if (starMessageData.reference) {
 			// Add the reference member to data.
 			const tempFetch = await message.guild.members.cache.get(starMessageData.reference.author.id);
 			starMessageData.reference.member = tempFetch;
-
-			//* If attachment data, Setup Reference image-based embed.
-			if (starMessageData.reference.attachments.size) {
-				for await (const attach of starMessageData.reference.attachments) {
-					const attachment = attach[1];
-
-					const imgRefEmbed = new EmbedBuilder()
-						.setURL(starMessageData.reference.url)
-						.setAuthor({
-							iconURL: starMessageData.reference.member.displayAvatarURL(),
-							name: `Replying to ${starMessageData.reference.member.displayName}`,
-						})
-						.setTimestamp(starMessageData.reference.createdAt)
-						.setImage(attachment.url);
-					if (starMessageData.reference.content) imgRefEmbed.setDescription(starMessageData.reference.content);
-
-					embedList.push(imgRefEmbed);
-				}
-			} else {
-				//* If no attachments, Setup Reference text-based embed.
-				const textRefEmbed = new EmbedBuilder()
-					.setAuthor({
-						iconURL: starMessageData.reference.member.displayAvatarURL(),
-						name: `Replying to ${starMessageData.reference.member.displayName}`,
-					})
-					.setTimestamp(starMessageData.reference.createdAt)
-					.setDescription(starMessageData.reference.content);
-
-				embedList.push(textRefEmbed);
-			}
+			// Build reference embed
+			referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${starMessageData.reference.member.displayName}`);
+			referenceEmbed.forEach((e) => embedList.push(e));
 		}
-
-		//! Handle starred message.
-		//* If attachment data, Setup Reference image-based embed.
-		if (starMessageData.message.attachments.size) {
-			for await (const attach of starMessageData.message.attachments) {
-				const attachment = attach[1];
-
-				const imgBaseEmbed = new EmbedBuilder()
-					.setURL(starMessageData.message.url)
-					.setAuthor({ iconURL: starMessageData.message.member.displayAvatarURL(), name: starMessageData.message.member.displayName })
-					.setTimestamp(starMessageData.message.createdAt)
-					.setColor(client.colors.starboard)
-					.setImage(attachment.url);
-				if (starMessageData.message.content) imgBaseEmbed.setDescription(starMessageData.message.content);
-
-				embedList.push(imgBaseEmbed);
-			}
-		} else {
-			//* If no attachments, Setup Reference text-based embed.
-			const textBaseEmbed = new EmbedBuilder()
-				.setAuthor({ iconURL: starMessageData.message.member.displayAvatarURL(), name: starMessageData.message.member.displayName })
-				.setTimestamp(starMessageData.message.createdAt)
-				.setColor(client.colors.starboard)
-				.setDescription(starMessageData.message.content);
-
-			embedList.push(textBaseEmbed);
-		}
+		// Build base embed
+		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard);
+		baseEmbed.forEach((e) => embedList.push(e));
 
 		// Build Button Row
 		const embedButtons = new ActionRowBuilder();
 		embedButtons.addComponents(new ButtonBuilder().setLabel('Original Message').setStyle(ButtonStyle.Link).setURL(message.url));
-		if (starMessageData.reference) embedButtons.addComponents(new ButtonBuilder().setLabel('Referenced Message').setStyle(ButtonStyle.Link).setURL(starMessageData.reference.url));
+		if (starMessageData.reference)
+			embedButtons.addComponents(
+				new ButtonBuilder().setLabel('Referenced Message').setStyle(ButtonStyle.Link).setURL(starMessageData.reference.url)
+			);
 
 		//! Check if the star threshhold has been met.
 		if (starDbData && starDbData.starCount >= starLimit) {
