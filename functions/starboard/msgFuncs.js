@@ -37,12 +37,15 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 		//* Embeds
 	} else if (message.embeds.length) {
 		for await (const embed of message.embeds) {
+			console.log(embed);
 			const builtEmbed = new EmbedBuilder()
 				.setURL(embed.data.url)
 				.setColor(embedColor)
 				.setTimestamp(message.createdAt)
 				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
-			if (embed.data?.image) builtEmbed.setImage(embed.data.image.url);
+			if (embed.data.title) builtEmbed.setTitle(embed.data.title);
+			if (embed.data.image) builtEmbed.setImage(embed.data.image.url);
+			if (embed.data.thumbnail) builtEmbed.setThumbnail(embed.data.thumbnail.url);
 			if (embed.data.description) builtEmbed.setDescription(embed.data.description);
 			embeds.push(builtEmbed);
 		}
