@@ -48,8 +48,6 @@ module.exports = {
 		// Defer, Things take time.
 		await interaction.deferReply();
 
-		console.log(subGroup, subCommand);
-
 		// switch subGroup
 		switch (subGroup) {
 			// Starboard channel
