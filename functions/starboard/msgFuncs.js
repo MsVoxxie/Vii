@@ -40,9 +40,9 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 			const builtEmbed = new EmbedBuilder()
 				.setURL(embed.data.url)
 				.setColor(embedColor)
-				.setImage(embed.data.image.url)
 				.setTimestamp(message.createdAt)
 				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+			if (embed.data?.image) builtEmbed.setImage(embed.data.image.url);
 			if (embed.data.description) builtEmbed.setDescription(embed.data.description);
 			embeds.push(builtEmbed);
 		}
