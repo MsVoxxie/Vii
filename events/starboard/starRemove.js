@@ -1,9 +1,9 @@
-const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Events, EmbedBuilder } = require('discord.js');
 const { getReplies } = require('../../functions/helpers/msgFuncs');
 const { starboardData } = require('../../models/index');
 
 module.exports = {
-	name: Events.MessageReactionAdd,
+	name: Events.MessageReactionRemove,
 	runType: 'infinity',
 	async execute(client, reaction, user) {
 		// If user is a bot, return.
@@ -24,11 +24,9 @@ module.exports = {
 
 		// Arrays
 		const embedList = [];
-		const buttonList = [];
 
 		// Temporary Definitions
 		let starDbData;
-		let starredMessage;
 
 		//! Check if this message is already a star or not.
 		const existingStar = await starboardData.findOne({ guildId: message.guild.id, messageId: message.id });
@@ -114,34 +112,17 @@ module.exports = {
 			embedList.push(textBaseEmbed);
 		}
 
-		// Build Button Row
-		const embedButtons = new ActionRowBuilder();
-		embedButtons.addComponents(new ButtonBuilder().setLabel('Original Message').setStyle(ButtonStyle.Link).setURL(message.url));
-		if (starMessageData.reference) embedButtons.addComponents(new ButtonBuilder().setLabel('Referenced Message').setStyle(ButtonStyle.Link).setURL(starMessageData.reference.url));
-
-		//! Check if the star threshhold has been met.
-		if (starDbData && starDbData.starCount >= starLimit) {
-			if (!starDbData.isStarred) {
-				//! Send Embeds
-				starredMessage = await starChannel.send({
-					content: `${starEmoji} ${starCount} | ${message.channel.url}`,
-					components: [embedButtons],
-					embeds: embedList.map((e) => e),
-				});
-
-				starDbData = await starboardData.findOneAndUpdate(
-					{ guildId: message.guild.id, messageId: message.id },
-					{ $set: { isStarred: true, starId: starredMessage.id } }
-				);
-			} else if (starDbData.isStarred === true) {
-				//! If message is already starred, update it!
-				const fetchedStar = await starChannel.messages.fetch(starDbData.starId).catch((e) => e);
-				if (!fetchedStar.content) return await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
-
-				fetchedStar.edit({
-					content: `${starEmoji} ${starCount} | ${message.channel.url}`,
-				});
-			}
+		//! Check if the star threshhold is below requirement
+		const fetchedStar = await starChannel.messages.fetch(starDbData.starId).catch((e) => e);
+		if (starDbData && starDbData.starCount < starLimit) {
+			//! Delete the message
+			await fetchedStar.delete();
+			await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
+		} else {
+			if (!fetchedStar.content) return await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
+			await fetchedStar.edit({
+				content: `${starEmoji} ${starCount} | ${message.channel.url}`,
+			});
 		}
 	},
 };
