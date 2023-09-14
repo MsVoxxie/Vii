@@ -37,7 +37,6 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 		//* Embeds
 	} else if (message.embeds.length) {
 		for await (const embed of message.embeds) {
-			console.log(embed);
 			const builtEmbed = new EmbedBuilder()
 				.setURL(embed.data.url)
 				.setColor(embedColor)
