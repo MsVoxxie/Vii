@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Events, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { getReplies, buildStarEmbed } = require('../../functions/starboard/msgFuncs');
 const { starboardData } = require('../../models/index');
 

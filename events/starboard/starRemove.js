@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require('discord.js');
+const { Events } = require('discord.js');
 const { getReplies } = require('../../functions/starboard/msgFuncs');
 const { starboardData } = require('../../models/index');
 
