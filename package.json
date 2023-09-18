@@ -38,7 +38,7 @@
 		"express-rate-limit": "^6.11.1",
 		"gifencoder": "^2.0.1",
 		"googlethis": "^1.7.1",
-		"libsodium-wrappers": "^0.7.11",
+		"libsodium-wrappers": "^0.7.13",
 		"moment": "^2.29.4",
 		"moment-duration-format": "^2.3.2",
 		"mongoose": "^7.0.4",
