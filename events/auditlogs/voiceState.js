@@ -44,9 +44,9 @@ module.exports = {
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields(
-					{ name: 'Joined Channel', value: newState.channel.url, inline: true },
-					{ name: 'User Joined', value: `<@${member.id}>`, inline: true },
-					{ name: 'Connected', value: client.relTimestamp(Date.now()), inline: true }
+					{ name: 'Joined Channel', value: newState.channel.url, inline: false },
+					{ name: 'User Joined', value: `<@${member.id}>`, inline: false },
+					{ name: 'Connected', value: client.relTimestamp(Date.now()), inline: false }
 				);
 
 			// Send it
@@ -73,13 +73,13 @@ module.exports = {
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields(
-					{ name: 'Left Channel', value: oldState.channel.url, inline: true },
-					{ name: 'User Joined', value: `<@${member.id}>`, inline: true },
-					{ name: 'Disconnected', value: client.relTimestamp(Date.now()), inline: true },
+					{ name: 'Left Channel', value: oldState.channel.url, inline: false },
+					{ name: 'User Joined', value: `<@${member.id}>`, inline: false },
+					{ name: 'Disconnected', value: client.relTimestamp(Date.now()), inline: false },
 					{
 						name: 'Connection Duration',
 						value: `\`${client.getDuration(newData.voiceState.joinDate, newData.voiceState.leaveDate).join(' ')}\``,
-						inline: true,
+						inline: false,
 					}
 				);
 
@@ -110,14 +110,14 @@ module.exports = {
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields(
-					{ name: 'Left Channel', value: oldState.channel.url, inline: true },
-					{ name: 'Joined Channel', value: newState.channel.url, inline: true },
-					{ name: 'User Joined', value: `<@${member.id}>`, inline: true },
-					{ name: 'Switched', value: client.relTimestamp(Date.now()), inline: true },
+					{ name: 'Left Channel', value: oldState.channel.url, inline: false },
+					{ name: 'Joined Channel', value: newState.channel.url, inline: false },
+					{ name: 'User Joined', value: `<@${member.id}>`, inline: false },
+					{ name: 'Switched', value: client.relTimestamp(Date.now()), inline: false },
 					{
 						name: 'Connection Duration',
 						value: `\`${client.getDuration(oldVoice.joinDate, Date.now()).join(' ')}\``,
-						inline: true,
+						inline: false,
 					}
 				);
 
