@@ -1,6 +1,7 @@
 module.exports = {
 	Guild: require('./schemas/guild'),
 	botData: require('./schemas/botData'),
+	userData: require('./schemas/userData'),
 	Level: require('./schemas/levelSchema'),
 	levelRoles: require('./schemas/levelRoles'),
 	pollData: require('./schemas/pollData'),

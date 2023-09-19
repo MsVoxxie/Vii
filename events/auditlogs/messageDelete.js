@@ -5,7 +5,10 @@ module.exports = {
 	name: Events.MessageDelete,
 	runType: 'infinity',
 	async execute(client, message) {
-		// get guild settings
+		// If Partial, give up
+		if (message.partial) return;
+
+		// Get guild settings
 		const settings = await client.getGuild(message.guild);
 		if (settings.auditLogId === null) return;
 
