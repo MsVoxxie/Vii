@@ -1,4 +1,4 @@
-const { Events, AuditLogEvent, EmbedBuilder, cleanCodeBlockContent } = require('discord.js');
+const { Events, AuditLogEvent, EmbedBuilder, cleanCodeBlockContent, codeBlock } = require('discord.js');
 const getAuditLogs = require('../../functions/audithelpers/getAuditLogs.js');
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
 			.setColor(client.colors.vii)
 			.setTitle('Message Updated')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setDescription(`Old Message\`\`\`${cleanCodeBlockContent(oldMessage.content)}\`\`\`\nNew Message\`\`\`${cleanCodeBlockContent(newMessage.content)}\`\`\``)
+			.setDescription(`Old Message${codeBlock(cleanCodeBlockContent(oldMessage.content))}\nNew Message${codeBlock(cleanCodeBlockContent(newMessage.content))}`)
 			.addFields(
 				{ name: 'Channel Name', value: newMessage.channel.url, inline: true },
 				{ name: 'Message Author', value: `<@${newMessage.member.id}>`, inline: true },

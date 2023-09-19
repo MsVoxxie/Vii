@@ -1,4 +1,4 @@
-const { Events, AuditLogEvent, EmbedBuilder } = require('discord.js');
+const { Events, AuditLogEvent, EmbedBuilder, cleanCodeBlockContent, codeBlock } = require('discord.js');
 const getAuditLogs = require('../../functions/audithelpers/getAuditLogs.js');
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
 			.setColor(client.colors.vii)
 			.setTitle('Message Deleted')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setDescription(`\`\`\`${message.content}\`\`\``)
+			.setDescription(`${codeBlock(cleanCodeBlockContent(message.content))}`)
 			.addFields(
 				{ name: 'Channel Name', value: message.channel.url, inline: true },
 				{ name: 'Message Author', value: `<@${message.member.id}>`, inline: true },
