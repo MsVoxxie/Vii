@@ -1,10 +1,12 @@
 const { Events, AttachmentBuilder } = require('discord.js');
-const { Configuration, OpenAIApi } = require('openai');
+const { default: OpenAI } = require('openai');
 
-const configuration = new Configuration({
+const OpenAIConfig = new OpenAI({
 	basePath: 'http://192.168.50.226:8888/v1',
+	apiKey: 'xxxx',
 });
-const AI = new OpenAIApi(configuration);
+
+const AI = OpenAIConfig;
 
 // Constant Variables
 const msgLengthLimit = 300;
