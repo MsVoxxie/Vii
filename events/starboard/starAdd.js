@@ -63,7 +63,6 @@ module.exports = {
 		}
 		// Build base embed
 		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard);
-		console.log(baseEmbed);
 		baseEmbed.embeds.forEach((e) => embedList.push(e));
 		baseEmbed.attachments.forEach((a) => attachmentList.push(a));
 

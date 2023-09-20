@@ -19,7 +19,6 @@ async function getReplies(message) {
 async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = '1e1f22') {
 	if (!message) throw new Error('Invalid or no message provided.');
 	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
-	const mediaRegex = /(?:((?:https|http):\/\/)|(?:\/)).+(?:.mp3|mp4|mov)/i;
 	const embeds = [];
 	const attachments = [];
 
