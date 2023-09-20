@@ -35,7 +35,7 @@ module.exports = {
 
 			// Check for level roles
 			const roleCheck = await checkLevelRoles(message.guild, message.member, dbResults.level + 1);
-			const roleText = `${roleCheck.addedRoles.length ? `Awarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}${roleCheck.removedRoles.length ? `\nRevoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
+			const roleText = `${roleCheck.addedRoles.length ? `Awarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}\n${roleCheck.removedRoles.length ? `\nRevoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setTitle('Level Up!')

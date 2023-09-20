@@ -14,7 +14,7 @@ module.exports = {
 		const channel = interaction.member.voice.channel;
 		if (!channel) return interaction.reply("You're not in a voice channel!");
 		const queue = await client.distube.getQueue(interaction);
-		if (!queue) return interaction.followUp('No media is currently playing!');
+		if (!queue) return interaction.reply('No media is currently playing!');
 
 		// Defer, Things take time.
 		await interaction.deferReply();
