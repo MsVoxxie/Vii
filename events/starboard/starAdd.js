@@ -24,6 +24,7 @@ module.exports = {
 
 		// Arrays
 		const embedList = [];
+		const attachmentList = [];
 
 		// Temporary Definitions
 		let starDbData;
@@ -57,11 +58,14 @@ module.exports = {
 			starMessageData.reference.member = tempFetch;
 			// Build reference embed
 			referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${starMessageData.reference.member.displayName}`);
-			referenceEmbed.forEach((e) => embedList.push(e));
+			referenceEmbed.embeds.forEach((e) => embedList.push(e));
+			referenceEmbed.attachments.forEach((a) => attachmentList.push(a));
 		}
 		// Build base embed
 		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard);
-		baseEmbed.forEach((e) => embedList.push(e));
+		console.log(baseEmbed);
+		baseEmbed.embeds.forEach((e) => embedList.push(e));
+		baseEmbed.attachments.forEach((a) => attachmentList.push(a));
 
 		// Build Button Row
 		const embedButtons = new ActionRowBuilder();
@@ -75,11 +79,20 @@ module.exports = {
 		if (starDbData && starDbData.starCount >= starLimit) {
 			if (!starDbData.isStarred) {
 				//! Send Embeds
-				starredMessage = await starChannel.send({
-					content: `${starEmoji} ${starCount} | ${message.channel.url}`,
-					components: [embedButtons],
-					embeds: embedList.map((e) => e),
-				});
+				if (baseEmbed.attachments.length || referenceEmbed.attachments.length) {
+					starredMessage = await starChannel.send({
+						content: `${starEmoji} ${starCount} | ${message.channel.url}`,
+						components: [embedButtons],
+						embeds: embedList.map((e) => e),
+						files: attachmentList.map((a) => a),
+					});
+				} else {
+					starredMessage = await starChannel.send({
+						content: `${starEmoji} ${starCount} | ${message.channel.url}`,
+						components: [embedButtons],
+						embeds: embedList.map((e) => e),
+					});
+				}
 
 				starDbData = await starboardData.findOneAndUpdate(
 					{ guildId: message.guild.id, messageId: message.id },

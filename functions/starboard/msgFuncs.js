@@ -18,8 +18,10 @@ async function getReplies(message) {
 
 async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = '1e1f22') {
 	if (!message) throw new Error('Invalid or no message provided.');
-	const { EmbedBuilder } = require('discord.js');
-	let embeds = [];
+	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+	const mediaRegex = /(?:((?:https|http):\/\/)|(?:\/)).+(?:.mp3|mp4|mov)/i;
+	const embeds = [];
+	const attachments = [];
 
 	//* Attachments
 	if (message.attachments.size) {
@@ -36,6 +38,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 		}
 		//* Embeds
 	} else if (message.embeds.length) {
+		console.log(message.embeds);
 		for await (const embed of message.embeds) {
 			const builtEmbed = new EmbedBuilder()
 				.setURL(embed.data.url)
@@ -46,6 +49,9 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 			if (embed.data.image) builtEmbed.setImage(embed.data.image.url);
 			if (embed.data.thumbnail) builtEmbed.setThumbnail(embed.data.thumbnail.url);
 			if (embed.data.description) builtEmbed.setDescription(embed.data.description);
+			if (embed.data.type === 'video') {
+				attachments.push(new AttachmentBuilder(embed.data.url));
+			}
 			embeds.push(builtEmbed);
 		}
 		//* Textbased
@@ -58,7 +64,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 			.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
 		embeds.push(builtEmbed);
 	}
-	return embeds;
+	return { embeds, attachments };
 }
 
 module.exports = {
