@@ -15,19 +15,17 @@ module.exports = {
 		const auditLogChannel = await newMessage.guild.channels.cache.get(settings.auditLogId);
 		if (!auditLogChannel) return;
 
-		// Get information
-		const { executor } = await getAuditLogs(newMessage.guild, AuditLogEvent.MessageUpdate);
-
 		// Build Embed
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
 			.setTitle('Message Updated')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setDescription(`Old Message${codeBlock(cleanCodeBlockContent(oldMessage.content))}\nNew Message${codeBlock(cleanCodeBlockContent(newMessage.content))}`)
+			.setDescription(
+				`Old Message${codeBlock(cleanCodeBlockContent(oldMessage.content))}\nNew Message${codeBlock(cleanCodeBlockContent(newMessage.content))}`
+			)
 			.addFields(
 				{ name: 'Channel Name', value: newMessage.channel.url, inline: true },
 				{ name: 'Message Author', value: `<@${newMessage.member.id}>`, inline: true },
-				{ name: 'Updated By', value: `<@${executor.id}>`, inline: true },
 				{ name: 'Updated', value: client.relTimestamp(Date.now()), inline: true }
 			);
 

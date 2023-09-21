@@ -11,7 +11,7 @@ const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const TOKEN = process.env.DISCORD_TOKEN;
 
-//D efine Client
+// Define Client
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
