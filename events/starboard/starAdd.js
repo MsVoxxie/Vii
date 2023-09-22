@@ -78,7 +78,7 @@ module.exports = {
 		if (starDbData && starDbData.starCount >= starLimit) {
 			if (!starDbData.isStarred) {
 				//! Send Embeds
-				if (baseEmbed.attachments.length || referenceEmbed.attachments.length) {
+				if (baseEmbed?.attachments.length || referenceEmbed?.attachments.length) {
 					starredMessage = await starChannel.send({
 						content: `${starEmoji} ${starCount} | ${message.channel.url}`,
 						components: [embedButtons],
