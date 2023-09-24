@@ -7,7 +7,7 @@ module.exports = {
 	async execute(client, message) {
 		// If Partial, give up
 		if (message.partial) return;
-
+		if (message.author.bot) return;
 		// Get guild settings
 		const settings = await client.getGuild(message.guild);
 		if (settings.auditLogId === null) return;

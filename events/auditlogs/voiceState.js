@@ -18,12 +18,10 @@ module.exports = {
 		if (!auditLogChannel) return;
 
 		// Setup Channel Strings
-		let oldChannelId = 'unknown';
 		if (oldState && oldState.channel && oldState.channel.parent && oldState.channel.parent.name) oldParentName = oldState.channel.parent.name;
 		if (oldState && oldState.channel && oldState.channel.name) oldChannelName = oldState.channel.name;
 		if (oldState && oldState.channelId) oldChannelId = oldState.channelId;
 
-		let newChannelId = 'unknown';
 		if (newState && newState.channel && newState.channel.parent && newState.channel.parent.name) newParentName = newState.channel.parent.name;
 		if (newState && newState.channel && newState.channel.name) newChannelName = newState.channel.name;
 		if (newState && newState.channelId) newChannelId = newState.channelId;
