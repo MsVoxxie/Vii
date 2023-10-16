@@ -44,7 +44,7 @@
 		"mongoose": "^7.5.2",
 		"nanoid": "^5.0.1",
 		"node-cron": "^3.0.2",
-		"openai": "^4.10.0",
+		"openai": "^4.12.1",
 		"quickchart-js": "^3.1.2",
 		"rettiwt-api": "^2.1.0",
 		"rettiwt-auth": "^1.2.0",
