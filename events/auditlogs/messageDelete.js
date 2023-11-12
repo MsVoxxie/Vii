@@ -18,6 +18,7 @@ module.exports = {
 
 		// Get information
 		const { executor } = await getAuditLogs(message.guild, AuditLogEvent.MessageDelete);
+		if (!executor) return;
 
 		// Build Embed
 		const embed = new EmbedBuilder()
