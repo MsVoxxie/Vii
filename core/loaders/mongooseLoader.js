@@ -6,7 +6,6 @@ module.exports = {
 	init: () => {
 		const dbOptions = {
 			connectTimeoutMS: 10 * 1000,
-			useNewUrlParser: true,
 			autoIndex: false,
 			family: 4,
 		};
