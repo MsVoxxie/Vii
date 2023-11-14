@@ -33,6 +33,31 @@ module.exports = {
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
+				.setName('welcomechannel')
+				.setDescription('Configure the welcome channel')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setchannel')
+						.setDescription('Set the welcome channel')
+						.addChannelOption((option) =>
+							option.setName('channel').setDescription('The channel to set the welcome channel to').setRequired(true)
+						)
+				)
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the welcome channel'))
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('welcomemessage')
+				.setDescription('Configure the welcome message')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setmessage')
+						.setDescription('Set the welcome message')
+						.addStringOption((option) => option.setName('message').setDescription('Templates: {SERVER_NAME} {USER_NAME}').setRequired(true))
+				)
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
 				.setName('levelchannel')
 				.setDescription('Configure the level channel')
 				.addSubcommand((subCommand) =>
@@ -91,6 +116,35 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { modLogId: null });
 					// Follow up
 					interaction.followUp('Mod log channel removed');
+				}
+				break;
+			// Welcome channel
+			case 'welcomechannel':
+				if (subCommand === 'setchannel') {
+					// Get channel
+					const welcomeChannel = interaction.options.getChannel('channel');
+					// Make sure channel is a text channel
+					if (!welcomeChannel.isTextBased()) return interaction.followUp('Channel must be a text channel');
+					// Set welcome channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeChannelId: welcomeChannel.id });
+					// Follow up
+					interaction.followUp(`Welcome channel set to ${welcomeChannel}`);
+				} else if (subCommand === 'removechannel') {
+					// Remove welcome channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeChannelId: null });
+					// Follow up
+					interaction.followUp('Welcome channel removed');
+				}
+				break;
+			// Welcome text
+			case 'welcomemessage':
+				if (subCommand === 'setmessage') {
+					// Get text
+					const welcomeMessage = interaction.options.getString('message');
+					// Set welcome text
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeMessage: welcomeMessage });
+					// Follow up
+					interaction.followUp(`Welcome text set to \`${welcomeMessage}\``);
 				}
 				break;
 			// Level channel

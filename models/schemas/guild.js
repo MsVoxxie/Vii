@@ -12,6 +12,9 @@ const guildSchema = Schema({
 	modLogId: {
 		type: String,
 	},
+	welcomeChannelId: {
+		type: String,
+	},
 	levelChannelId: {
 		type: String,
 	},
@@ -28,6 +31,12 @@ const guildSchema = Schema({
 	starboardLimit: {
 		type: Number,
 		default: 3,
+		required: false,
+	},
+	// Strings
+	welcomeMessage: {
+		type: String,
+		default: 'Welcome to {SERVER_NAME}, {USER_NAME}!',
 		required: false,
 	},
 });
