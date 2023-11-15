@@ -75,7 +75,7 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setTitle('Youtube channel is now being watched.')
 					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-					.setDescription(`${targetNotificationChannel} will now receive new uploads from \`${channelName}\``);
+					.setDescription(`${targetNotificationChannel} will now receive new uploads from\n\`${channelName}\``);
 				interaction.followUp({ embeds: [embed] });
 			})
 			.catch((e) => {
