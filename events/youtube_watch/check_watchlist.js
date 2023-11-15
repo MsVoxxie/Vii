@@ -22,11 +22,10 @@ module.exports = {
 			// Check if there has been a new upload
 			if (
 				!lastCheckedVideo ||
-				(latestVideo.id.split(':')[2] !== lastCheckedVideo.id && new Date(latestVideo.pubDate) > new Date(lastCheckedVideo.pubDate))
+				(latestVideo.id.split(':')[2] !== lastCheckedVideo.id && new Date(latestVideo.pubDate) > new Date(lastCheckedVideo.publishDate))
 			) {
 				// Fetch the guild we're targeting
 				const targetGuild = client.guilds.cache.get(watchedChannel.guildId) || (await client.guilds.fetch(watchedChannel.guildId));
-				console.log(targetGuild.name);
 				if (!targetGuild) {
 					await youtubeNotificationData.findOneAndDelete({
 						_id: watchedChannel._id,
