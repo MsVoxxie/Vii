@@ -48,6 +48,7 @@
 		"quickchart-js": "^3.1.2",
 		"rettiwt-api": "^2.3.0",
 		"rettiwt-auth": "^1.2.0",
+		"rss-parser": "^3.13.0",
 		"vm": "^0.1.0",
 		"word-definition": "^2.1.6"
 	}

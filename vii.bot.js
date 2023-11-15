@@ -89,6 +89,13 @@ require('./core/api/internalAPI')(client);
 // Every Minute
 cron.schedule('* * * * *', () => {
 	client.emit('everyMinute');
+	console.log('1 minute popped');
+});
+
+// Every 5 Minutes
+cron.schedule('*/5 * * * *', () => {
+	client.emit('everyFiveMinutes');
+	console.log('5 minutes popped');
 });
 
 // Login

@@ -9,4 +9,5 @@ module.exports = {
 	reminderData: require('./schemas/reminderData'),
 	giveawaysData: require('./schemas/giveawayData'),
 	starboardData: require('./schemas/starboardData'),
+	youtubeNotificationData: require('./schemas/youtubeNotificationData'),
 };
