@@ -3,7 +3,7 @@ const Parser = require('rss-parser');
 const parser = new Parser();
 
 module.exports = {
-	name: 'everyMinute',
+	name: 'everyFiveMinutes',
 	runType: 'infinity',
 	async execute(client) {
 		// Get watchlist
@@ -59,7 +59,7 @@ module.exports = {
 								?.replace('{VIDEO_URL}', latestVideo.link)
 								?.replace('{VIDEO_TITLE}', latestVideo.title)
 								?.replace('{CHANNEL_URL}', channelFeed.link)
-								?.replace('{CHANNEL_NAME}', channelFeed.title) || `New upload by \`${channelFeed.title}\`\n${latestVideo.link}`;
+								?.replace('{CHANNEL_NAME}', channelFeed.title) || `New upload by \`${channelFeed.title}\`\n${latestVideo.link}!`;
 
 						targetChannel.send(targetMessage);
 					})
