@@ -73,6 +73,7 @@ module.exports = {
 			.save()
 			.then(() => {
 				const embed = new EmbedBuilder()
+					.setColor(client.colors.vii)
 					.setTitle('Youtube channel is now being watched.')
 					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 					.setDescription(`${targetNotificationChannel} will now receive new uploads from\n\`${channelName}\``);
