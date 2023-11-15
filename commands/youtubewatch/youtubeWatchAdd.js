@@ -39,12 +39,12 @@ module.exports = {
 			channelId: targetNotificationChannel.id,
 			ytChannelId: targetYtChannelId,
 		});
-		if (duplicateExists) return interaction.followUp('This channel is already being watched.\nPlease run `youtube-watch-remove` first.');
+		if (duplicateExists) return interaction.followUp('This channel is already being watched.\nPlease run **youtube-watch-remove** first.');
 
 		// Define Feed
 		const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL).catch((e) => {
 			interaction.followUp(
-				'Invalid channel ID.\nTo fetch a channel ID, go to the channels "About" Section and scroll down to "Share Channel" and then click "Copy channel ID".'
+				'Invalid channel ID.\nTo fetch a channel ID, go to the channels **"About"** Section and scroll down to **"Share Channel"** and then click **"Copy channel ID"**.'
 			);
 		});
 		if (!channelFeed) return;
@@ -76,7 +76,7 @@ module.exports = {
 					.setColor(client.colors.vii)
 					.setTitle('Youtube channel is now being watched.')
 					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-					.setDescription(`${targetNotificationChannel} will now receive new uploads from\n\`${channelName}\``);
+					.setDescription(`${targetNotificationChannel} will now receive new uploads from\n**${channelName}**`);
 				interaction.followUp({ embeds: [embed] });
 			})
 			.catch((e) => {
