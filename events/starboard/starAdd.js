@@ -97,7 +97,8 @@ module.exports = {
 					{ guildId: message.guild.id, messageId: message.id },
 					{ $set: { isStarred: true, starId: starredMessage.id } }
 				);
-			} else if (starDbData.isStarred === true) {
+			}
+			if (starDbData.isStarred === true) {
 				//! If message is already starred, update it!
 				const fetchedStar = await starChannel.messages.fetch(starDbData.starId).catch((e) => e);
 				if (!fetchedStar.content) return await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });

@@ -34,6 +34,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
 			if (message.content) builtEmbed.setDescription(message.content);
 			embeds.push(builtEmbed);
+			attachments.push(new AttachmentBuilder(attachment.url));
 		}
 		//* Embeds
 	} else if (message.embeds.length) {

@@ -26,6 +26,7 @@ module.exports = {
 					const timeDiff = 1000 * 60 * 30;
 					if (new Date().getTime() - activityTimestamp > timeDiff) {
 						console.log(`${curMember.displayName} is playing ${currentActivity.name} for over 30 minutes`);
+						// curGuild.members.ban(curMember, { reason: `playing ${GAME_TO_CHECK}.` });
 					}
 				}
 			}
