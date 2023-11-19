@@ -10,4 +10,5 @@ module.exports = {
 	giveawaysData: require('./schemas/giveawayData'),
 	starboardData: require('./schemas/starboardData'),
 	youtubeNotificationData: require('./schemas/youtubeNotificationData'),
+	roleAssignmentData: require('./schemas/roleAsignmentData'),
 };
