@@ -47,6 +47,20 @@ module.exports = {
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
+				.setName('leavechannel')
+				.setDescription('Configure the leave channel')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setchannel')
+						.setDescription('Set the leave channel')
+						.addChannelOption((option) =>
+							option.setName('channel').setDescription('The channel to set the leave channel to').setRequired(true)
+						)
+				)
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the leave channel'))
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
 				.setName('welcomemessage')
 				.setDescription('Configure the welcome message')
 				.addSubcommand((subCommand) =>
@@ -136,15 +150,22 @@ module.exports = {
 					interaction.followUp('Welcome channel removed');
 				}
 				break;
-			// Welcome text
-			case 'welcomemessage':
-				if (subCommand === 'setmessage') {
-					// Get text
-					const welcomeMessage = interaction.options.getString('message');
-					// Set welcome text
-					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeMessage: welcomeMessage });
+				// Leave channel
+			case 'leavechannel':
+				if (subCommand === 'setchannel') {
+					// Get channel
+					const leaveChannel = interaction.options.getChannel('channel');
+					// Make sure channel is a text channel
+					if (!leaveChannel.isTextBased()) return interaction.followUp('Channel must be a text channel');
+					// Set leave channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { leaveChannelId: leaveChannel.id });
 					// Follow up
-					interaction.followUp(`Welcome text set to \`${welcomeMessage}\``);
+					interaction.followUp(`Leave channel set to ${leaveChannel}`);
+				} else if (subCommand === 'removechannel') {
+					// Remove leave channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { leaveChannelId: null });
+					// Follow up
+					interaction.followUp('Leave channel removed');
 				}
 				break;
 			// Level channel

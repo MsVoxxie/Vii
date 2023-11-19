@@ -15,6 +15,9 @@ const guildSchema = Schema({
 	welcomeChannelId: {
 		type: String,
 	},
+	leaveChannelId: {
+		type: String,
+	},
 	levelChannelId: {
 		type: String,
 	},
