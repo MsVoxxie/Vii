@@ -9,7 +9,7 @@ module.exports = {
 	async execute(client, interaction, settings) {
 		// Grab Emojis and Format
 		const guildEmojis = await interaction.guild.emojis.cache;
-		const formattedEmojis = `const ViiEmojis = { ${guildEmojis.map((e) => `${e.name.toUpperCase()}: '<:${e.name}:${e.id}>'`).join(',\n')} }`;
+		const formattedEmojis = `const ViiEmojis = { ${guildEmojis.map((e) => `${e.name.toUpperCase()}: '<:${e.name}:${e.id}>'`).join(',\n')} }\nmodule.exports = { ViiEmojis, };`;
 
 		// Send List
 		let reply = formattedEmojis;

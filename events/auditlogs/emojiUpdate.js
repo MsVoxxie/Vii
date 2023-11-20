@@ -20,7 +20,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
 			.setTitle('Emoji Updated')
-			.setThumbnail(emoji.url)
+			.setThumbnail(emoji.imageURL())
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 
 		if (emoji.name) embed.addFields({ name: 'New Name', value: newEmoji.name, inline: true });
