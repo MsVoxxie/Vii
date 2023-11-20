@@ -90,7 +90,7 @@ module.exports = {
 				)
 		),
 	options: {
-		devOnly: true,
+		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
