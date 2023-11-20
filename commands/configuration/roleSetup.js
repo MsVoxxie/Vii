@@ -78,9 +78,7 @@ module.exports = {
 						// Generate Embed
 						const embed = new EmbedBuilder()
 							.setTitle('Reaction Role Created')
-							.setDescription(
-								`**Identifier:** \`${uniqueIdentifier}\`\n**Emoji:** ${emojiId}\n**Role:** ${roleId}\n**Channel:** ${msgChan}\n[Message Link](${fetchedMessage.url})`
-							)
+							.setDescription(`**Identifier:** \`${uniqueIdentifier}\`\n**Emoji:** ${emojiId}\n**Role:** ${roleId}\n**Channel:** ${msgChan}\n[Message Link](${fetchedMessage.url})`)
 							.setColor(client.colors.vii)
 							.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 							.setFooter({ text: 'Please keep this identifier safe as it is used to remove roles.' });
