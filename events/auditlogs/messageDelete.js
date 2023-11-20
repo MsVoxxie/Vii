@@ -8,6 +8,10 @@ module.exports = {
 		// If Partial, give up
 		if (message.partial) return;
 		if (message.author.bot) return;
+
+		// If its a sticker, return
+		if (message?.stickers?.size) return;
+
 		// Get guild settings
 		const settings = await client.getGuild(message.guild);
 		if (settings.auditLogId === null) return;
