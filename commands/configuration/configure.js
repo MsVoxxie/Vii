@@ -39,9 +39,7 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the welcome channel')
-						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The channel to set the welcome channel to').setRequired(true)
-						)
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the welcome channel to').setRequired(true))
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the welcome channel'))
 		)
@@ -53,9 +51,7 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the leave channel')
-						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The channel to set the leave channel to').setRequired(true)
-						)
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the leave channel to').setRequired(true))
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the leave channel'))
 		)
@@ -81,6 +77,17 @@ module.exports = {
 						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the level channel to').setRequired(true))
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the level channel'))
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('autofixlinks')
+				.setDescription('Should links be automatically converted')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('toggle')
+						.setDescription('Toggle between true or false')
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
+				)
 		),
 	options: {
 		devOnly: true,
@@ -150,7 +157,7 @@ module.exports = {
 					interaction.followUp('Welcome channel removed');
 				}
 				break;
-				// Leave channel
+			// Leave channel
 			case 'leavechannel':
 				if (subCommand === 'setchannel') {
 					// Get channel
@@ -184,6 +191,17 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { levelChannelId: null });
 					// Follow up
 					interaction.followUp('Level channel removed');
+				}
+				break;
+			// ShouldFixLinks
+			case 'autofixlinks':
+				if (subCommand === 'toggle') {
+					// Get channel
+					const toggleSwitch = interaction.options.getBoolean('toggle');
+					// Set the toggle
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { shouldFixLinks: toggleSwitch });
+					// Follow up
+					interaction.followUp(`Link fixing is now set to ${toggleSwitch}`);
 				}
 				break;
 		}

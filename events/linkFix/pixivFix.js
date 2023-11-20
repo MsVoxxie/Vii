@@ -8,6 +8,10 @@ module.exports = {
 		if (message.author.bot) return;
 		if (!message.content.startsWith('https://www.pixiv.net/')) return;
 
+		// Check if we should fix or not.
+		const settings = await client.getGuild(message.guild);
+		if (!settings.shouldFixLinks) return;
+
 		//Create new URL
 		const fixedURL = new URL(message);
 		fixedURL.hostname = 'phixiv.net';

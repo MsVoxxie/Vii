@@ -42,6 +42,12 @@ const guildSchema = Schema({
 		default: 'Welcome to {SERVER_NAME}, {USER_NAME}!',
 		required: false,
 	},
+	// Booleans
+	shouldFixLinks: {
+		type: Boolean,
+		default: true,
+		required: false,
+	},
 });
 
 module.exports = model('Guild', guildSchema);
