@@ -7,11 +7,11 @@ module.exports = {
 	async execute(client, emoji) {
 		// Get guild settings
 		const settings = await client.getGuild(emoji.guild);
-		if (settings.auditLogId === null) return;
+		if (settings.modLogId === null) return;
 
 		// Fetch audit log channel
-		const auditLogChannel = await emoji.guild.channels.cache.get(settings.auditLogId);
-		if (!auditLogChannel) return;
+		const modLogChannel = await emoji.guild.channels.cache.get(settings.modLogId);
+		if (!modLogChannel) return;
 
 		// Get information
 		const { executor } = await getAuditLogs(emoji.guild, AuditLogEvent.EmojiCreate);
@@ -28,6 +28,6 @@ module.exports = {
 		if (executor) embed.addFields({ name: 'Created By', value: `<@${executor.id}>`, inline: true });
 
 		// Send message
-		await auditLogChannel.send({ embeds: [embed] });
+		await modLogChannel.send({ embeds: [embed] });
 	},
 };

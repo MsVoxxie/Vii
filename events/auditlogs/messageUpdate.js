@@ -5,7 +5,7 @@ module.exports = {
 	name: Events.MessageUpdate,
 	runType: 'infinity',
 	async execute(client, oldMessage, newMessage) {
-		// get guild settings
+		// Get guild settings
 		if (newMessage.author.bot) return;
 		if (newMessage.content?.toString() === oldMessage.content?.toString()) return;
 		const settings = await client.getGuild(newMessage.guild);
@@ -20,9 +20,7 @@ module.exports = {
 			.setColor(client.colors.vii)
 			.setTitle('Message Updated')
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setDescription(
-				`Old Message${codeBlock(cleanCodeBlockContent(oldMessage.content))}\nNew Message${codeBlock(cleanCodeBlockContent(newMessage.content))}`
-			)
+			.setDescription(`Old Message${codeBlock(cleanCodeBlockContent(oldMessage.content))}\nNew Message${codeBlock(cleanCodeBlockContent(newMessage.content))}`)
 			.addFields(
 				{ name: 'Channel Name', value: newMessage.channel.url, inline: true },
 				{ name: 'Message Author', value: `<@${newMessage.member.id}>`, inline: true },
