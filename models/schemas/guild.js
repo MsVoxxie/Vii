@@ -45,7 +45,7 @@ const guildSchema = Schema({
 	// Booleans
 	shouldFixLinks: {
 		type: Boolean,
-		default: true,
+		default: false,
 		required: false,
 	},
 });
