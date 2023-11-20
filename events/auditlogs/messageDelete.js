@@ -10,7 +10,7 @@ module.exports = {
 		if (message.author.bot) return;
 
 		// If its a sticker, return
-		if (message?.stickers?.size) return;
+		if (message.stickers?.size) return;
 
 		// Get guild settings
 		const settings = await client.getGuild(message.guild);
@@ -21,8 +21,11 @@ module.exports = {
 		if (!auditLogChannel) return;
 
 		// Get information
-		const { executor } = await getAuditLogs(message.guild, AuditLogEvent.MessageDelete);
+		let { executor, createdTimestamp } = await getAuditLogs(message.guild, AuditLogEvent.MessageDelete);
 		if (!executor) return;
+
+		// Check for time difference
+		if (createdTimestamp > Date.now() - 5000) executor = message.member;
 
 		// Build Embed
 		const embed = new EmbedBuilder()
