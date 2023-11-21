@@ -134,6 +134,8 @@ module.exports = {
 				break;
 
 			case 'trivia':
+				const difficulty = ['easy', 'medium', 'hard'];
+				const randDiff = difficulty[Math.floor(Math.random() * difficulty.length)];
 				const triviaGame = new Trivia({
 					message: interaction,
 					isSlashGame: true,
@@ -147,7 +149,7 @@ module.exports = {
 					trueButtonStyle: 'SUCCESS',
 					falseButtonStyle: 'DANGER',
 					mode: 'multiple', // multiple || single
-					difficulty: 'medium', // easy || medium || hard
+					difficulty: randDiff, // easy || medium || hard
 					winMessage: 'You won! The correct answer is {answer}.',
 					loseMessage: 'You lost! The correct answer is {answer}.',
 					errMessage: 'Unable to fetch question data! Please try again.',
