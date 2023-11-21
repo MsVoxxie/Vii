@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { Connect4, RockPaperScissors, TicTacToe, TwoZeroFourEight, Minesweeper, Snake } = require('discord-gamecord');
+const { Connect4, RockPaperScissors, TicTacToe, Trivia, TwoZeroFourEight, Minesweeper, Snake } = require('discord-gamecord');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,6 +25,7 @@ module.exports = {
 				.setDescription('Create a game of TikTacToe')
 				.addUserOption((option) => option.setName('opponent').setDescription('Who you would like to play against').setRequired(true))
 		)
+		.addSubcommand((subcommand) => subcommand.setName('trivia').setDescription('Create a game of Trivia'))
 		.addSubcommand((subcommand) => subcommand.setName('2048').setDescription('Create a game of 2048'))
 		.addSubcommand((subcommand) => subcommand.setName('minesweeper').setDescription('Create a game of Minesweeper'))
 		.addSubcommand((subcommand) => subcommand.setName('snake').setDescription('Create a game of Snake')),
@@ -130,6 +131,31 @@ module.exports = {
 
 				tiktactoeGame.startGame();
 				tiktactoeGame.on('gameOver', (result) => null);
+				break;
+
+			case 'trivia':
+				const triviaGame = new Trivia({
+					message: interaction,
+					isSlashGame: true,
+					embed: {
+						title: 'Trivia',
+						color: client.colors.vii,
+						description: 'You have 60 seconds to guess the answer.',
+					},
+					timeoutTime: 60000,
+					buttonStyle: 'PRIMARY',
+					trueButtonStyle: 'SUCCESS',
+					falseButtonStyle: 'DANGER',
+					mode: 'multiple', // multiple || single
+					difficulty: 'medium', // easy || medium || hard
+					winMessage: 'You won! The correct answer is {answer}.',
+					loseMessage: 'You lost! The correct answer is {answer}.',
+					errMessage: 'Unable to fetch question data! Please try again.',
+					playerOnlyMessage: 'Only {player} can use these buttons.',
+				});
+
+				triviaGame.startGame();
+				triviaGame.on('gameOver', (result) => null);
 				break;
 
 			case '2048':
