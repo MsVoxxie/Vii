@@ -45,7 +45,7 @@ module.exports = {
 					isSlashGame: true,
 					opponent: interaction.options.getUser('opponent'),
 					embed: {
-						title: 'Connect4 Game',
+						title: 'Connect4',
 						statusTitle: 'Status',
 						color: client.colors.vii,
 					},
@@ -58,9 +58,9 @@ module.exports = {
 					timeoutTime: 60000,
 					buttonStyle: 'PRIMARY',
 					turnMessage: '{emoji} | Its turn of player **{player}**.',
-					winMessage: '{emoji} | **{player}** won the Connect4 Game.',
-					tieMessage: 'The Game tied! No one won the Game!',
-					timeoutMessage: 'The Game went unfinished! No one won the Game!',
+					winMessage: '{emoji} | **{player}** won Connect4.',
+					tieMessage: 'The Game tied! No one won!',
+					timeoutMessage: 'The Game went unfinished! No one won!',
 					playerOnlyMessage: 'Only {player} and {opponent} can use these buttons.',
 				});
 
@@ -92,9 +92,9 @@ module.exports = {
 					timeoutTime: 60000,
 					buttonStyle: 'PRIMARY',
 					pickMessage: 'You choose {emoji}.',
-					winMessage: '**{player}** won the Game! Congratulations!',
-					tieMessage: 'The Game tied! No one won the Game!',
-					timeoutMessage: 'The Game went unfinished! No one won the Game!',
+					winMessage: '**{player}** won! Congratulations!',
+					tieMessage: 'The Game tied! No one won!',
+					timeoutMessage: 'The Game went unfinished! No one won!',
 					playerOnlyMessage: 'Only {player} and {opponent} can use these buttons.',
 				});
 
@@ -123,9 +123,9 @@ module.exports = {
 					xButtonStyle: 'DANGER',
 					oButtonStyle: 'PRIMARY',
 					turnMessage: '{emoji} | Its turn of player **{player}**.',
-					winMessage: '{emoji} | **{player}** won the TicTacToe Game.',
-					tieMessage: 'The Game tied! No one won the Game!',
-					timeoutMessage: 'The Game went unfinished! No one won the Game!',
+					winMessage: '{emoji} | **{player}** won the TicTacToe.',
+					tieMessage: 'The Game tied! No one won!',
+					timeoutMessage: 'The Game went unfinished! No one won!',
 					playerOnlyMessage: 'Only {player} and {opponent} can use these buttons.',
 				});
 
@@ -193,8 +193,8 @@ module.exports = {
 					emojis: { flag: '🚩', mine: '💣' },
 					mines: 5,
 					timeoutTime: 60000,
-					winMessage: 'You won the Game! You successfully avoided all the mines.',
-					loseMessage: 'You lost the Game! Beaware of the mines next time.',
+					winMessage: 'You won! You successfully avoided all the mines.',
+					loseMessage: 'You lost! Beaware of the mines next time.',
 					playerOnlyMessage: 'Only {player} can use these buttons.',
 				});
 
