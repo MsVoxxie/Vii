@@ -28,21 +28,18 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
-		const animalSelection = interaction.options.getString('choice');
-		const animalEndpoint = `https://some-random-api.com/animal/${animalSelection}`;
-
 		// Defer, Things take time.
 		await interaction.deferReply();
+
+		// Options
+		const animalSelection = interaction.options.getString('choice');
+		const animalEndpoint = `https://some-random-api.com/animal/${animalSelection}`;
 
 		// Fetch Animal
 		const Animal = await fetch(animalEndpoint).then((res) => res.json());
 
 		// Build Embed
-		const embed = new EmbedBuilder()
-			.setTitle(`**Random ${animalSelection} Picture!**`)
-			.setImage(Animal.image)
-			.setColor(client.colors.vii)
-			.setTimestamp();
+		const embed = new EmbedBuilder().setTitle(`**Random ${animalSelection} Picture!**`).setImage(Animal.image).setColor(client.colors.vii).setTimestamp();
 
 		// Send it
 		return await interaction.followUp({ embeds: [embed] });

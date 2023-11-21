@@ -12,6 +12,10 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
+		// Get options
 		const user = interaction.options.getUser('target') || interaction.user;
 		const member = interaction.guild.members.cache.get(user.id);
 
@@ -20,6 +24,6 @@ module.exports = {
 			.setAuthor({ name: `${member.displayName}'s Avatar`, iconURL: member.displayAvatarURL({ dynamic: true }) })
 			.setImage(member.displayAvatarURL({ dynamic: true, format: 'png', size: 1024 }));
 
-		return interaction.reply({ embeds: [embed] });
+		return interaction.followUp({ embeds: [embed] });
 	},
 };

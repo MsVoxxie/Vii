@@ -12,6 +12,9 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
 		// API Key
 		const apiKey = process.env.WEATHER_API;
 
@@ -20,9 +23,7 @@ module.exports = {
 		const ephemeral = interaction.options.getBoolean('ephemeral') || false;
 
 		// Fetch the weather data
-		const weatherData = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locale}&aqi=no`).then((response) =>
-			response.json()
-		);
+		const weatherData = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locale}&aqi=no`).then((response) => response.json());
 		if (weatherData.error) return interaction.reply({ content: 'Invalid location provided.', ephemeral: true });
 
 		// Create the embed
@@ -81,6 +82,6 @@ module.exports = {
 			);
 
 		// Send the embed
-		await interaction.reply({ embeds: [embed], ephemeral: ephemeral });
+		await interaction.followUp({ embeds: [embed], ephemeral: ephemeral });
 	},
 };

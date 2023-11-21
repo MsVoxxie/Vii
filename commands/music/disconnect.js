@@ -11,6 +11,10 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
+		// Checks
 		const voiceState = await interaction.guild.members.me.voice;
 		if (!voiceState.channel) return interaction.reply("I'm not in a voice channel!");
 
@@ -23,11 +27,8 @@ module.exports = {
 		await voiceState.disconnect();
 
 		// Build Embed
-		const embed = new EmbedBuilder()
-			.setTitle(`**Disconnecting!**`)
-			.setDescription(`${interaction.member} told me to disconnect.`)
-			.setColor(client.colors.vii);
-		return interaction.reply({ embeds: [embed] }).then((m) => {
+		const embed = new EmbedBuilder().setTitle(`**Disconnecting!**`).setDescription(`${interaction.member} told me to disconnect.`).setColor(client.colors.vii);
+		return interaction.followUp({ embeds: [embed] }).then((m) => {
 			setTimeout(() => m.delete(), 60 * 1000);
 		});
 	},

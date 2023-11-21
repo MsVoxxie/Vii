@@ -7,6 +7,9 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
 		// Grab Emojis and Format
 		const guildEmojis = await interaction.guild.emojis.cache;
 		const formattedEmojis = `const ViiEmojis = { ${guildEmojis.map((e) => `${e.name.toUpperCase()}: '<:${e.name}:${e.id}>'`).join(',\n')} }\nmodule.exports = { ViiEmojis, };`;
@@ -18,9 +21,9 @@ module.exports = {
 			const buffer = Buffer.from(reply, 'utf8');
 			const txtFile = new AttachmentBuilder(buffer, { name: `formatted_emoji_list.txt` });
 
-			interaction.reply({ files: [txtFile] });
+			interaction.followUp({ files: [txtFile] });
 		} else {
-			interaction.reply(`${reply}`);
+			interaction.followUp(`${reply}`);
 		}
 	},
 };

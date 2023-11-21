@@ -5,9 +5,12 @@ module.exports = {
 	name: Events.MessageUpdate,
 	runType: 'infinity',
 	async execute(client, oldMessage, newMessage) {
-		// Get guild settings
+		// Checks
 		if (newMessage.author.bot) return;
 		if (newMessage.content?.toString() === oldMessage.content?.toString()) return;
+		if (!oldMessage.content || !newMessage.content) return;
+
+		// Get guild settings
 		const settings = await client.getGuild(newMessage.guild);
 		if (settings.auditLogId === null) return;
 

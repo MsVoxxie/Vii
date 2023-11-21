@@ -11,12 +11,8 @@ module.exports = {
 			subCommand
 				.setName('start')
 				.setDescription('Start a giveaway')
-				.addStringOption((option) =>
-					option.setName('duration').setDescription('How long the giveaway should last. (1d, 1h, 1m, 1s)').setRequired(true)
-				)
-				.addIntegerOption((option) =>
-					option.setName('winners').setDescription('How many winners the giveaway should have.').setMinValue(1).setRequired(true)
-				)
+				.addStringOption((option) => option.setName('duration').setDescription('How long the giveaway should last. (1d, 1h, 1m, 1s)').setRequired(true))
+				.addIntegerOption((option) => option.setName('winners').setDescription('How many winners the giveaway should have.').setMinValue(1).setRequired(true))
 				.addStringOption((option) => option.setName('prize').setDescription('What the prize of the giveaway should be.').setRequired(true))
 				.addChannelOption((option) => option.setName('channel').setDescription('The channel to start the giveaway in.').setRequired(false))
 				.addStringOption((option) => option.setName('content').setDescription('The content of the giveaway message.').setRequired(false))

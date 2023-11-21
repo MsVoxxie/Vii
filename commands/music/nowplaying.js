@@ -11,8 +11,11 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
-		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+		// Defer, Things take time.
 		await interaction.deferReply();
+
+		// Checks
+		const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 		const queue = await client.distube.getQueue(interaction);
 		if (!queue) return interaction.followUp('No media is currently playing!');
 

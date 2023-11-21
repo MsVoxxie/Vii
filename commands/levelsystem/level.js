@@ -22,14 +22,14 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
 		// Get subcommand
 		const subCommand = interaction.options.getSubcommand();
 
 		// Get Background image
 		const backgroundImage = join(__dirname, '../../images/level/background.png');
-
-		// Defer, Things take time.
-		await interaction.deferReply();
 
 		// Switch subcommand
 		switch (subCommand) {
@@ -44,8 +44,7 @@ module.exports = {
 				const userLevel = await Level.findOne({ userId: fetchedMember.id, guildId: interaction.guild.id });
 
 				// Make sure user has a level
-				if (!userLevel)
-					return interaction.followUp(mentioneduserId ? `${fetchedMember.user.tag} does not have a level` : 'You do not have a level');
+				if (!userLevel) return interaction.followUp(mentioneduserId ? `${fetchedMember.user.tag} does not have a level` : 'You do not have a level');
 
 				// Get all levels and sort by rankings
 				const allUserLevels = await Level.find({ guildId: interaction.guild.id }).sort({ level: -1, xp: -1 }).lean();

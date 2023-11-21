@@ -28,10 +28,7 @@ module.exports = {
 
 			await client.distube.setVolume(interaction, 25);
 
-			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
-				.setTitle('**Searching Query**')
-				.setDescription(`**Searching»** ${query}`);
+			const embed = new EmbedBuilder().setColor(client.colors.vii).setTitle('**Searching Query**').setDescription(`**Searching»** ${query}`);
 
 			return interaction.followUp({ embeds: [embed], ephemeral: true }).then((m) => {
 				setTimeout(() => m.delete(), 60 * 1000);

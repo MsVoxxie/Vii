@@ -36,10 +36,7 @@ module.exports = {
 				.setTitle('__**Evaluation Successful**__')
 				.setColor('#32a852')
 				.setFooter({ text: `Async: ${wasAsync} | Took ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms` })
-				.addFields(
-					{ name: '📥 Input', value: `\`\`\`js\n${cleanText(code)}\n\`\`\`` },
-					{ name: '📤 Output', value: `\`\`\`js\n${cleanText(evaluatedCode)}\n\`\`\`` }
-				);
+				.addFields({ name: '📥 Input', value: `\`\`\`js\n${cleanText(code)}\n\`\`\`` }, { name: '📤 Output', value: `\`\`\`js\n${cleanText(evaluatedCode)}\n\`\`\`` });
 			await interaction.followUp({ embeds: [embed] });
 		} catch (error) {
 			console.error(error);
@@ -48,10 +45,7 @@ module.exports = {
 				.setTitle('__**Evaluation Failed**__')
 				.setColor('#a83232')
 				.setFooter({ text: `Async: ${wasAsync} | Took ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms` })
-				.addFields(
-					{ name: '📥 Input', value: `\`\`\`js\n${cleanText(code)}\n\`\`\`` },
-					{ name: '📤 Output', value: `\`\`\`js\n${cleanText(evaluatedCode)}\n\`\`\`` }
-				);
+				.addFields({ name: '📥 Input', value: `\`\`\`js\n${cleanText(code)}\n\`\`\`` }, { name: '📤 Output', value: `\`\`\`js\n${cleanText(evaluatedCode)}\n\`\`\`` });
 			await interaction.followUp({ embeds: [embed] });
 		}
 	},

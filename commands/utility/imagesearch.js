@@ -13,11 +13,15 @@ module.exports = {
 		disabled: true,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
+		// Get Options
 		const searchQuery = interaction.options.getString('query');
 		const safeMode = interaction.channel.nsfw ? false : true;
 		const initialResults = await google.image(searchQuery, { safe: safeMode });
 		const imageResults = initialResults.filter((u) => u.url.replace(/\?.*/g, ''));
-		if (!imageResults) return interaction.reply(`No results found for \`${searchQuery}\``);
+		if (!imageResults) return interaction.followUp(`No results found for \`${searchQuery}\``);
 
 		// Arrays
 		const embeds = [];
@@ -47,7 +51,7 @@ module.exports = {
 		);
 
 		// Send
-		const embedMsg = await interaction.reply({ embeds: [embeds[curPage]], components: [Buttons] });
+		const embedMsg = await interaction.followUp({ embeds: [embeds[curPage]], components: [Buttons] });
 
 		// Listen for interactions
 		const filter = (interaction) => interaction.user.id === interaction.user.id;

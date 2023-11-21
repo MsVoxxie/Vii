@@ -11,30 +11,21 @@ module.exports = {
 				.setDescription('Add a reminder')
 				.addStringOption((option) => option.setName('reminder').setDescription('What do you want to be reminded of?').setRequired(true))
 				.addIntegerOption((option) =>
-					option
-						.setName('minutes')
-						.setDescription('How many minutes from now do you want to be reminded?')
-						.setMinValue(0)
-						.setMaxValue(59)
-						.setRequired(true)
+					option.setName('minutes').setDescription('How many minutes from now do you want to be reminded?').setMinValue(0).setMaxValue(59).setRequired(true)
 				)
 				.addIntegerOption((option) =>
-					option
-						.setName('hours')
-						.setDescription('How many hours from now do you want to be reminded?')
-						.setMinValue(0)
-						.setMaxValue(23)
-						.setRequired(false)
+					option.setName('hours').setDescription('How many hours from now do you want to be reminded?').setMinValue(0).setMaxValue(23).setRequired(false)
 				)
-				.addIntegerOption((option) =>
-					option.setName('days').setDescription('How many days from now do you want to be reminded?').setMinValue(0).setRequired(false)
-				)
+				.addIntegerOption((option) => option.setName('days').setDescription('How many days from now do you want to be reminded?').setMinValue(0).setRequired(false))
 		),
 	options: {
 		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
 		// Variables
 		const { options, guild } = interaction;
 		const reminder = options.getString('reminder');
@@ -56,6 +47,6 @@ module.exports = {
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.setDescription(`Your reminder has been set for ${client.relTimestamp(reminderTime)} from now.\n**Reminder›** ${reminder}`);
 
-		await interaction.reply({ embeds: [embed] });
+		await interaction.followUp({ embeds: [embed] });
 	},
 };

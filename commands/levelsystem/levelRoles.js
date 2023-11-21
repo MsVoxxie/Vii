@@ -14,11 +14,7 @@ module.exports = {
 				.addRoleOption((option) => option.setName('role').setDescription('Role to add').setRequired(true))
 				.addIntegerOption((option) => option.setName('level').setDescription('Level to add role at').setMinValue(1).setRequired(true))
 				.addStringOption((option) =>
-					option
-						.setName('type')
-						.setDescription('Type of role to add')
-						.addChoices({ name: 'Add', value: 'add' }, { name: 'Remove', value: 'remove' })
-						.setRequired(true)
+					option.setName('type').setDescription('Type of role to add').addChoices({ name: 'Add', value: 'add' }, { name: 'Remove', value: 'remove' }).setRequired(true)
 				)
 		)
 		.addSubcommand((subCommand) =>
@@ -27,11 +23,7 @@ module.exports = {
 				.setDescription('Remove a level role')
 				.addRoleOption((option) => option.setName('role').setDescription('Role to remove').setRequired(true))
 				.addStringOption((option) =>
-					option
-						.setName('type')
-						.setDescription('Type of role to remove')
-						.addChoices({ name: 'Add', value: 'add' }, { name: 'Remove', value: 'remove' })
-						.setRequired(true)
+					option.setName('type').setDescription('Type of role to remove').addChoices({ name: 'Add', value: 'add' }, { name: 'Remove', value: 'remove' }).setRequired(true)
 				)
 		),
 	options: {
@@ -39,11 +31,11 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
-		// Get subcommand
-		const subCommand = interaction.options.getSubcommand();
-
 		// Defer, Things take time.
 		await interaction.deferReply();
+
+		// Get subcommand
+		const subCommand = interaction.options.getSubcommand();
 
 		// Switch subcommand
 		switch (subCommand) {

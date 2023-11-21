@@ -34,7 +34,7 @@ module.exports = {
 				}
 				await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 			} catch (error) {
-				interaction.reply({ content: `An error occurred executing ${interaction.commandName}`, ephemeral: true });
+				interaction.followUp({ content: `An error occurred executing ${interaction.commandName}`, ephemeral: true });
 				Logger.error(`Error executing ${interaction.commandName}`);
 				Logger.error(error);
 				await botData.findOneAndUpdate({}, { $inc: { commandsFailed: 1 } }, { upsert: true });
