@@ -161,10 +161,10 @@ module.exports = {
 			case '2048':
 				const twozerofoureightGame = new TwoZeroFourEight({
 					message: interaction,
-					isSlashGame: false,
+					isSlashGame: true,
 					embed: {
 						title: '2048',
-						color: '#5865F2',
+						color: client.colors.vii,
 					},
 					emojis: {
 						up: '⬆️',
