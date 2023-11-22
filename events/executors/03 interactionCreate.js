@@ -1,6 +1,7 @@
 const { Events } = require('discord.js');
 const { botData } = require('../../models');
 const Logger = require('../../functions/logging/logger');
+const { errorHandler } = require('../../functions/logging/errorHandler');
 const { ViiEmojis } = require('../../images/icons/emojis');
 
 module.exports = {
@@ -34,9 +35,7 @@ module.exports = {
 				}
 				await botData.findOneAndUpdate({}, { $inc: { commandsExecuted: 1 } }, { upsert: true });
 			} catch (error) {
-				interaction.followUp({ content: `An error occurred executing ${interaction.commandName}`, ephemeral: true });
-				Logger.error(`Error executing ${interaction.commandName}`);
-				Logger.error(error);
+				await errorHandler(client, interaction, error);
 				await botData.findOneAndUpdate({}, { $inc: { commandsFailed: 1 } }, { upsert: true });
 			}
 		}

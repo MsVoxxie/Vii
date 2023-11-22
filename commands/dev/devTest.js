@@ -8,6 +8,9 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		// Defer, Things take time.
+		await interaction.deferReply();
+
 		let data1 = ['|'];
 		let data2 = ['|', '|', '|', '|', '|', '|', '|', '|'];
 
