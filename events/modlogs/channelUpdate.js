@@ -11,7 +11,7 @@ module.exports = {
 		if (settings.modLogId === null) return;
 
 		// Ignore position updates, they're spammy
-		if (oldChannel.position !== newChannel.position) return;
+		if (oldChannel.rawPosition !== newChannel.rawPosition) return;
 
 		// Fetch audit log channel
 		const modLogChannel = await oldChannel.guild.channels.cache.get(settings.modLogId);
@@ -47,7 +47,7 @@ module.exports = {
 			const oldTopic = oldChannel.topic?.length > 500 ? format(oldChannel.topic, 490) : oldChannel.topic;
 			const newTopic = newChannel.topic?.length > 500 ? format(newChannel.topic, 490) : newChannel.topic;
 
-			embed.addFields({ name: 'Topic', value: `${oldTopic} **›** ${newTopic}`, inline: false });
+			embed.addFields({ name: 'Topic', value: `${oldTopic.length === 0 ? 'None' : oldTopic} **›** ${newTopic.length === 0 ? 'None' : newTopic}`, inline: false });
 		}
 
 		// Channel Parent
