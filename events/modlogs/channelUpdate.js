@@ -1,6 +1,7 @@
 const { Events, AuditLogEvent, EmbedBuilder } = require('discord.js');
 const getAuditLogs = require('../../functions/audithelpers/getAuditLogs.js');
 const getChannelType = require('../../functions/audithelpers/getChannelType.js');
+const { format } = require('../../functions/helpers/utils.js');
 
 module.exports = {
 	name: Events.ChannelUpdate,
@@ -76,8 +77,3 @@ module.exports = {
 		await modLogChannel.send({ embeds: [embed] });
 	},
 };
-
-function format(text, number) {
-	text = text.slice(0, number);
-	return text + '...';
-}

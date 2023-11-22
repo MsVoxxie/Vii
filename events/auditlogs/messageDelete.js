@@ -40,6 +40,19 @@ module.exports = {
 				{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
 			);
 
+		// Files
+		let files = '';
+		if (message.attachments.size) {
+			message.attachments.forEach((attach) => {
+				files += `[${attach.name}](${attach.url}) **›** [**Alt Link**](${attach.proxyURL})\n`;
+			});
+
+			embed.addFields({
+				name: 'Attachments',
+				value: files,
+			});
+		}
+
 		// Send message
 		await auditLogChannel.send({ embeds: [embed] });
 	},
