@@ -8,7 +8,7 @@ module.exports = {
 	async execute(client, oldRole, newRole) {
 		// Checks
 		if (oldRole === newRole) return;
-		if (oldRole.position !== newRole.position) return;
+		if (oldRole.rawPosition !== newRole.rawPosition) return;
 
 		// Get guild settings
 		const settings = await client.getGuild(oldRole.guild);
