@@ -9,6 +9,7 @@ const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
+require('events').EventEmitter.defaultMaxListeners = 16;
 const TOKEN = process.env.DISCORD_TOKEN;
 
 // Define Client
