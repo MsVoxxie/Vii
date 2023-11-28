@@ -6,7 +6,7 @@ module.exports = {
 	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
-		if (!message.content.startsWith('https://www.furaffinity.net/')) return console.log('aaaaa');
+		if (!message.content.startsWith('https://www.furaffinity.net/')) return;
 
 		// Check if we should fix or not.
 		const settings = await client.getGuild(message.guild);
