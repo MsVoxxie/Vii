@@ -19,7 +19,8 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		let { executor } = await getAuditLogs(oldRole.guild, AuditLogEvent.RoleUpdate);
+		let { executor, createdTimestamp } = await getAuditLogs(oldRole.guild, AuditLogEvent.RoleUpdate);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
 		if (!executor) return console.log('no executor');
 
 		// Create embed
@@ -27,7 +28,7 @@ module.exports = {
 			.setTitle('Role Updated')
 			.setColor(client.colors.vii)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.setDescription(`**Role:** ${oldRole}\n**Updated by:** <@${executor.id}>\n**Updated:** ${client.relTimestamp(Date.now())}`);
+			.setDescription(`**Role:** ${oldRole}\n**Updated by:** ${executor}\n**Updated:** ${client.relTimestamp(Date.now())}`);
 
 		// Role Name
 		if (oldRole.name !== newRole.name) {

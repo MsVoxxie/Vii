@@ -21,7 +21,7 @@ module.exports = {
 			.addFields(
 				{ name: 'Invite Code', value: `\`${invite.code}\``, inline: true },
 				{ name: 'Invite Uses', value: `${invite.maxUses === 0 ? 'Infinite' : invite.maxUses}`, inline: true },
-				{ name: 'Invite Expires', value: client.relTimestamp(invite.expiresTimestamp), inline: true },
+				{ name: 'Invite Expires', value: invite.expiresTimestamp === null ? 'Never' : client.relTimestamp(invite.expiresTimestamp), inline: true },
 				{ name: 'Target Channel', value: `${invite.channel.url}`, inline: true },
 				{ name: 'Created By', value: `<@${invite.inviter.id}>`, inline: true },
 				{ name: 'Created', value: client.relTimestamp(Date.now()), inline: true }

@@ -15,7 +15,9 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		const { executor } = await getAuditLogs(channel.guild, AuditLogEvent.ChannelDelete);
+		let { executor, createdTimestamp } = await getAuditLogs(channel.guild, AuditLogEvent.ChannelDelete);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+
 		const channelType = getChannelType(channel);
 
 		// Build Embed
@@ -26,7 +28,7 @@ module.exports = {
 		if (channel.id) embed.addFields({ name: 'Channel ID', value: channel.id, inline: true });
 		if (channel.parent) embed.addFields({ name: 'Parent Channel', value: channel.parent.name, inline: true });
 		embed.addFields({ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true });
-		if (executor) embed.addFields({ name: 'Deleted By', value: `<@${executor.id}>`, inline: true });
+		if (executor) embed.addFields({ name: 'Deleted By', value: `${executor}`, inline: true });
 
 		// Send message
 		await modLogChannel.send({ embeds: [embed] });

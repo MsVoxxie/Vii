@@ -19,7 +19,8 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		const { executor } = await getAuditLogs(oldChannel.guild, AuditLogEvent.ChannelUpdate);
+		let { executor, createdTimestamp } = await getAuditLogs(oldChannel.guild, AuditLogEvent.ChannelUpdate);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
 		const channelType = getChannelType(newChannel);
 
 		// Create embed
@@ -30,7 +31,7 @@ module.exports = {
 			.addFields(
 				{ name: 'Channel Type', value: channelType, inline: true },
 				{ name: 'Updated', value: client.relTimestamp(Date.now()), inline: true },
-				{ name: 'Updated By', value: `<@${executor.id}>`, inline: true }
+				{ name: 'Updated By', value: `${executor}`, inline: true }
 			);
 
 		// Channel Name

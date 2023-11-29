@@ -14,7 +14,8 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		const { executor } = await getAuditLogs(emoji.guild, AuditLogEvent.EmojiUpdate);
+		let { executor, createdTimestamp } = await getAuditLogs(emoji.guild, AuditLogEvent.EmojiUpdate);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
 
 		// Build Embed
 		const embed = new EmbedBuilder()
@@ -25,7 +26,7 @@ module.exports = {
 
 		if (emoji.name) embed.addFields({ name: 'New Name', value: newEmoji.name, inline: true });
 		embed.addFields({ name: 'Updated', value: client.relTimestamp(Date.now()), inline: true });
-		if (executor) embed.addFields({ name: 'Updated By', value: `<@${executor.id}>`, inline: true });
+		if (executor) embed.addFields({ name: 'Updated By', value: `${executor}`, inline: true });
 
 		// Send message
 		await modLogChannel.send({ embeds: [embed] });

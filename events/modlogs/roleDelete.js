@@ -14,7 +14,9 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		let { executor } = await getAuditLogs(role.guild, AuditLogEvent.RoleDelete);
+		let { executor, createdTimestamp } = await getAuditLogs(role.guild, AuditLogEvent.RoleDelete);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+
 		if (!executor) return;
 
 		// Create embed
@@ -24,7 +26,7 @@ module.exports = {
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.addFields(
 				{ name: 'Role', value: `${role.name}`, inline: true },
-				{ name: 'Deleted By', value: `<@${executor.id}>`, inline: true },
+				{ name: 'Deleted By', value: `${executor}`, inline: true },
 				{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
 			);
 

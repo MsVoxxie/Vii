@@ -14,7 +14,8 @@ module.exports = {
 		if (!modLogChannel) return;
 
 		// Get information
-		const { executor } = await getAuditLogs(invite.guild, AuditLogEvent.MessageDelete);
+		let { executor, createdTimestamp } = await getAuditLogs(invite.guild, AuditLogEvent.InviteDelete);
+		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
 		if (!executor) return;
 
 		// Create embed
@@ -25,7 +26,7 @@ module.exports = {
 			.addFields(
 				{ name: 'Invite Code', value: `\`${invite.code}\``, inline: true },
 				{ name: 'Invite Uses', value: `${invite.uses === null ? '0' : invite.uses}`, inline: true },
-				{ name: 'Deleted By', value: `<@${executor.id}>`, inline: true },
+				{ name: 'Deleted By', value: `${executor}`, inline: true },
 				{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
 			);
 

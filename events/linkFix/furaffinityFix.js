@@ -2,7 +2,7 @@ const { Events } = require('discord.js');
 
 module.exports = {
 	name: Events.MessageCreate,
-	runType: 'infinity',
+	runType: 'disabled',
 	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
