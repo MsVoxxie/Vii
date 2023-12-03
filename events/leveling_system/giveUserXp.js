@@ -35,11 +35,11 @@ module.exports = {
 
 			// Check for level roles
 			const roleCheck = await checkLevelRoles(message.guild, message.member, dbResults.level + 1);
-			const roleText = `${roleCheck.addedRoles.length ? `Awarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}\n${roleCheck.removedRoles.length ? `\nRevoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
+			const roleText = `${roleCheck.addedRoles.length ? `\nAwarded Role${roleCheck.addedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.addedRoles.map((r) => r).join(' | ')}\n${roleCheck.removedRoles.length ? `\nRevoked Role${roleCheck.removedRoles.length >= 1 ? 's›\n' : '›\n'}` : ''}${roleCheck.removedRoles.map((r) => r).join(' | ')}`
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setTitle('Level Up!')
-				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!\n${roleText}\n[Jump to Level Message](${message.url})`)
+				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!${roleText}[Jump to Level Message](${message.url})`)
 				.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setThumbnail(message.member.displayAvatarURL({ dynamic: true }))
