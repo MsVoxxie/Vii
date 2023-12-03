@@ -24,6 +24,7 @@ module.exports = {
 			.setTitle('Member Updated')
 			.setColor(client.colors.vii)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+			.setDescription(`**Member:** ${oldMember.displayName}\n**Updated:** ${client.relTimestamp(Date.now())}`)
 			.setThumbnail(oldAvatar);
 
 		// Avatar
