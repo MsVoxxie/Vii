@@ -42,7 +42,7 @@
 		"libsodium-wrappers": "^0.7.13",
 		"moment": "^2.29.4",
 		"moment-duration-format": "^2.3.2",
-		"mongoose": "^8.0.2",
+		"mongoose": "^8.1.1",
 		"nanoid": "^3.3.7",
 		"node-cron": "^3.0.2",
 		"openai": "^4.20.1",
