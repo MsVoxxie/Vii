@@ -48,6 +48,11 @@ const guildSchema = Schema({
 		default: false,
 		required: false,
 	},
+	shouldRoleNotify: {
+		type: Boolean,
+		default: true,
+		required: false,
+	},
 });
 
 module.exports = model('Guild', guildSchema);

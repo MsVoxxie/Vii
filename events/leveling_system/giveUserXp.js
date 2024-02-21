@@ -39,7 +39,7 @@ module.exports = {
 			// Build embed
 			const embed = new EmbedBuilder()
 				.setTitle('Level Up!')
-				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!${roleText}[Jump to Level Message](${message.url})`)
+				.setDescription(`Congratulations ${message.author}!\nYou have leveled up to level ${dbResults.level + 1}!${roleText}\n[Jump to Level Message](${message.url})`)
 				.setFooter({ text: `You need ${calcXp} more Xp to level up again!` })
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setThumbnail(message.member.displayAvatarURL({ dynamic: true }))

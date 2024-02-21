@@ -3,7 +3,7 @@ const { default: OpenAI } = require('openai');
 
 const OpenAIConfig = new OpenAI({
 	basePath: 'http://192.168.50.226:8888/v1',
-	apiKey: 'xxxx',
+	apiKey: '',
 });
 
 const AI = OpenAIConfig;
@@ -87,7 +87,7 @@ module.exports = {
 			});
 
 			// Generate response
-			const res = await AI.createChatCompletion({
+			const res = await AI.chat.completions.create({
 				model: 'lunademo',
 				messages: conversationLog,
 				max_tokens: replyLengthLimit,

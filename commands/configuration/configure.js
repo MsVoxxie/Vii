@@ -88,6 +88,17 @@ module.exports = {
 						.setDescription('Toggle between true or false')
 						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
 				)
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('shouldrolenotify')
+				.setDescription('Should I notify users about their roles?')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('toggle')
+						.setDescription('Toggle between true or false')
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
+				)
 		),
 	options: {
 		devOnly: false,
@@ -202,6 +213,17 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { shouldFixLinks: toggleSwitch });
 					// Follow up
 					interaction.followUp(`Link fixing is now set to ${toggleSwitch}`);
+				}
+				break;
+			// shouldRoleNotify
+			case 'shouldrolenotify':
+				if (subCommand === 'toggle') {
+					// Get channel
+					const toggleSwitch = interaction.options.getBoolean('toggle');
+					// Set the toggle
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { shouldRoleNotify: toggleSwitch });
+					// Follow up
+					interaction.followUp(`Role notifications are now set to ${toggleSwitch}`);
 				}
 				break;
 		}

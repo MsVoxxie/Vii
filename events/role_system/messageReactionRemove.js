@@ -11,6 +11,9 @@ module.exports = {
 		// Define message for sanity
 		const message = reaction.message;
 
+		// Fetch guild settings
+		const settings = await client.getGuild(message.guild);
+
 		// Fetch the reaciton.
 		const fetchedReaction = await roleAssignmentData.findOne({
 			guildId: message.guild.id,
@@ -39,7 +42,10 @@ module.exports = {
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 
 			// Notify the member
-			await targetMember.send({ embeds: [embed] });
+			// Notify the member
+			if (settings.shouldRoleNotify) {
+				await targetMember.send({ embeds: [embed] });
+			}
 		} catch (error) {
 			// Generate mini-embed
 			const embed = new EmbedBuilder()
@@ -48,7 +54,10 @@ module.exports = {
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
 
 			// Notify the member
-			await targetMember.send({ embeds: [embed] });
+			// Notify the member
+			if (settings.shouldRoleNotify) {
+				await targetMember.send({ embeds: [embed] });
+			}
 		}
 	},
 };
