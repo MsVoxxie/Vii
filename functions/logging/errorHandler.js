@@ -16,7 +16,7 @@ const errorHandler = async (client, interaction, err) => {
 			.setDescription(`There was an issue executing \`${interaction.commandName}\`\nI seem to be missing permissions.`)
 			.setColor(client.colors.warning);
 
-		return await interaction.followUp({ embeds: [embed] });
+		return (await interaction.followUp({ embeds: [embed] })) || (await interaction.reply({ embeds: [embed] }));
 	}
 
 	// Otherwise, provide a stack to report.
@@ -32,7 +32,7 @@ const errorHandler = async (client, interaction, err) => {
 	const attachFile = new AttachmentBuilder(errBuffer, { name: 'Error Logs.txt' });
 
 	// Send it off
-	return await interaction.followUp({ embeds: [embed], files: [attachFile] });
+	return (await interaction.followUp({ embeds: [embed], files: [attachFile] })) || (await interaction.reply({ embeds: [embed], files: [attachFile] }));
 };
 
 module.exports = {
