@@ -19,11 +19,33 @@ async function getReplies(message) {
 async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = '1e1f22') {
 	if (!message) throw new Error('Invalid or no message provided.');
 	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+	const { Rettiwt } = require('rettiwt-api');
+	const twitFetch = new Rettiwt();
 	const embeds = [];
 	const attachments = [];
 
+	//* Twitter Check
+	const twitId = /\/status\/(\d+)/s.exec(message.content);
+	if (twitId) {
+		await twitFetch.tweet.details(twitId[1]).then(async (res) => {
+			for await (const attach of res.media) {
+				const attachment = attach;
+				const builtEmbed = new EmbedBuilder()
+					.setURL(message.url)
+					.setColor(embedColor)
+					.setImage(attachment.url)
+					.setTimestamp(message.createdAt)
+					.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+				if (message.content) builtEmbed.setDescription(message.content);
+				embeds.push(builtEmbed);
+				if (attachment.type.includes('video')) {
+					attachments.push(new AttachmentBuilder(attachment.url));
+				}
+			}
+		});
+	}
 	//* Attachments
-	if (message.attachments.size) {
+	else if (message.attachments.size) {
 		for await (const attach of message.attachments) {
 			const attachment = attach[1];
 			const builtEmbed = new EmbedBuilder()
