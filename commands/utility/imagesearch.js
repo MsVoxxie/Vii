@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonStyle, ButtonBuilder, EmbedBuilder } = require('discord.js');
-const google = require('googlethis');
+// const google = require('googlethis');
 
 module.exports = {
 	data: new SlashCommandBuilder()
