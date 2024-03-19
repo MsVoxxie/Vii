@@ -16,7 +16,7 @@ module.exports = {
 		if (!twitId) return interaction.followUp('This is an invalid url or the tweet cannot be retrieved!');
 
 		await twitFetch.tweet.details(twitId[1]).then(async (res) => {
-			console.log(res.fullText);
+			if (!res) return interaction.followUp('There was an error retrieving this tweet.\nIt may be considered NSFW.');
 			const fileAttachments = [];
 			if (!res.media) return interaction.followUp("Sorry, this tweet doesn't contain any media!");
 			for await (const attach of res.media) {
@@ -24,7 +24,8 @@ module.exports = {
 				fileAttachments.push(new AttachmentBuilder(attachment.url));
 			}
 
-			await interaction.followUp({ content: `${res.fullText ? res.fullText : ''}`, files: fileAttachments.map((a) => a) });
+			await interaction.targetMessage.reply({ content: `${res?.fullText ? res?.fullText : ''}`, files: fileAttachments.map((a) => a) });
+			await interaction.deleteReply();
 		});
 	},
 };
