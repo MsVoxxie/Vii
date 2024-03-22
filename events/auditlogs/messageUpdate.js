@@ -1,4 +1,4 @@
-const { Events, AuditLogEvent, EmbedBuilder, cleanCodeBlockContent, codeBlock } = require('discord.js');
+const { Events, EmbedBuilder, cleanCodeBlockContent, codeBlock } = require('discord.js');
 const { format } = require('../../functions/helpers/utils.js');
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
 	runType: 'infinity',
 	async execute(client, oldMessage, newMessage) {
 		// Checks
-		if (newMessage.author.bot) return;
+		if (newMessage.author?.bot) return;
 		if (newMessage.content?.toString() === oldMessage.content?.toString()) return;
 		if (!oldMessage.content || !newMessage.content) return;
 

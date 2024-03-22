@@ -1,6 +1,4 @@
 const { AttachmentBuilder, ContextMenuCommandBuilder, ApplicationCommandType } = require('discord.js');
-const { Rettiwt } = require('rettiwt-api');
-const twitFetch = new Rettiwt();
 
 module.exports = {
 	data: new ContextMenuCommandBuilder().setName('Extract Raw Tweet').setType(ApplicationCommandType.Message),
@@ -9,6 +7,9 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		const { Rettiwt } = require('rettiwt-api');
+		const twitFetch = new Rettiwt({ apiKey: process.env.TWIT_TOKEN });
+
 		await interaction.deferReply();
 		const twitURL = interaction.targetMessage.content;
 		const twitId = /\/status\/(\d+)/s.exec(twitURL);

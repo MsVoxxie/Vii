@@ -1,6 +1,4 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
-const { Rettiwt } = require('rettiwt-api');
-const twitFetch = new Rettiwt();
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,6 +10,9 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+		const { Rettiwt } = require('rettiwt-api');
+		const twitFetch = new Rettiwt({ apiKey: process.env.TWIT_TOKEN });
+
 		await interaction.deferReply();
 		const twitURL = interaction.options.getString('tweet_url');
 		const twitId = /\/status\/(\d+)/s.exec(twitURL);
@@ -31,6 +32,7 @@ module.exports = {
 				await interaction.followUp({ content: `${res?.fullText ? res?.fullText : ''}`, files: fileAttachments.map((a) => a) });
 			})
 			.catch(async (e) => {
+				console.log(e);
 				await interaction.followUp('An unknown error occurred.');
 			});
 	},
