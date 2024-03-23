@@ -91,7 +91,7 @@ module.exports = {
 				max_tokens: replyLengthLimit,
 				temperature: 0.9,
 				frequency_penalty: 0.2,
-				presence_penalty: 1.0,
+				presence_penalty: 0.7,
 				n: 1,
 			});
 
