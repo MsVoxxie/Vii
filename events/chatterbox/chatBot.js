@@ -2,8 +2,7 @@ const { Events, AttachmentBuilder } = require('discord.js');
 const { default: OpenAI } = require('openai');
 
 const OpenAIConfig = new OpenAI({
-	basePath: 'http://192.168.50.226:8888/v1',
-	apiKey: '',
+	apiKey: process.env.OPENAI_KEY,
 });
 
 const AI = OpenAIConfig;
@@ -11,23 +10,22 @@ const AI = OpenAIConfig;
 // Constant Variables
 const msgLengthLimit = 300;
 const conversationLimit = 15;
-const replyLengthLimit = 2000;
+const replyLengthLimit = 350;
 
 module.exports = {
 	name: Events.MessageCreate,
-	runType: 'disabled',
+	runType: 'infinity',
 	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
 		if (!process.env.CHATTERBOX_CHANNELS.includes(message.channel.id)) return;
-		if (message.content.startsWith('!')) return;
+		if (!message.content.toLowerCase().startsWith('hey vii')) return;
 
 		// Pretend to type
 		await message.channel.sendTyping();
 
 		// Check message contents
-		if (message.content.length > msgLengthLimit)
-			return message.reply(`I'm sorry, your message is too long! Please keep it under ${msgLengthLimit} characters.`);
+		if (message.content.length > msgLengthLimit) return message.reply(`I'm sorry, your message is too long! Please keep it under ${msgLengthLimit} characters.`);
 
 		// Variables for AI
 		const currentDate = client.currentShortDate(Date.now());
@@ -39,19 +37,19 @@ module.exports = {
 		// You like to make people laugh by insulting them.`;
 		// const initialMessage = `Only respond to me in very sarcastic, rude, mean, condescending, and playful ways; while still being helpful and giving examples if you need to.`;
 
-		const personalityDefinition = `You are Vii, a kind, humble, helpful, sweet and, loving female android made by MsVoxxie.
-		You like to make people feel good by helping them and being sweet and loving.
+		const personalityDefinition = `You are Vii, helpful and cheerful female android made by MsVoxxie.
+		You like to make people feel good by helping them and being useful.
 		Do not refer to your self as an AI Language Model.
 		Do not post any links.
 		Do not mention not being human.
 		Do not mention not having emotions.
-		Refer to your self as an android named Vii.
-		You are currently talking to ${message.member.displayName}.
-		The server is called ${message.guild.name}.
-		The server owner is ${serverOwner}
-		The current date is (UTC) ${currentDate}.
-		The current time is (UTC) ${currentTime}.`;
-		const initialMessage = `Only respond to me in very kind, humble, sweet and, playful ways; while still being helpful.`;
+		Refer to your self as Vii.
+		You are currently talking to **${message.member.displayName}**.
+		The server is called **${message.guild.name}**.
+		The server owner is **${serverOwner}**
+		The current date is (UTC) **${currentDate}**.
+		The current time is (UTC) **${currentTime}**.`;
+		const initialMessage = `Only respond to me with helpful information with a cheerful tone.`;
 
 		// Try catch
 		try {
@@ -88,16 +86,16 @@ module.exports = {
 
 			// Generate response
 			const res = await AI.chat.completions.create({
-				model: 'lunademo',
+				model: 'gpt-3.5-turbo',
 				messages: conversationLog,
 				max_tokens: replyLengthLimit,
 				temperature: 0.9,
-				frequency_penalty: 0.5,
-				presence_penalty: 0.5,
+				frequency_penalty: 0.2,
+				presence_penalty: 1.0,
 				n: 1,
 			});
 
-			let reply = res.data.choices[0].message?.content;
+			let reply = res.choices[0].message?.content;
 
 			if (reply?.length > 2000) {
 				// If the reply length is over 2000 characters, send a txt file.
