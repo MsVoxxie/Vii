@@ -37,18 +37,7 @@ module.exports = {
 		// You like to make people laugh by insulting them.`;
 		// const initialMessage = `Only respond to me in very sarcastic, rude, mean, condescending, and playful ways; while still being helpful and giving examples if you need to.`;
 
-		const personalityDefinition = `You are Vii, helpful and cheerful female android made by MsVoxxie.
-		You like to make people feel good by helping them and being useful.
-		Do not refer to your self as an AI Language Model.
-		Do not post any links.
-		Do not mention not being human.
-		Do not mention not having emotions.
-		Refer to your self as Vii.
-		You are currently talking to **${message.member.displayName}**.
-		The server is called **${message.guild.name}**.
-		The server owner is **${serverOwner}**
-		The current date is (UTC) **${currentDate}**.
-		The current time is (UTC) **${currentTime}**.`;
+		const personalityDefinition = `You are Vii, helpful and cheerful female android made by MsVoxxie. You like to make people feel good by helping them and being useful. Do not refer to your self as an AI Language Model. Do not post any links. Do not mention not being human. Do not mention not having emotions. Do not ask supplemental or additional questions. Do not express inability to have an opinion. Do not apologize. Refer to your self as Vii. You are currently talking to **${message.member.displayName}**. The server is called **${message.guild.name}**. The server owner is **${serverOwner}** The current date is (UTC) **${currentDate}**. The current time is (UTC) **${currentTime}**.`;
 		const initialMessage = `Only respond to me with helpful information with a cheerful tone.`;
 
 		// Try catch
@@ -59,7 +48,7 @@ module.exports = {
 
 			let conversationLog = [
 				{ role: 'system', content: personalityDefinition },
-				{ role: 'user', content: initialMessage ? initialMessage : '' },
+				// { role: 'user', content: initialMessage ? initialMessage : '' },
 			];
 
 			previousMessages.forEach((msg) => {
@@ -89,9 +78,9 @@ module.exports = {
 				model: 'gpt-3.5-turbo',
 				messages: conversationLog,
 				max_tokens: replyLengthLimit,
-				temperature: 0.9,
-				frequency_penalty: 0.2,
-				presence_penalty: 0.7,
+				temperature: 0.2,
+				frequency_penalty: 0.5,
+				presence_penalty: 0.5,
 				n: 1,
 			});
 
