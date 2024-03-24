@@ -62,7 +62,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 		}
 		//* Embeds
 	} else if (message.embeds.length) {
-		console.log(message.embeds);
+		let imageSet = false;
 		for await (const embed of message.embeds) {
 			const builtEmbed = new EmbedBuilder()
 				.setURL(embed.data.url)
@@ -71,7 +71,11 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
 			if (embed.data.title) builtEmbed.setTitle(embed.data.title);
 			if (embed.data.image) builtEmbed.setImage(embed.data.image.url);
-			if (embed.data.thumbnail) builtEmbed.setThumbnail(embed.data.thumbnail.url);
+			if (embed.data.thumbnail && !embed.data.image) {
+				builtEmbed.setImage(embed.data.thumbnail.url);
+				imageSet = true;
+			}
+			if (embed.data.thumbnail && !imageSet) builtEmbed.setThumbnail(embed.data.thumbnail.url);
 			if (embed.data.description) builtEmbed.setDescription(embed.data.description);
 			if (embed.data.type === 'video') {
 				attachments.push(new AttachmentBuilder(embed.data.url));
