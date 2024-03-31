@@ -20,7 +20,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 	if (!message) throw new Error('Invalid or no message provided.');
 	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 	const { Rettiwt } = require('rettiwt-api');
-	const twitFetch = new Rettiwt();
+	const twitFetch = new Rettiwt({ apiKey: process.env.TWIT_TOKEN });
 	const embeds = [];
 	const attachments = [];
 
