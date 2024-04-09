@@ -41,7 +41,16 @@ module.exports = {
 			const rawData = resultData.raw.data;
 
 			// Threshhold
-			if (resultData.similarity < 70) return interaction.followUp({ content: `[No high similarity results...](${message.url})` });
+			if (resultData.similarity < 70) {
+				const embed = new EmbedBuilder()
+					.setTitle(`**SauceNAO (${resultData.similarity}% Match)**`)
+					.setDescription(`[No high similarity results...](${message.url})`)
+					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+
+					.setColor(client.colors.vii);
+
+				return interaction.followUp({ embeds: [embed] });
+			}
 
 			let compiledData = {
 				thumbnail: resultData.thumbnail,
@@ -64,10 +73,11 @@ module.exports = {
 
 			// Build Embed
 			const embed = new EmbedBuilder()
-				.setURL(`${resultData.authorUrl ? resultData.authorUrl : resultData.url}`)
 				.setTitle(`**SauceNAO (${compiledData.similarity}% Match)**`)
 				.setThumbnail(compiledData.thumbnail)
+				.setColor(client.colors.vii)
 				.setDescription(`Original Discord message can be found [Here](${message.url})`)
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields({ name: 'Ext Urls', value: compiledData.ext_urls.map((u) => u).join('\n') });
 
 			// Title
@@ -95,7 +105,12 @@ module.exports = {
 			interaction.followUp({ embeds: [embed] });
 		} catch (error) {
 			console.log(error);
-			return interaction.followUp({ content: `[There was an error communicating with the server.](${message.url})` });
+			const embed = new EmbedBuilder()
+				.setTitle(`**SauceNAO Error**`)
+				.setDescription(`[An error occurred. Please try again.](${message.url})`)
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setColor(client.colors.vii);
+			return interaction.followUp({ embeds: [embed] });
 		}
 	},
 };
