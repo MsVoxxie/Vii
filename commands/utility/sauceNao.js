@@ -45,8 +45,6 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setTitle(`**SauceNAO (${resultData.similarity}% Match)**`)
 					.setDescription(`[No high similarity results...](${message.url})`)
-					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-
 					.setColor(client.colors.vii);
 
 				return interaction.followUp({ embeds: [embed] });
@@ -108,7 +106,6 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setTitle(`**SauceNAO Error**`)
 				.setDescription(`[An error occurred. Please try again.](${message.url})`)
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.setColor(client.colors.vii);
 			return interaction.followUp({ embeds: [embed] });
 		}
