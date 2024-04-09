@@ -4,7 +4,7 @@ const SauceNAO = require('sagiri');
 const sauceNAO = SauceNAO(process.env.SAUCENAO);
 
 module.exports = {
-	data: new ContextMenuCommandBuilder().setName('Find Sauce Nao').setType(ApplicationCommandType.Message),
+	data: new ContextMenuCommandBuilder().setName('Search SauceNao').setType(ApplicationCommandType.Message),
 	options: {
 		devOnly: false,
 		disabled: false,
