@@ -91,7 +91,7 @@ module.exports = {
 							{ upsert: true }
 						)
 						.then(() => {
-							interaction.followUp({ content: 'The master channel has been created.' });
+							interaction.followUp({ content: `The master channel has been created for ${masterId.name}` });
 						});
 				}
 				break;
@@ -112,7 +112,7 @@ module.exports = {
 
 					// Delete the master channel
 					await autoChannelData.findOneAndUpdate({ guildId }, { $pull: { masterChannels: { masterCategoryId: masterId.id } } }).then(() => {
-						interaction.followUp({ content: 'The master channel has been deleted.' });
+						interaction.followUp({ content: `The master channel has been deleted for ${masterId.name}` });
 					});
 				}
 				break;

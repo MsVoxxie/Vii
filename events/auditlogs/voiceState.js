@@ -29,11 +29,7 @@ module.exports = {
 		// Joined Voice Channel
 		if (!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) {
 			// Database Entry
-			await userData.findOneAndUpdate(
-				{ guildId: guildId, userId: userId },
-				{ $set: { voiceState: { joinDate: Date.now() } } },
-				{ upsert: true, new: true }
-			);
+			await userData.findOneAndUpdate({ guildId: guildId, userId: userId }, { $set: { voiceState: { joinDate: Date.now() } } }, { upsert: true, new: true });
 
 			// Build Embed
 			const embed = new EmbedBuilder()

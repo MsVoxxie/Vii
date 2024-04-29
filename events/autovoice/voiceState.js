@@ -9,6 +9,7 @@ module.exports = {
 		if (!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) {
 			// Get the auto channel data
 			const findData = await autoChannelData.findOne({ guildId: newState.guild.id, 'masterChannels.masterCategoryId': newState.channel.parent.id });
+			if (!findData) return;
 			// Get the correct masterChannel based on the parent id
 			const data = findData.masterChannels.find((channel) => channel.masterCategoryId === newState.channel.parent.id);
 			if (!data) return;
@@ -25,6 +26,7 @@ module.exports = {
 					type: ChannelType.GuildVoice,
 					parent: creatorChannel.parent,
 					userLimit: data.childDefaultMaxUsers,
+					position: creatorChannel.position + 1,
 				});
 
 				await autoChannelData.findOneAndUpdate(
@@ -33,7 +35,6 @@ module.exports = {
 						$addToSet: {
 							'masterChannels.$.childChannels': {
 								childId: createdChannel.id,
-								childName: createdChannel.name,
 								maxUsers: data.childDefaultMaxUsers || 0,
 								createdBy: newState.member.id,
 							},
@@ -47,7 +48,10 @@ module.exports = {
 		}
 
 		//Left Voice Channel
-		if (oldState.channelId && !newState.channelId && oldState.channel && !newState.channel) {
+		if (
+			(oldState.channelId && !newState.channelId && oldState.channel && !newState.channel) ||
+			(oldState.channelId && newState.channelId && oldState.channel && newState.channel)
+		) {
 			// Check if the user left a child channel
 			const childDataFetch = await autoChannelData.findOne(
 				{ guildId: oldState.guild.id, 'masterChannels.childChannels.childId': oldState.channelId },
