@@ -43,7 +43,7 @@
 		"mongoose": "^8.2.0",
 		"nanoid": "^3.3.7",
 		"node-cron": "^3.0.2",
-		"openai": "^4.28.4",
+		"openai": "^4.38.5",
 		"quickchart-js": "^3.1.2",
 		"rettiwt-api": "^2.6.2",
 		"rss-parser": "^3.13.0",
