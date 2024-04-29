@@ -11,4 +11,5 @@ module.exports = {
 	starboardData: require('./schemas/starboardData'),
 	youtubeNotificationData: require('./schemas/youtubeNotificationData'),
 	roleAssignmentData: require('./schemas/roleAsignmentData'),
+	autoChannelData: require('./schemas/autoChannelData'),
 };
