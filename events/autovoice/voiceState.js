@@ -26,8 +26,11 @@ module.exports = {
 					type: ChannelType.GuildVoice,
 					parent: creatorChannel.parent,
 					userLimit: data.childDefaultMaxUsers,
-					position: creatorChannel.position + 1,
+					position: creatorChannel.position,
 				});
+
+				// Send basic information about owner commands to the channel.
+				await createdChannel.send({ content: `Welcome **${newState.member.displayName}**\n You can manage your channel with the /**voice** commands.` });
 
 				await autoChannelData.findOneAndUpdate(
 					{ guildId: newState.guild.id, 'masterChannels.masterChannelId': newState.channelId },
@@ -35,7 +38,6 @@ module.exports = {
 						$addToSet: {
 							'masterChannels.$.childChannels': {
 								childId: createdChannel.id,
-								maxUsers: data.childDefaultMaxUsers || 0,
 								createdBy: newState.member.id,
 							},
 						},
@@ -65,7 +67,7 @@ module.exports = {
 
 			// Check if the oldChannel was a child channel
 			if (oldState.channelId === childData.childId) {
-				if (oldState.channel.members.size === 0) {
+				if (oldState.channel?.members.size === 0) {
 					const childChannel = oldState.guild.channels.cache.get(oldState.channelId);
 					await childChannel.delete();
 

@@ -3,12 +3,12 @@ const { autoChannelData } = require('../../models');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('autovoice')
-		.setDescription('Set up an auto voice channel system.')
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+		.setName('avoice')
+		.setDescription('Manage the auto voice channel system.')
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
-				.setName('create')
+				.setName('setup')
 				.setDescription('Set up the auto voice channel system in a category.')
 				.addSubcommand((subCommand) =>
 					subCommand
@@ -17,6 +17,7 @@ module.exports = {
 						.addChannelOption((option) =>
 							option.setName('category').setDescription('The category to set the creator channel to').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
 						)
+						.addStringOption((option) => option.setName('master_category_name').setDescription('Name of the master channel').setRequired(false))
 						.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Template: {USER}').setRequired(false))
 						.addNumberOption((option) =>
 							option.setName('child_default_max_users').setDescription('Default max users for the child channels').setMinValue(0).setMaxValue(99).setRequired(false)
@@ -32,12 +33,12 @@ module.exports = {
 						.setName('creator')
 						.setDescription('Delete the creator channel for this category.')
 						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The category to delete the master channel from').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
+							option.setName('category').setDescription('The category to delete the master channel from').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
 						)
 				)
 		),
 	options: {
-		devOnly: true,
+		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
@@ -50,10 +51,12 @@ module.exports = {
 
 		// switch subGroup
 		switch (subGroup) {
-			case 'create':
+			case 'setup':
 				if (subCommand === 'creator') {
 					// Get the category channel
 					const masterId = interaction.options.getChannel('category');
+					const masterName = interaction.options.getString('master_category_name');
+
 					// Get the guildId
 					const guildId = interaction.guild.id;
 
@@ -67,7 +70,7 @@ module.exports = {
 
 					// Create voice channel
 					let masterChannel = await interaction.guild.channels.create({
-						name: '➕ Join to Create',
+						name: masterName || '➕ Join to Create',
 						type: ChannelType.GuildVoice,
 						parent: masterId,
 					});
@@ -99,7 +102,7 @@ module.exports = {
 			case 'delete':
 				if (subCommand === 'creator') {
 					// Get the category channel
-					const masterId = interaction.options.getChannel('channel');
+					const masterId = interaction.options.getChannel('category');
 					// Get the guildId
 					const guildId = interaction.guild.id;
 
