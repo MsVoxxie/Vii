@@ -13,7 +13,7 @@ module.exports = {
 				.addChannelOption((option) =>
 					option.setName('category').setDescription('The category to set the creator channel to').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
 				)
-				.addStringOption((option) => option.setName('master_category_name').setDescription('Name of the master channel').setRequired(false))
+				.addStringOption((option) => option.setName('master_channel_name').setDescription('Name of the master channel').setRequired(false))
 				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Template: {USER}').setRequired(false))
 				.addNumberOption((option) =>
 					option.setName('child_default_max_users').setDescription('Default max users for the child channels').setMinValue(0).setMaxValue(99).setRequired(false)
@@ -52,7 +52,7 @@ module.exports = {
 			case 'create':
 				// Get the category channel
 				const masterCategory = interaction.options.getChannel('category');
-				const masterName = interaction.options.getString('master_category_name');
+				const masterName = interaction.options.getString('master_channel_name');
 
 				// Check if the category is already set up
 				const masterCheck = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterCategoryId': masterCategory.id });
