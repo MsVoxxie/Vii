@@ -5,8 +5,14 @@ module.exports = {
 	name: Events.VoiceStateUpdate,
 	runType: 'infinity',
 	async execute(client, oldState, newState) {
+		oldState.shouldAudit = false;
+		newState.shouldAudit = false;
+
 		// Joined Voice Channel
-		if (!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) {
+		if (
+			(!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) ||
+			(oldState.channelId && newState.channelId && oldState.channel && newState.channel)
+		) {
 			// Get the auto channel data
 			const findData = await autoChannelData.findOne({ guildId: newState.guild.id, 'masterChannels.masterCategoryId': newState.channel.parent.id });
 			if (!findData) return;
@@ -28,6 +34,9 @@ module.exports = {
 					userLimit: data.childDefaultMaxUsers,
 					position: creatorChannel.position,
 				});
+
+				// Dont audit the channel creation
+				createdChannel.shouldAudit = false;
 
 				// Send basic information about owner commands to the channel.
 				await createdChannel.send({ content: `Welcome **${newState.member.displayName}**\n You can manage your channel with the /**voice** commands.` });

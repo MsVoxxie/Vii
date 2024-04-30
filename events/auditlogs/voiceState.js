@@ -5,6 +5,9 @@ module.exports = {
 	name: Events.VoiceStateUpdate,
 	runType: 'infinity',
 	async execute(client, oldState, newState) {
+		// Check if we should audit
+		if (!oldState.shouldAudit || !newState.shouldAudit) return;
+
 		// Declarations
 		const userId = oldState.id || newState.id;
 		const guildId = oldState.guild.id || newState.guild.id;

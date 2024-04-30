@@ -6,6 +6,9 @@ module.exports = {
 	name: Events.ChannelCreate,
 	runType: 'infinity',
 	async execute(client, channel) {
+		// Check if we should audit
+		if (!channel.shouldAudit) return;
+
 		// Get guild settings
 		const settings = await client.getGuild(channel.guild);
 		if (settings.modLogId === null) return;

@@ -7,6 +7,9 @@ module.exports = {
 	name: Events.ChannelUpdate,
 	runType: 'infinity',
 	async execute(client, oldChannel, newChannel) {
+		// Check if we should audit
+		if (!oldChannel.shouldAudit || !newChannel.shouldAudit) return;
+
 		// Get guild settings
 		const settings = await client.getGuild(oldChannel.guild);
 		if (settings.modLogId === null) return;

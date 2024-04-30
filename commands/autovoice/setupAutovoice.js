@@ -75,6 +75,9 @@ module.exports = {
 						parent: masterId,
 					});
 
+					// Dont audit the channel creation
+					masterChannel.shouldAudit = false;
+
 					// Save data to the database
 					await autoChannelData
 						.findOneAndUpdate(
@@ -111,7 +114,10 @@ module.exports = {
 					if (!check) return interaction.followUp({ content: 'The category is not set up.' });
 
 					// Delete the voice channel by id
-					await interaction.guild.channels.cache.get(check.masterChannels[0].masterChannelId).delete();
+					const masterChannel = await interaction.guild.channels.cache.get(check.masterChannels[0].masterChannelId).delete();
+
+					// Dont audit the channel deletion
+					masterChannel.shouldAudit = false;
 
 					// Delete the master channel
 					await autoChannelData.findOneAndUpdate({ guildId }, { $pull: { masterChannels: { masterCategoryId: masterId.id } } }).then(() => {
