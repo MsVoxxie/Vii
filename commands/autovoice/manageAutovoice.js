@@ -19,14 +19,15 @@ module.exports = {
 				.setName('kick')
 				.setDescription('Kick a user from your channel.')
 				.addUserOption((option) => option.setName('user').setDescription('The user to kick.').setRequired(true))
-		),
+		)
+		.addSubcommand((subCommand) => subCommand.setName('delete').setDescription('Delete your channel.')),
 	options: {
 		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
 		// Defer, Things take time.
-		await interaction.deferReply();
+		await interaction.deferReply({ ephemeral: true });
 
 		// Check if the user is in a voice channel
 		if (!interaction.member.voice.channel) return interaction.editReply({ content: 'You need to be in a voice channel to use this command.', ephemeral: true });
@@ -70,6 +71,16 @@ module.exports = {
 				// Kick the user
 				await childChannel.members.get(user.id).voice.disconnect();
 				interaction.followUp({ content: `${user.displayName} has been kicked from the channel.`, ephemeral: true });
+				break;
+
+			case 'delete':
+				// Delete the child channel
+				await interaction.member.voice.channel.delete();
+				// Check that a channel exists to reply to
+				if (interaction.channel) {
+					interaction.followUp({ content: 'Your channel has been deleted.', ephemeral: true });
+				}
+				break;
 		}
 	},
 };
