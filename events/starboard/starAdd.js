@@ -35,11 +35,7 @@ module.exports = {
 		const existingStar = await starboardData.findOne({ guildId: message.guild.id, messageId: message.id });
 
 		if (existingStar) {
-			starDbData = await starboardData.findOneAndUpdate(
-				{ guildId: message.guild.id, messageId: message.id },
-				{ $set: { starCount } },
-				{ new: true, upsert: true }
-			);
+			starDbData = await starboardData.findOneAndUpdate({ guildId: message.guild.id, messageId: message.id }, { $set: { starCount } }, { new: true, upsert: true });
 		} else {
 			starDbData = await starboardData.findOneAndUpdate(
 				{ guildId: message.guild.id, messageId: message.id },
@@ -70,13 +66,26 @@ module.exports = {
 		const embedButtons = new ActionRowBuilder();
 		embedButtons.addComponents(new ButtonBuilder().setLabel('Original Message').setStyle(ButtonStyle.Link).setURL(message.url));
 		if (starMessageData.reference)
-			embedButtons.addComponents(
-				new ButtonBuilder().setLabel('Referenced Message').setStyle(ButtonStyle.Link).setURL(starMessageData.reference.url)
-			);
+			embedButtons.addComponents(new ButtonBuilder().setLabel('Referenced Message').setStyle(ButtonStyle.Link).setURL(starMessageData.reference.url));
 
 		//! Check if the star threshhold has been met.
 		if (starDbData && starDbData.starCount >= starLimit) {
 			if (!starDbData.isStarred) {
+				// Random quips to tell the user that the message has been starred.
+				const quips = [
+					'Get pinned, idiot.',
+					'You just got pinned, nerd.',
+					`Off to ${starChannel} with you!`,
+					"You've just been sent to the board of shame.",
+					"You've been pinned to the wall, congrats!",
+					'All eyes on you now, buddy.',
+					`Have fun in ${starChannel} :)`,
+				];
+				const randomQuip = quips[Math.floor(Math.random() * quips.length)];
+
+				// Reply to the original message with the quip.
+				await message.reply(randomQuip);
+
 				//! Send Embeds
 				if (baseEmbed?.attachments.length || referenceEmbed?.attachments.length) {
 					starredMessage = await starChannel.send({
@@ -93,10 +102,7 @@ module.exports = {
 					});
 				}
 
-				starDbData = await starboardData.findOneAndUpdate(
-					{ guildId: message.guild.id, messageId: message.id },
-					{ $set: { isStarred: true, starId: starredMessage.id } }
-				);
+				starDbData = await starboardData.findOneAndUpdate({ guildId: message.guild.id, messageId: message.id }, { $set: { isStarred: true, starId: starredMessage.id } });
 			}
 			if (starDbData.isStarred === true) {
 				//! If message is already starred, update it!

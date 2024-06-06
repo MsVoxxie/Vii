@@ -103,10 +103,22 @@ module.exports = {
 				if (!check) return interaction.followUp({ content: 'The category is not set up.' });
 
 				// Delete the voice channel by id
-				const masterChannel = await interaction.guild.channels.cache.get(check.masterChannels[0].masterChannelId).delete();
+				const masterChannel = await interaction.guild.channels.cache
+					.get(check.masterChannels[0].masterChannelId)
+					.delete()
+					.then(async () => {
+						// Fetch each child channel and delete it
+						await check.masterChannels[0].childChannels.forEach(async (childChannel) => {
+							if (childChannel) {
+								try {
+									await interaction.guild.channels.cache.get(childChannel.childId).delete();
+								} catch (error) {}
+							}
+						});
+					});
 
 				// Dont audit the channel deletion
-				masterChannel.shouldAudit = false;
+				if (masterChannel) masterChannel.shouldAudit = false;
 
 				// Delete the master channel
 				await autoChannelData.findOneAndUpdate({ guildId: interaction.guild.id }, { $pull: { masterChannels: { masterCategoryId: masterId.id } } }).then(() => {

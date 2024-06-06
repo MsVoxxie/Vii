@@ -19,9 +19,7 @@ module.exports = {
 				if (childChannel) {
 					try {
 						await channel.guild.channels.cache.get(childChannel.childId).delete();
-					} catch (error) {
-						console.log(error);
-					}
+					} catch (error) {}
 				}
 			});
 
