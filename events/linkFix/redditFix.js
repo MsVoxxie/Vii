@@ -1,4 +1,5 @@
-const { Events } = require('discord.js');
+const { Events, hyperlink } = require('discord.js');
+const { embedHasContent } = require('../../functions/helpers/utils');
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -16,7 +17,32 @@ module.exports = {
 		const fixedURL = new URL(message);
 		fixedURL.hostname = 'www.rxddit.com';
 
-		// Send Fix
-		await message.reply({ content: fixedURL.href, allowedMentions: { repliedUser: false } });
+		// Check if the embed has content
+		const { hasImage, hasThumbnail, hasDescription } = embedHasContent(message.embeds[0]);
+		if (hasImage || hasThumbnail || hasDescription) {
+			//! Manually Fix
+			await message.react('🔧');
+			// Add a reaction collector to listen for the fix reaction
+			const filter = (reaction, user) => reaction.emoji.name === '🔧' && user.id === message.author.id;
+			const collector = message.createReactionCollector({ filter, time: 60 * 1000 });
+
+			collector.on('collect', async () => {
+				await collector.stop();
+				await message.reactions.removeAll();
+
+				// Format the url to be pretty
+				const autoFix = hyperlink(`UserFixed • Reddit`, fixedURL.href);
+				await message.reply({ content: autoFix, allowedMentions: { repliedUser: false } });
+			});
+
+			collector.on('end', async () => {
+				await message.reactions.removeAll();
+			});
+			return;
+		}
+
+		// Format the url to be pretty
+		const autoFix = hyperlink(`AutoFixed • Reddit`, fixedURL.href);
+		await message.reply({ content: autoFix, allowedMentions: { repliedUser: false } });
 	},
 };
