@@ -73,10 +73,9 @@ module.exports = {
 			if (!starDbData.isStarred) {
 				// Random quips to tell the user that the message has been starred.
 				const quips = [
-					'Get pinned, idiot.',
-					'You just got pinned, nerd.',
+					'You just got pinned!',
 					`Off to ${starChannel} with you!`,
-					"You've just been sent to the board of shame.",
+					`You've just been sent to ${starChannel}`,
 					"You've been pinned to the wall, congrats!",
 					'All eyes on you now, buddy.',
 					`Have fun in ${starChannel} :)`,
