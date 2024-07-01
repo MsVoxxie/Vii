@@ -9,7 +9,7 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Connect),
 	options: {
 		devOnly: false,
-		disabled: false,
+		disabled: true,
 	},
 	async execute(client, interaction, settings) {
 		const channel = interaction.member.voice.channel;

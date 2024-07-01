@@ -168,6 +168,17 @@ module.exports = {
 					interaction.followUp('Welcome channel removed');
 				}
 				break;
+			// Welcome message
+			case 'welcomemessage':
+				if (subCommand === 'setmessage') {
+					// Get channel
+					const welcomeMessage = interaction.options.getString('message');
+					// Set welcome message
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeMessage: welcomeMessage });
+					// Follow up
+					interaction.followUp(`Welcome message set to ${welcomeMessage}`);
+				}
+				break;
 			// Leave channel
 			case 'leavechannel':
 				if (subCommand === 'setchannel') {
