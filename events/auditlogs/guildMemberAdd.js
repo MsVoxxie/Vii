@@ -20,10 +20,7 @@ module.exports = {
 				.setTitle('Member Joined')
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-				.addFields(
-					{ name: 'Member Name', value: member.displayName, inline: true },
-					{ name: 'Joined', value: client.relTimestamp(Date.now()), inline: true }
-				);
+				.addFields({ name: 'Member Name', value: member.displayName, inline: true }, { name: 'Joined', value: client.relTimestamp(Date.now()), inline: true });
 
 			// Send message
 			await auditLogChannel.send({ embeds: [embed] });
@@ -34,7 +31,7 @@ module.exports = {
 		if (welcomeChannel) {
 			// Fetch Welcome Text
 			const welcomeText = settings.welcomeMessage;
-			const welcomeMessage = welcomeText.replace('{SERVER_NAME}', member.guild.name).replace('{USER_NAME}', member.displayName);
+			const welcomeMessage = welcomeText.replace('{SERVER_NAME}', member.guild.name).replace('{USER_NAME}', member.displayName).replace('{USER_MENTION}', member);
 
 			// Build Embed
 			const embed = new EmbedBuilder()

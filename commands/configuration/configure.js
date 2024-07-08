@@ -63,7 +63,7 @@ module.exports = {
 					subCommand
 						.setName('setmessage')
 						.setDescription('Set the welcome message')
-						.addStringOption((option) => option.setName('message').setDescription('Templates: {SERVER_NAME} {USER_NAME}').setRequired(true))
+						.addStringOption((option) => option.setName('message').setDescription('Templates: {SERVER_NAME} {USER_NAME} {USER_MENTION}').setRequired(true))
 				)
 		)
 		.addSubcommandGroup((subGroup) =>

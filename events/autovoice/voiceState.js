@@ -32,7 +32,7 @@ module.exports = {
 					type: ChannelType.GuildVoice,
 					parent: creatorChannel.parent,
 					userLimit: data.childDefaultMaxUsers,
-					position: creatorChannel.position + 1,
+					position: creatorChannel.position + 0,
 				});
 
 				// Dont audit the channel creation
