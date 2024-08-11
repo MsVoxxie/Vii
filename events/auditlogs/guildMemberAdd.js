@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require('discord.js');
+const { Events, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	name: Events.GuildMemberAdd,
@@ -6,6 +6,19 @@ module.exports = {
 	async execute(client, member) {
 		// Declarations
 		const settings = await client.getGuild(member.guild);
+		const oldInvites = client.invites.get(member.guild.id);
+		let newInvites;
+
+		// Fetch Invites
+		if (member.guild.members.me.permissions.has(PermissionFlagsBits.ManageGuild)) {
+			newInvites = await member.guild.invites.fetch();
+		}
+
+		// Invite information
+		const usedInvite = newInvites.find((invite) => invite.uses > oldInvites.get(invite.code));
+		const inviter = await client.users.fetch(usedInvite.inviter.id);
+
+		console.log(usedInvite.code, inviter.id);
 
 		// Checks
 		if (member.id === client.user.id) return;
@@ -20,7 +33,12 @@ module.exports = {
 				.setTitle('Member Joined')
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-				.addFields({ name: 'Member Name', value: member.displayName, inline: true }, { name: 'Joined', value: client.relTimestamp(Date.now()), inline: true });
+				.addFields(
+					{ name: 'Member Name', value: `<@${member.id}>`, inline: true },
+					{ name: 'Joined', value: client.relTimestamp(Date.now()), inline: true },
+					{ name: 'Invite Used', value: usedInvite.code, inline: true },
+					{ name: 'Inviter', value: inviter.id ? `<@${inviter.id}>` : 'Unknown', inline: true }
+				);
 
 			// Send message
 			await auditLogChannel.send({ embeds: [embed] });

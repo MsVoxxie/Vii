@@ -72,6 +72,7 @@ client.giveawayManager = new GiveawaysManager(client, {
 
 // Define Collections
 client.commands = new Collection();
+client.invites = new Collection();
 client.events = new Collection();
 
 // Load Database

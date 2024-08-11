@@ -12,5 +12,11 @@ module.exports = {
 			Logger.info(`Joined ${guild.name}`);
 			Logger.success(`Successfully created database entry for ${guild.name}`);
 		}
+
+		// Cache invites for the guild
+		if (!guild || !guild.members.me.permissions.has(PermissionFlagsBits.ManageGuild)) return;
+		guild.invites.fetch().then((invites) => {
+			client.invites.set(guild.id, new Map(invites.map((invite) => [invite.code, invite.uses])));
+		});
 	},
 };

@@ -12,5 +12,8 @@ module.exports = {
 			Logger.info(`Left ${guild.name}`);
 			Logger.success(`Successfully deleted database entry for ${guild.name}`);
 		}
+
+		// Remove invites for the guild
+		client.invites.delete(guild.id);
 	},
 };
