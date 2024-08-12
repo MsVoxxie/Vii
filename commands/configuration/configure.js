@@ -64,6 +64,7 @@ module.exports = {
 						.setName('setmessage')
 						.setDescription('Set the welcome message')
 						.addStringOption((option) => option.setName('message').setDescription('Templates: {SERVER_NAME} {USER_NAME} {USER_MENTION}').setRequired(true))
+						.addStringOption((option) => option.setName('image').setDescription('Image URL to send with the message').setRequired(false))
 				)
 		)
 		.addSubcommandGroup((subGroup) =>
@@ -173,10 +174,11 @@ module.exports = {
 				if (subCommand === 'setmessage') {
 					// Get channel
 					const welcomeMessage = interaction.options.getString('message');
+					const welcomeImage = interaction.options.getString('image') || null;
 					// Set welcome message
-					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeMessage: welcomeMessage });
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { welcomeMessage: welcomeMessage, welcomeImage: welcomeImage });
 					// Follow up
-					interaction.followUp(`Welcome message set to ${welcomeMessage}`);
+					interaction.followUp(`Welcome message set to ${welcomeMessage}.\n${welcomeImage ? `Image set to ${welcomeImage}` : ''}`);
 				}
 				break;
 			// Leave channel

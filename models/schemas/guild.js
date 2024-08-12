@@ -42,6 +42,11 @@ const guildSchema = Schema({
 		default: 'Welcome to {SERVER_NAME}, {USER_NAME}!',
 		required: false,
 	},
+	welcomeImage: {
+		type: String,
+		default: null,
+		required: false,
+	},
 	// Booleans
 	shouldFixLinks: {
 		type: Boolean,

@@ -15,10 +15,8 @@ module.exports = {
 		}
 
 		// Invite information
-		const usedInvite = newInvites.find((invite) => invite.uses > oldInvites.get(invite.code));
-		const inviter = await client.users.fetch(usedInvite.inviter.id);
-
-		console.log(usedInvite.code, inviter.id);
+		const usedInvite = newInvites?.find((invite) => invite.uses > oldInvites.get(invite.code));
+		const inviter = await client.users.fetch(usedInvite?.inviter.id);
 
 		// Checks
 		if (member.id === client.user.id) return;
@@ -52,12 +50,14 @@ module.exports = {
 			const welcomeMessage = welcomeText.replace('{SERVER_NAME}', member.guild.name).replace('{USER_NAME}', member.displayName).replace('{USER_MENTION}', member);
 
 			// Build Embed
-			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
-				.setTitle(member.displayName)
-				.setDescription(welcomeMessage)
-				.setThumbnail(member.displayAvatarURL())
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+			const embed = new EmbedBuilder().setAuthor({ iconURL: member.displayAvatarURL(), name: member.displayName }).setColor(client.colors.vii).setDescription(welcomeMessage);
+
+			if (settings.welcomeImage) {
+				embed.setImage(settings.welcomeImage);
+			} else {
+				embed.setThumbnail(member.displayAvatarURL());
+				embed.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+			}
 
 			// Send message
 			await welcomeChannel.send({ embeds: [embed] });

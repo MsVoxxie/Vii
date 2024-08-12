@@ -83,7 +83,7 @@ module.exports = {
 				const randomQuip = quips[Math.floor(Math.random() * quips.length)];
 
 				// Reply to the original message with the quip.
-				await message.reply(randomQuip);
+				// await message.reply(randomQuip);
 
 				//! Send Embeds
 				if (baseEmbed?.attachments.length || referenceEmbed?.attachments.length) {
