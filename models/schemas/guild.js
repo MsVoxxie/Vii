@@ -12,6 +12,12 @@ const guildSchema = Schema({
 	modLogId: {
 		type: String,
 	},
+	verificationChannelId: {
+		type: String,
+	},
+	verifiedRoleId: {
+		type: String,
+	},
 	welcomeChannelId: {
 		type: String,
 	},

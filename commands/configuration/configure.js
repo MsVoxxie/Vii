@@ -33,6 +33,30 @@ module.exports = {
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
+				.setName('verificationchannel')
+				.setDescription('Configure the verification channel')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setchannel')
+						.setDescription('Set the verification channel')
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the verification channel to').setRequired(true))
+				)
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the verification channel'))
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('verifiedrole')
+				.setDescription('Configure the verified role')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setrole')
+						.setDescription('Set the verified role')
+						.addRoleOption((option) => option.setName('role').setDescription('The role to set the verified role to').setRequired(true))
+				)
+				.addSubcommand((subCommand) => subCommand.setName('removerole').setDescription('Remove the verified role'))
+		) //!
+		.addSubcommandGroup((subGroup) =>
+			subGroup
 				.setName('welcomechannel')
 				.setDescription('Configure the welcome channel')
 				.addSubcommand((subCommand) =>
@@ -149,6 +173,40 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { modLogId: null });
 					// Follow up
 					interaction.followUp('Mod log channel removed');
+				}
+				break;
+			// Verification channel
+			case 'verificationchannel':
+				if (subCommand === 'setchannel') {
+					// Get channel
+					const verificationChannel = interaction.options.getChannel('channel');
+					// Make sure channel is a text channel
+					if (!verificationChannel.isTextBased()) return interaction.followUp('Channel must be a text channel');
+					// Set verification channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { verificationChannelId: verificationChannel.id });
+					// Follow up
+					interaction.followUp(`Verification channel set to ${verificationChannel}`);
+				} else if (subCommand === 'removechannel') {
+					// Remove verification channel
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { verificationChannelId: null });
+					// Follow up
+					interaction.followUp('Verification channel removed');
+				}
+				break;
+			// Verified role
+			case 'verifiedrole':
+				if (subCommand === 'setrole') {
+					// Get role
+					const verifiedRole = interaction.options.getRole('role');
+					// Set verified role
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { verifiedRoleId: verifiedRole.id });
+					// Follow up
+					interaction.followUp(`Verified role set to ${verifiedRole}`);
+				} else if (subCommand === 'removerole') {
+					// Remove verified role
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { verifiedRoleId: null });
+					// Follow up
+					interaction.followUp('Verified role removed');
 				}
 				break;
 			// Welcome channel

@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { Events, EmbedBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
 	name: Events.GuildMemberAdd,
@@ -62,5 +62,46 @@ module.exports = {
 			// Send message
 			await welcomeChannel.send({ embeds: [embed] });
 		}
+
+		// Verification System
+		if (!settings.verificationChannelId) return;
+		// Check for Verification Channel
+		const verificationChannel = await member.guild.channels.cache.get(settings.verificationChannelId);
+		if (!verificationChannel && auditLogChannel) {
+			const embed = new EmbedBuilder()
+				.setColor(client.colors.vii)
+				.setTitle('Verification Channel Not Found')
+				.setDescription('The verification channel was not found. Please set it with the `/configure` command.');
+			return await auditLogChannel.send({ embeds: [embed] });
+		} else if (!verificationChannel) {
+			return;
+		}
+
+		// Check for Verified Role
+		const verifiedRole = member.guild.roles.cache.get(settings.verifiedRoleId);
+		if (!verifiedRole && auditLogChannel) {
+			const embed = new EmbedBuilder()
+				.setColor(client.colors.vii)
+				.setTitle('Verified Role Not Found')
+				.setDescription('The verified role was not found. Please set it with the `/configure` command.');
+			return await auditLogChannel.send({ embeds: [embed] });
+		} else if (!verifiedRole) {
+			return;
+		}
+
+		// Create Verification Embed
+		const embed = new EmbedBuilder()
+			.setColor(client.colors.vii)
+			.setTitle('Verification Request')
+			.setDescription(`${member} has joined the server.\nPlease confirm or deny their entry by clicking the buttons below.`);
+
+		// Create Buttons
+		const verificationButtons = new ActionRowBuilder().addComponents(
+			new ButtonBuilder().setLabel('Confirm').setStyle(ButtonStyle.Success).setCustomId(`verify_${member.id}`),
+			new ButtonBuilder().setLabel('Deny').setStyle(ButtonStyle.Danger).setCustomId(`deny_${member.id}`)
+		);
+
+		// Send Message
+		await verificationChannel.send({ embeds: [embed], components: [verificationButtons] });
 	},
 };
