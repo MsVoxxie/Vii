@@ -15,6 +15,25 @@ module.exports = {
 		// Check if the staff member has the manage_members permission
 		if (!staffMember.permissions.has(PermissionFlagsBits.ManageRoles)) return;
 
+		// Check if I have the permissions to manage roles or kick members
+		if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles) && !interaction.guild.members.me.permissions.has(PermissionFlagsBits.KickMembers)) {
+			if (settings.auditLogId) {
+				const auditLog = interaction.guild.channels.cache.get(settings.auditLogId);
+				const embed = new EmbedBuilder()
+					.setTitle('Missing Permissions')
+					.setDescription(`I need the **Manage Roles** and **Kick Members** permission to verify or deny members.`)
+					.setColor(client.colors.error)
+					.setTimestamp();
+				auditLog.send({ embeds: [embed] });
+			} else {
+				try {
+					staffMember.send('I need the **Manage Roles** and **Kick Members** permission to verify or deny members.');
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}
+
 		// Fetch guild settings
 		const settings = await client.getGuild(interaction.guild);
 		const verifiedRole = interaction.guild.roles.cache.get(settings.verifiedRoleId);
