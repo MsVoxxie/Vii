@@ -6,7 +6,7 @@ module.exports = {
 	runType: 'infinity',
 	async execute(client, oldState, newState) {
 		// Check if we should audit
-		if (!oldState.shouldAudit || !newState.shouldAudit) return;
+		if (oldState.shouldAudit === false || newState.shouldAudit === false) return;
 
 		// Declarations
 		const userId = oldState.id || newState.id;

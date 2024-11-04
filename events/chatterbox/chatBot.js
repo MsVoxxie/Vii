@@ -18,7 +18,7 @@ module.exports = {
 	async execute(client, message) {
 		// Checks
 		if (message.author.bot) return;
-		if (!process.env.CHATTERBOX_WHITELIST.includes(message.author.id) && !process.env.DEVELOPERS.includes(message.author.id)) return;
+		// if (!process.env.CHATTERBOX_WHITELIST.includes(message.author.id) && !process.env.DEVELOPERS.includes(message.author.id)) return;
 		if (!message.content.toLowerCase().startsWith('hey vii')) return;
 
 		// Pretend to type
