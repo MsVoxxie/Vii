@@ -24,8 +24,10 @@ module.exports = {
 		let { executor, createdTimestamp } = await getAuditLogs(message.guild, AuditLogEvent.MessageDelete);
 		if (!executor) return;
 
-		// Check for time difference
-		if (createdTimestamp > Date.now() - 5000) executor = message.member;
+		// Check for time difference, if the returned audit log createdTimestamp is greater than 5 seconds, set executor to message author
+		if (Date.now() - createdTimestamp > 5000) {
+			executor = message.author;
+		}
 
 		// Build Embed
 		const embed = new EmbedBuilder()
