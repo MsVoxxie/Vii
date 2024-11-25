@@ -22,7 +22,7 @@ module.exports = {
 
 		// Create Embed
 		const embed = new EmbedBuilder()
-			.setTitle('Member Updated')
+			.setTitle('Member Updated Generic [Unhandled]')
 			.setColor(client.colors.vii)
 			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 			.setDescription(`**Member:** ${oldMember.displayName}\n**Updated:** ${client.relTimestamp(Date.now())}`)
@@ -30,11 +30,13 @@ module.exports = {
 
 		// Avatar
 		if (oldAvatar !== newAvatar) {
+			embed.setTitle('Member Avatar Updated');
 			embed.addFields({ name: 'Avatar', value: `[**[Before]**](${oldAvatar}) **›** [**[After]**](${newAvatar})`, inline: false });
 		}
 
 		// Username
 		if (oldMember.user.username !== newMember.user.username) {
+			embed.setTitle('Member Username Updated');
 			embed.addFields({ name: 'Username', value: `${oldMember.user.username} **›** ${newMember.user.username}`, inline: false });
 		}
 
@@ -43,6 +45,7 @@ module.exports = {
 			// Get information
 			let { executor } = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 
+			embed.setTitle('Member Nickname Updated');
 			embed.addFields(
 				{
 					name: 'Nickname',
@@ -64,6 +67,7 @@ module.exports = {
 			// Get information
 			let { executor, reason } = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 
+			embed.setTitle('Member Timeout Updated');
 			embed.addFields(
 				{
 					name: 'Timeout',
@@ -103,6 +107,7 @@ module.exports = {
 			// Get information
 			let { executor } = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 
+			embed.setTitle('Member Roles Updated');
 			embed.addFields(
 				{
 					name: 'Removed Roles',
@@ -121,6 +126,7 @@ module.exports = {
 			// Get information
 			let { executor } = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 
+			embed.setTitle('Member Roles Updated');
 			embed.addFields(
 				{
 					name: 'Added Roles',
