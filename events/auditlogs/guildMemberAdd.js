@@ -16,7 +16,7 @@ module.exports = {
 
 		// Invite information
 		const usedInvite = newInvites?.find((invite) => invite.uses > oldInvites.get(invite.code));
-		const inviter = await client.users.fetch(usedInvite?.inviter.id);
+		const inviter = await client.users?.fetch(usedInvite?.inviter.id);
 
 		// Checks
 		if (member.id === client.user.id) return;
