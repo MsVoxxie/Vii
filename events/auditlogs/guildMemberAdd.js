@@ -31,6 +31,7 @@ module.exports = {
 				.setTitle('Member Joined')
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `User ID: ${member.id}` })
 				.addFields(
 					{ name: 'Member Name', value: `<@${member.id}>`, inline: true },
 					{ name: 'Joined', value: client.relTimestamp(Date.now()), inline: true },
