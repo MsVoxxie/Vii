@@ -18,8 +18,8 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(client.colors.vii)
 			.addFields(
-				{ name: `<:discord_white:1229370575294566431> Websocket`, value: blockQuote(codeBlock(websocketPing)), inline: true },
-				{ name: '<:theconnectionisgood:1229370579102994472> Host<>Discord', value: blockQuote(codeBlock(discordPing)), inline: true }
+				{ name: `<:discord_white:1338246567546851408> Websocket`, value: blockQuote(codeBlock(websocketPing)), inline: true },
+				{ name: '<:connection_good:1338246534826950707> Host<>Discord', value: blockQuote(codeBlock(discordPing)), inline: true }
 			)
 			.setTimestamp();
 
