@@ -13,6 +13,10 @@ module.exports = {
 		const modLogChannel = await invite.guild.channels.cache.get(settings.modLogId);
 		if (!modLogChannel) return;
 
+		// Get audit log entry
+		const auditLog = await getAuditLogs(invite.guild, AuditLogEvent.InviteCreate);
+		const reasonId = auditLog.reason.split(' ')[2].replace(/[<>@!]/g, '');
+
 		// Create embed
 		const embed = new EmbedBuilder()
 			.setTitle('Invite Created')
@@ -23,7 +27,7 @@ module.exports = {
 				{ name: 'Invite Uses', value: `${invite.maxUses === 0 ? 'Infinite' : invite.maxUses}`, inline: true },
 				{ name: 'Invite Expires', value: invite.expiresTimestamp === null ? 'Never' : client.relTimestamp(invite.expiresTimestamp), inline: true },
 				{ name: 'Target Channel', value: `${invite.channel.url}`, inline: true },
-				{ name: 'Created By', value: `<@${invite.inviter.id}>`, inline: true },
+				{ name: 'Created By', value: `${reasonId ? `<@${reasonId}>` : `<@${invite.inviter.id}>`}`, inline: true },
 				{ name: 'Created', value: client.relTimestamp(Date.now()), inline: true }
 			);
 

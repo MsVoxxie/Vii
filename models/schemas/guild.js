@@ -30,6 +30,12 @@ const guildSchema = Schema({
 	starboardChannelId: {
 		type: String,
 	},
+	inviteChannelId: {
+		type: String,
+	},
+	inviteEmbedId: {
+		type: String,
+	},
 	// Emojis
 	starboardEmoji: {
 		type: String,
@@ -40,6 +46,16 @@ const guildSchema = Schema({
 	starboardLimit: {
 		type: Number,
 		default: 3,
+		required: false,
+	},
+	inviteMaxUses: {
+		type: Number,
+		default: 0,
+		required: false,
+	},
+	inviteMaxAge: {
+		type: Number,
+		default: 0,
 		required: false,
 	},
 	// Strings

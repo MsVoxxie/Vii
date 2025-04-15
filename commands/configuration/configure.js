@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { Guild } = require('../../models/index');
 
 module.exports = {
@@ -45,6 +45,47 @@ module.exports = {
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
+				.setName('invite_config')
+				.setDescription('Configure the invite system')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setup')
+						.setDescription('Setup the invite system')
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the invite system to').setRequired(true))
+						.addStringOption((option) => option.setName('embed_message').setDescription('The message to send in the invite system embed').setRequired(true))
+						.addStringOption((option) =>
+							option
+								.setName('invite_max_uses')
+								.setDescription('The max uses for the invite link')
+								.setRequired(true)
+								.addChoices(
+									{ name: '1 Use', value: '1' },
+									{ name: '5 Uses', value: '5' },
+									{ name: '10 Uses', value: '10' },
+									{ name: '25 Uses', value: '25' },
+									{ name: '50 Uses', value: '50' },
+									{ name: '100 Uses', value: '100' }
+								)
+						)
+						.addStringOption((option) =>
+							option
+								.setName('invite_max_age')
+								.setDescription('The max age for the invite link')
+								.setRequired(true)
+								.addChoices(
+									{ name: '1 Hour', value: '3600' },
+									{ name: '6 Hours', value: '21600' },
+									{ name: '12 Hours', value: '43200' },
+									{ name: '1 Day', value: '86400' },
+									{ name: '7 Days', value: '604800' },
+									{ name: 'Never Expire', value: '0' }
+								)
+						)
+				)
+				.addSubcommand((subCommand) => subCommand.setName('remove').setDescription('Remove the invite system'))
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
 				.setName('verifiedrole')
 				.setDescription('Configure the verified role')
 				.addSubcommand((subCommand) =>
@@ -54,7 +95,7 @@ module.exports = {
 						.addRoleOption((option) => option.setName('role').setDescription('The role to set the verified role to').setRequired(true))
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removerole').setDescription('Remove the verified role'))
-		) //!
+		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
 				.setName('welcomechannel')
@@ -297,6 +338,91 @@ module.exports = {
 					interaction.followUp(`Role notifications are now set to ${toggleSwitch}`);
 				}
 				break;
+
+			// Invite system
+			case 'invite_config':
+				if (subCommand === 'setup') {
+					// Get channel
+					const inviteChannel = interaction.options.getChannel('channel');
+					// Make sure channel is a text channel
+					if (!inviteChannel.isTextBased()) return interaction.followUp('Channel must be a text channel');
+					// Get embed message
+					const embedMessage = interaction.options.getString('embed_message');
+					// Get max uses
+					const maxUses = interaction.options.getString('invite_max_uses');
+					// Get max age
+					const maxAge = interaction.options.getString('invite_max_age');
+
+					// Confirmation message
+					const confirmEmbed = new EmbedBuilder()
+						.setColor('Green')
+						.setTitle('Invite System Setup')
+						.setDescription(
+							`Invite system setup in ${inviteChannel} with the following settings:\n\n**Embed Message:** ${embedMessage}\n**Max Uses:** ${maxUses}\n**Max Age:** ${maxAge}`
+						);
+
+					// Create the Invite Embed and Button
+					const inviteEmbed = new EmbedBuilder()
+						.setColor(client.colors.vii)
+						.setDescription(embedMessage)
+						.setFooter({ text: 'Click the button below to get your invite link!' });
+					const invButton = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('get_invite').setLabel('Get Invite Link').setStyle(ButtonStyle.Success));
+
+					try {
+						// Send the invite embed
+						const inviteMessage = await inviteChannel.send({ embeds: [inviteEmbed], components: [invButton] });
+
+						// Set invite system
+						await Guild.findOneAndUpdate(
+							{ guildId: interaction.guild.id },
+							{
+								inviteChannelId: inviteChannel.id,
+								inviteEmbedId: inviteMessage.id,
+								inviteMaxUses: maxUses,
+								inviteMaxAge: maxAge,
+							}
+						);
+
+						// Send confirmation message
+						await interaction.followUp({ embeds: [confirmEmbed] });
+					} catch (error) {
+						console.error('Error sending invite embed:', error);
+						await interaction.followUp('There was an error setting up the invite system. Please try again.');
+					}
+				}
+
+				// Remove invite system
+				if (subCommand === 'remove') {
+					// Get the invite channel from the database
+					const settings = await client.getGuild(interaction.guild);
+					const inviteChannelId = settings.inviteChannelId;
+					const inviteMessageId = settings.inviteEmbedId;
+					let errMsg;
+
+					// Try to fetch the channel and message
+					try {
+						const inviteChannel = await interaction.guild.channels.fetch(inviteChannelId);
+						const inviteMessage = await inviteChannel.messages.fetch(inviteMessageId);
+
+						// Delete the message
+						await inviteMessage.delete();
+					} catch (error) {
+						console.error('Error deleting invite message:', error);
+						errMsg = 'There was an error deleting the invite message.';
+					}
+
+					// Remove invite system
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { inviteChannelId: null, inviteMaxUses: null, inviteMaxAge: null });
+					// Follow up
+					interaction.followUp({ content: `Invite system removed${errMsg ? `\nHowever, ${errMsg}` : ''}`, flags: MessageFlags.Ephemeral });
+				}
+				break;
 		}
 	},
 };
+// Invite button idea
+// Generate an embed with a configurable message, invite uses and, duration.
+
+// Will make a button which users can click,
+
+// Clicking the button will dm them an invite link for the server

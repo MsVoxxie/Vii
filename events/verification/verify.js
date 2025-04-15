@@ -4,7 +4,7 @@ module.exports = {
 	name: Events.InteractionCreate,
 	runType: 'infinity',
 	async execute(client, interaction) {
-		if (!interaction.isButton()) return console.log('Not a button.');
+		if (!interaction.isButton()) return;
 
 		// Declarations
 		const staffMember = interaction.member;
