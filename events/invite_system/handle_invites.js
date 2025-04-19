@@ -33,7 +33,6 @@ module.exports = {
 
 		// Send the invite link to the user directly
 		try {
-			await interaction.user.send({ embeds: [embed] });
 			await interaction.reply({
 				embeds: [embed],
 				flags: MessageFlags.Ephemeral,
