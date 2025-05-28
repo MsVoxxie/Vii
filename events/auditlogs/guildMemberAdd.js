@@ -15,8 +15,19 @@ module.exports = {
 		}
 
 		// Invite information
-		const usedInvite = newInvites?.find((invite) => invite.uses > oldInvites.get(invite.code));
-		let inviter = await client.users?.fetch(usedInvite?.inviter.id);
+		const usedInvite = newInvites?.find((invite) => {
+			const oldUses = oldInvites.get(invite.code)?.uses ?? 0;
+			return invite.uses > oldUses;
+		});
+
+		let inviter = null;
+		if (usedInvite?.inviter?.id) {
+			try {
+				inviter = await client.users.fetch(usedInvite.inviter.id);
+			} catch (err) {
+				console.error('Failed to fetch inviter:', err);
+			}
+		}
 		if (!inviter) inviter = { id: null };
 
 		// Checks
@@ -59,6 +70,10 @@ module.exports = {
 			} else {
 				embed.setThumbnail(member.displayAvatarURL());
 				embed.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+			}
+
+			if (inviter.id) {
+				embed.setFooter({ text: `Invited by: ${inviter.displayName}`, iconURL: inviter.displayAvatarURL() });
 			}
 
 			// Send message
