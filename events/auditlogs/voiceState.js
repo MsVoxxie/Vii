@@ -7,7 +7,6 @@ module.exports = {
 	async execute(client, oldState, newState) {
 		// Check if we should audit
 		if (oldState.shouldAudit === false || newState.shouldAudit === false) return;
-
 		// Declarations
 		const userId = oldState.id || newState.id;
 		const guildId = oldState.guild.id || newState.guild.id;
@@ -20,7 +19,6 @@ module.exports = {
 		const auditLogChannel = await curGuild.channels.cache.get(settings.auditLogId);
 		if (!auditLogChannel) return;
 
-		// Setup Channel Strings
 		if (oldState && oldState.channel && oldState.channel.parent && oldState.channel.parent.name) oldParentName = oldState.channel.parent.name;
 		if (oldState && oldState.channel && oldState.channel.name) oldChannelName = oldState.channel.name;
 		if (oldState && oldState.channelId) oldChannelId = oldState.channelId;
@@ -30,7 +28,7 @@ module.exports = {
 		if (newState && newState.channelId) newChannelId = newState.channelId;
 
 		// Joined Voice Channel
-		if (!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) {
+		if (!oldState.channelId && newState.channelId) {
 			// Database Entry
 			await userData.findOneAndUpdate({ guildId: guildId, userId: userId }, { $set: { voiceState: { joinDate: Date.now() } } }, { upsert: true, new: true });
 
@@ -41,7 +39,7 @@ module.exports = {
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields(
-					{ name: 'Joined Channel', value: newState.channel.url, inline: false },
+					{ name: 'Joined Channel', value: newState.channel?.url || 'Unknown', inline: false },
 					{ name: 'User Joined', value: `<@${member.id}>`, inline: false },
 					{ name: 'Connected', value: client.relTimestamp(Date.now()), inline: false }
 				);
@@ -50,11 +48,11 @@ module.exports = {
 			await auditLogChannel.send({ embeds: [embed] });
 		}
 
-		//Left Voice Channel
-		if (oldState.channelId && !newState.channelId && oldState.channel && !newState.channel) {
+		// Left Voice Channel
+		if (oldState.channelId && !newState.channelId) {
 			// Old Date
 			const oldData = await userData.findOne({ guildId: guildId, userId: userId }).lean();
-			const oldVoice = oldData.voiceState;
+			const oldVoice = oldData?.voiceState || {};
 
 			// Database Entry
 			const newData = await userData.findOneAndUpdate(
@@ -70,7 +68,7 @@ module.exports = {
 				.setThumbnail(member.displayAvatarURL())
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 				.addFields(
-					{ name: 'Left Channel', value: oldState.channel.url, inline: false },
+					{ name: 'Left Channel', value: oldState.channel?.url || 'Unknown', inline: false },
 					{ name: 'User Joined', value: `<@${member.id}>`, inline: false },
 					{ name: 'Disconnected', value: client.relTimestamp(Date.now()), inline: false },
 					{
@@ -84,7 +82,7 @@ module.exports = {
 			await auditLogChannel.send({ embeds: [embed] });
 		}
 
-		//Switched Voice Channel
+		// Switched Voice Channel
 		if (oldState.channelId && newState.channelId && oldState.channel && newState.channel) {
 			// False positive check
 			if (oldState.channelId === newState.channelId) return;

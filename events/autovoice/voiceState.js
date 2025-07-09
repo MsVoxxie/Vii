@@ -5,9 +5,6 @@ module.exports = {
 	name: Events.VoiceStateUpdate,
 	runType: 'infinity',
 	async execute(client, oldState, newState) {
-		oldState.shouldAudit = false;
-		newState.shouldAudit = false;
-
 		// Joined Voice Channel
 		if (
 			(!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) ||
