@@ -38,6 +38,11 @@ module.exports = {
 					'[Gorp!](https://cdn.discordapp.com/attachments/988469231760838721/1328879906007945226/DOG_GOES_GORP_1.mp4?ex=67884f5a&is=6786fdda&hm=c0181bc4a9954ea0acbb4e54cd7727bf8b0a3cc7e302f987f99ec4814e3683fd&)'
 				);
 				break;
+			case '💨':
+				msg.channel.send(
+					'[Wake Up](https://cdn.discordapp.com/attachments/694220032284295261/1141529641052557382/8ZhvWM3evLxRGWlZ.mp4?ex=688b6213&is=688a1093&hm=995e09b50862e11a0a63b72109afe4ef10d65c4303934d165123c071ba332792&)'
+				);
+				break;
 		}
 	},
 };
