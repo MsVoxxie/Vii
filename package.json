@@ -32,7 +32,7 @@
 		"cors": "^2.8.5",
 		"discord-gamecord": "^4.4.1",
 		"discord-giveaways": "^6.0.1",
-		"discord.js": "^14.12.1",
+		"discord.js": "^14.15.3",
 		"distube": "^4.1.0",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
