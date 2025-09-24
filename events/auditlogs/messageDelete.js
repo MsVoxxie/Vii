@@ -1,5 +1,6 @@
 const { Events, AuditLogEvent, EmbedBuilder, cleanCodeBlockContent, codeBlock } = require('discord.js');
 const getAuditLogs = require('../../functions/audithelpers/getAuditLogs.js');
+const { roleAssignmentData } = require('../../models/index.js');
 
 module.exports = {
 	name: Events.MessageDelete,
@@ -8,6 +9,19 @@ module.exports = {
 		// If Partial, give up
 		if (message.partial) return;
 		if (message.author.bot) return;
+
+		// If the message ID relates to a role reaction, delete the entry from the database.
+		try {
+			const roles = await roleAssignmentData.find({ messageId: message.id });
+			if (roles.length) {
+				// Loop through each role and delete it.
+				for (const role of roles) {
+					await role.deleteOne();
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
 
 		// If its a sticker, return
 		if (message.stickers?.size) return;
