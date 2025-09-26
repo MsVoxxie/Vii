@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,7 +24,7 @@ module.exports = {
 
 		// Fetch the weather data
 		const weatherData = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locale}&aqi=no`).then((response) => response.json());
-		if (weatherData.error) return interaction.reply({ content: 'Invalid location provided.', ephemeral: true });
+		if (weatherData.error) return interaction.reply({ content: 'Invalid location provided.', flags: MessageFlags.Ephemeral });
 
 		// Create the embed
 		const embed = new EmbedBuilder()

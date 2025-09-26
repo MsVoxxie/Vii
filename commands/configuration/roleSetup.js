@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 const { roleAssignmentData } = require('../../models/index');
 const generateId = require('../../functions/helpers/generateId');
 
@@ -36,10 +36,10 @@ module.exports = {
 			case 'create':
 				// Check for valid options
 				if (!interaction.options.getString('messagelink').startsWith('https://discord.com/channels/'))
-					return interaction.followUp({ content: 'The message link you provided is not valid.', ephemeral: true });
+					return interaction.followUp({ content: 'The message link you provided is not valid.', flags: MessageFlags.Ephemeral });
 				const emojiTest = new RegExp(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
 				if (emojiTest.test(interaction.options.getString('emoji')) === false)
-					return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', ephemeral: true });
+					return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', flags: MessageFlags.Ephemeral });
 
 				// Get options
 				const msgLink = interaction.options.getString('messagelink').split('/').slice(5);
@@ -52,15 +52,15 @@ module.exports = {
 				// Check that we can add roles to this message
 				const reactionCount = await fetchedMessage.reactions.cache.size;
 				if (reactionCount >= 20)
-					return interaction.followUp({ content: 'This message has too many reactions already.\nPlease create a new message and try again.', ephemeral: true });
+					return interaction.followUp({ content: 'This message has too many reactions already.\nPlease create a new message and try again.', flags: MessageFlags.Ephemeral });
 
 				// Check if this emoji has already been used on this message
 				const checkEmoji = await fetchedMessage.reactions.cache.get(emojiId)?.count;
-				if (checkEmoji) return interaction.followUp({ content: 'This emoji is already used for this message.\nPlease try another.', ephemeral: true });
+				if (checkEmoji) return interaction.followUp({ content: 'This emoji is already used for this message.\nPlease try another.', flags: MessageFlags.Ephemeral });
 
 				// Check if this role already exists
 				const checkRoles = await roleAssignmentData.exists({ guildId: interaction.guild.id, roleId: roleId.id }).lean();
-				if (checkRoles) return interaction.followUp({ content: 'This role has already been added to this guild.', ephemeral: true });
+				if (checkRoles) return interaction.followUp({ content: 'This role has already been added to this guild.', flags: MessageFlags.Ephemeral });
 
 				// Create database entry
 				await roleAssignmentData
@@ -88,7 +88,7 @@ module.exports = {
 
 						interaction.followUp({ embeds: [embed] });
 					})
-					.catch((e) => interaction.followUp({ content: 'An error occurred while creating this role. Please try again', ephemeral: true }));
+					.catch((e) => interaction.followUp({ content: 'An error occurred while creating this role. Please try again', flags: MessageFlags.Ephemeral }));
 
 				break;
 
@@ -98,7 +98,7 @@ module.exports = {
 
 				// Fetch database entry for the itentifier
 				const reactionData = await roleAssignmentData.findOne({ guildId: interaction.guild.id, uniqueIdentifier: reactionIdentifier });
-				if (!reactionData) return interaction.followUp({ content: 'The ID you provided does not exist in my database', ephemeral: true });
+				if (!reactionData) return interaction.followUp({ content: 'The ID you provided does not exist in my database', flags: MessageFlags.Ephemeral });
 
 				// Fetch the channel and remove the reaction
 				const reactionChannel = await interaction.guild.channels.fetch(reactionData.channelId);
@@ -119,7 +119,7 @@ module.exports = {
 
 						await interaction.followUp({ embeds: [embed] });
 					})
-					.catch((e) => interaction.followUp({ content: 'An error occurred while deleting this role. Please try again', ephemeral: true }));
+					.catch((e) => interaction.followUp({ content: 'An error occurred while deleting this role. Please try again', flags: MessageFlags.Ephemeral }));
 				break;
 		}
 	},

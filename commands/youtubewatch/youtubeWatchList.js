@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder, MessageFlags } = require('discord.js');
 const { youtubeNotificationData } = require('../../models/index');
 const Parser = require('rss-parser');
 const parser = new Parser();
@@ -15,7 +15,7 @@ module.exports = {
 	},
 	async execute(client, interaction, settings) {
 		// Defer, Things take time.
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		// Get all of this guilds watched channels
 		const watchedChannels = await youtubeNotificationData.find({ guildId: interaction.guildId });

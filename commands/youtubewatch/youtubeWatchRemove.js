@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, MessageFlags } = require('discord.js');
 const { youtubeNotificationData } = require('../../models/index');
 const Parser = require('rss-parser');
 const parser = new Parser();
@@ -23,7 +23,7 @@ module.exports = {
 	},
 	async execute(client, interaction, settings) {
 		// Defer, Things take time.
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		// Declarations
 		const targetYtChannelId = interaction.options.getString('youtube-id');

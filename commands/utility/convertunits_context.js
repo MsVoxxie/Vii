@@ -1,4 +1,4 @@
-const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder } = require('discord.js');
+const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder, MessageFlags } = require('discord.js');
 const { doConversions } = require('../../functions/unitconversions/measurments');
 
 module.exports = {
@@ -37,7 +37,7 @@ module.exports = {
 		if (parseResult.success) {
 			interaction.reply({ embeds: [parseResult.embed] });
 		} else {
-			interaction.reply({ content: 'Nothing to Convert!', ephemeral: true });
+			interaction.reply({ content: 'Nothing to Convert!', flags: MessageFlags.Ephemeral });
 		}
 	},
 };

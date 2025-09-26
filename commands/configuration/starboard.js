@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const { Guild } = require('../../models/index');
 
 module.exports = {
@@ -15,9 +15,7 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the starboard channel')
-						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The channel to set the starboard channel to').setRequired(true)
-						)
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the starboard channel to').setRequired(true))
 				)
 				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the starboard channel'))
 				.addSubcommand((subCommand) =>
@@ -30,9 +28,7 @@ module.exports = {
 					subCommand
 						.setName('starcount')
 						.setDescription('Set the starboard react emoji')
-						.addNumberOption((option) =>
-							option.setName('count').setDescription('How many stars for a post to be pinned').setMinValue(1).setMaxValue(99).setRequired(true)
-						)
+						.addNumberOption((option) => option.setName('count').setDescription('How many stars for a post to be pinned').setMinValue(1).setMaxValue(99).setRequired(true))
 				)
 		),
 
@@ -73,7 +69,7 @@ module.exports = {
 					const starboardEmoji = interaction.options.getString('emoji');
 					const emojiTest = new RegExp(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
 					if (emojiTest.test(starboardEmoji) === false)
-						return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', ephemeral: true });
+						return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', flags: MessageFlags.Ephemeral });
 					// Set Starboard Emoji
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { starboardEmoji: starboardEmoji });
 					// Follow up

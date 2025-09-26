@@ -12,15 +12,29 @@ module.exports = {
 		// Fetch Invites
 		if (member.guild.members.me.permissions.has(PermissionFlagsBits.ManageGuild)) {
 			newInvites = await member.guild.invites.fetch();
+		} else {
+			newInvites = null;
 		}
 
-		// Invite information
-		const usedInvite = newInvites?.find((invite) => {
-			const oldUses = oldInvites.get(invite.code)?.uses ?? 0;
-			return invite.uses > oldUses;
-		});
+		let usedInvite;
+		if (newInvites && oldInvites) {
+			usedInvite = newInvites.find((invite) => {
+				const oldUses = oldInvites.get(invite.code)?.uses ?? 0;
+				return invite.uses > oldUses;
+			});
+		}
 
+		// Handle vanity URL
 		let inviter = null;
+		if (!usedInvite && member.guild.vanityURLCode) {
+			usedInvite = { code: member.guild.vanityURLCode, inviter: null, isVanity: true };
+		}
+
+		// Fallback if no invite found
+		if (!usedInvite) {
+			usedInvite = { code: 'Unknown', inviter: null };
+		}
+
 		if (usedInvite?.inviter?.id) {
 			try {
 				inviter = await client.users.fetch(usedInvite.inviter.id);
@@ -29,6 +43,9 @@ module.exports = {
 			}
 		}
 		if (!inviter) inviter = { id: null };
+
+		// Update invite cache for next join
+		if (newInvites) client.invites.set(member.guild.id, newInvites);
 
 		// Checks
 		if (member.id === client.user.id) return;

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const ms = require('ms');
 
 module.exports = {
@@ -51,7 +51,7 @@ module.exports = {
 		switch (subCommand) {
 			case 'start':
 				// Reply to let the user know the giveaway is being created
-				await interaction.reply({ content: 'Creating giveaway...', ephemeral: true });
+				await interaction.reply({ content: 'Creating giveaway...', flags: MessageFlags.Ephemeral });
 
 				// Get options
 				const duration = ms(interaction.options.getString('duration') || '');
@@ -146,11 +146,11 @@ module.exports = {
 				}
 
 				// Edit reply to let the user know the giveaway was created
-				await interaction.editReply({ content: `Giveaway created in ${showChannel}.`, ephemeral: true });
+				await interaction.editReply({ content: `Giveaway created in ${showChannel}.`, flags: MessageFlags.Ephemeral });
 				break;
 			case 'edit':
 				// Reply to let the user know the giveaway is being edited
-				await interaction.reply({ content: 'Editing giveaway...', ephemeral: true });
+				await interaction.reply({ content: 'Editing giveaway...', flags: MessageFlags.Ephemeral });
 
 				// Get options
 				const newPrize = interaction.options.getString('prize');
@@ -166,16 +166,16 @@ module.exports = {
 						newPrize: newPrize,
 					})
 					.then(() => {
-						interaction.editReply({ content: `Giveaway edited.`, ephemeral: true });
+						interaction.editReply({ content: `Giveaway edited.`, flags: MessageFlags.Ephemeral });
 					})
 					.catch((err) => {
-						interaction.editReply({ content: `An error occured editing your giveaway.`, ephemeral: true });
+						interaction.editReply({ content: `An error occured editing your giveaway.`, flags: MessageFlags.Ephemeral });
 					});
 				break;
 
 			case 'end':
 				// Reply to let the user know the giveaway is being ended
-				await interaction.reply({ content: 'Ending giveaway...', ephemeral: true });
+				await interaction.reply({ content: 'Ending giveaway...', flags: MessageFlags.Ephemeral });
 
 				// Get options
 				const endMessageId = interaction.options.getString('message_id');
@@ -184,16 +184,16 @@ module.exports = {
 				client.giveawayManager
 					.end(endMessageId)
 					.then(() => {
-						interaction.editReply({ content: `Giveaway ended.`, ephemeral: true });
+						interaction.editReply({ content: `Giveaway ended.`, flags: MessageFlags.Ephemeral });
 					})
 					.catch((err) => {
-						interaction.editReply({ content: `An error occured ending your giveaway.`, ephemeral: true });
+						interaction.editReply({ content: `An error occured ending your giveaway.`, flags: MessageFlags.Ephemeral });
 					});
 				break;
 
 			case 'reroll':
 				// Reply to let the user know the giveaway is being rerolled
-				await interaction.reply({ content: 'Rerolling giveaway...', ephemeral: true });
+				await interaction.reply({ content: 'Rerolling giveaway...', flags: MessageFlags.Ephemeral });
 
 				// Get options
 				const query = interaction.options.getString('message_id');
@@ -202,7 +202,7 @@ module.exports = {
 					client.giveawayManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === query);
 
 				// If no giveaway was found
-				if (!findGiveaway) return interaction.editReply({ content: `No giveaway found for \`${query}\`.`, ephemeral: true });
+				if (!findGiveaway) return interaction.editReply({ content: `No giveaway found for \`${query}\`.`, flags: MessageFlags.Ephemeral });
 
 				// Reroll giveaway
 				client.giveawayManager
@@ -212,10 +212,10 @@ module.exports = {
 						},
 					})
 					.then(() => {
-						interaction.editReply({ content: `Giveaway rerolled.`, ephemeral: true });
+						interaction.editReply({ content: `Giveaway rerolled.`, flags: MessageFlags.Ephemeral });
 					})
 					.catch((err) => {
-						interaction.editReply({ content: `An error occured rerolling your giveaway.`, ephemeral: true });
+						interaction.editReply({ content: `An error occured rerolling your giveaway.`, flags: MessageFlags.Ephemeral });
 					});
 				break;
 		}

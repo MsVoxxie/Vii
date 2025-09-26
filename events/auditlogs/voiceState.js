@@ -73,7 +73,7 @@ module.exports = {
 					{ name: 'Disconnected', value: client.relTimestamp(Date.now()), inline: false },
 					{
 						name: 'Connection Duration',
-						value: `\`${client.getDuration(newData.voiceState.joinDate, newData.voiceState.leaveDate).join(' ')}\``,
+						value: `\`${client.getDuration(newData.voiceState.joinDate, newData.voiceState.leaveDate).join(' ') || 'Less than 1s'}\``,
 						inline: false,
 					}
 				);
@@ -111,7 +111,7 @@ module.exports = {
 					{ name: 'Switched', value: client.relTimestamp(Date.now()), inline: false },
 					{
 						name: 'Connection Duration',
-						value: `\`${client.getDuration(oldVoice.joinDate, Date.now()).join(' ')}\``,
+						value: `\`${client.getDuration(oldVoice.joinDate, Date.now()).join(' ') || 'Less than 1s'}\``,
 						inline: false,
 					}
 				);

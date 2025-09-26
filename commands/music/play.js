@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,7 +30,7 @@ module.exports = {
 
 			const embed = new EmbedBuilder().setColor(client.colors.vii).setTitle('**Searching Query**').setDescription(`**Searching»** ${query}`);
 
-			return interaction.followUp({ embeds: [embed], ephemeral: true }).then((m) => {
+			return interaction.followUp({ embeds: [embed], flags: MessageFlags.Ephemeral }).then((m) => {
 				setTimeout(() => m.delete(), 60 * 1000);
 			});
 		} catch (error) {
