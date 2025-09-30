@@ -4,10 +4,6 @@ dotenv.config();
 
 // Discord Classes
 const cron = require('node-cron');
-const { DisTube } = require('distube');
-const { SpotifyPlugin } = require('@distube/spotify');
-const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 require('events').EventEmitter.defaultMaxListeners = 16;
 const TOKEN = process.env.DISCORD_TOKEN;
@@ -24,7 +20,7 @@ const client = new Client({
 		GatewayIntentBits.GuildModeration,
 		GatewayIntentBits.GuildVoiceStates,
 		GatewayIntentBits.GuildMessageReactions,
-		GatewayIntentBits.GuildEmojisAndStickers,
+		GatewayIntentBits.GuildExpressions,
 	],
 	partials: [Partials.Message, Partials.Reaction, Partials.Channel],
 	allowedMentions: {
@@ -41,23 +37,6 @@ client.colors = {
 	error: '#ff0000',
 	warning: '#ffff00',
 };
-
-// Music Client
-client.distube = new DisTube(client, {
-	leaveOnStop: false,
-	leaveOnEmpty: true,
-	leaveOnFinish: true,
-	emitNewSongOnly: true,
-	emitAddSongWhenCreatingQueue: true,
-	emitAddListWhenCreatingQueue: false,
-	plugins: [
-		new YtDlpPlugin(),
-		new SoundCloudPlugin(),
-		new SpotifyPlugin({
-			emitEventsAfterFetching: true,
-		}),
-	],
-});
 
 // Giveaway Client
 const GiveawaysManager = require('./functions/database/giveaways');
@@ -82,7 +61,6 @@ require('./functions/helpers/timeFuncs')(client);
 require('./functions/database/util')(client);
 
 // Run Loaders
-require('./core/loaders/musicEventLoader')(client);
 require('./core/loaders/commandLoader')(client);
 require('./core/loaders/eventLoader')(client);
 require('./core/api/internalAPI')(client);

@@ -17,13 +17,13 @@ module.exports = {
 				// Check if command is dev only
 				if (command.options.devOnly) {
 					if (!process.env.DEVELOPERS.includes(interaction.user.id)) {
-						return interaction.reply({ content: 'This command is for developers only.', flags: MessageFlags.Ephemeral });
+						return interaction.editReply({ content: 'This command is for developers only.', flags: MessageFlags.Ephemeral });
 					}
 				}
 
 				// Check if command is disabled
 				if (command.options.disabled) {
-					return interaction.reply({ content: 'This command is disabled.', flags: MessageFlags.Ephemeral });
+					return interaction.editReply({ content: 'This command is disabled.', flags: MessageFlags.Ephemeral });
 				}
 
 				// Execute Command
