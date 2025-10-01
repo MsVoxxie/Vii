@@ -58,7 +58,17 @@ module.exports = {
 			referenceEmbed.attachments.forEach((a) => attachmentList.push(a));
 		}
 		// Build base embed
-		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard);
+		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard).catch(() => {
+			{
+				try {
+					message.reply(`Sorry <@${message.member.id}>, There was an error fetching the content of this post, Please try again later.`);
+					message.reactions.cache.get(starEmoji).users.remove(user.id);
+					return;
+				} catch (error) {
+					null;
+				}
+			}
+		});
 		baseEmbed.embeds.forEach((e) => embedList.push(e));
 		baseEmbed.attachments.forEach((a) => attachmentList.push(a));
 

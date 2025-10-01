@@ -21,7 +21,6 @@
 	"license": "ISC",
 	"homepage": "https://github.com/MsVoxxie/Vii/tree/master#readme",
 	"dependencies": {
-		"@discordjs/opus": "^0.9.0",
 		"@distube/ytdl-core": "^4.13.3",
 		"ascii-table": "^0.0.9",
 		"canvacord": "^5.4.8",
@@ -41,7 +40,7 @@
 		"node-cron": "^3.0.2",
 		"openai": "^4.28.4",
 		"quickchart-js": "^3.1.2",
-		"rettiwt-api": "^2.6.2",
+		"rettiwt-api": "^6.0.6",
 		"rss-parser": "^3.13.0",
 		"sagiri": "^3.4.0",
 		"vm": "^0.1.0",
