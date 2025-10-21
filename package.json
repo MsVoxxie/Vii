@@ -38,6 +38,7 @@
 		"nanoid": "^3.3.7",
 		"node-cron": "^3.0.2",
 		"quickchart-js": "^3.1.2",
+		"rettiwt-api": "^6.0.6",
 		"rss-parser": "^3.13.0",
 		"sagiri": "^3.4.0",
 		"vm": "^0.1.0",
