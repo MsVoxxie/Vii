@@ -19,76 +19,44 @@ async function getReplies(message) {
 async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = '1e1f22') {
 	if (!message) throw new Error('Invalid or no message provided.');
 	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
-	const { Rettiwt } = require('rettiwt-api');
-	const twitFetch = new Rettiwt({ apiKey: process.env.TWIT_TOKEN, logging: true });
 	const embeds = [];
 	const attachments = [];
 
-	//* Twitter Check
-	const twitId = /\/status\/(\d+)/s.exec(message.content);
-	if (twitId) {
-		await twitFetch.tweet
-			.details(twitId[1])
-			.then(async (res) => {
-				for await (const attach of res.media) {
-					const attachment = attach;
-					const builtEmbed = new EmbedBuilder()
-						.setURL(message.url)
-						.setColor(embedColor)
-						.setImage(attachment.url)
-						.setTimestamp(message.createdAt)
-						.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
-					if (message.content) builtEmbed.setDescription(message.content);
-					embeds.push(builtEmbed);
-					if (attachment.type.includes('video')) {
-						attachments.push(new AttachmentBuilder(attachment.url));
-					}
-				}
-			})
-			.catch((err) => {
-				throw console.error('[Rettiwt-API] Tweet fetch error:', err);
-			});
-	}
-	//* Attachments
-	else if (message.attachments.size) {
-		for await (const attach of message.attachments) {
-			const attachment = attach[1];
+	// Attachments
+	if (message.attachments.size) {
+		for (const attach of message.attachments.values()) {
 			const builtEmbed = new EmbedBuilder()
 				.setURL(message.url)
 				.setColor(embedColor)
-				.setImage(attachment.url)
+				.setImage(attach.url)
 				.setTimestamp(message.createdAt)
 				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
 			if (message.content) builtEmbed.setDescription(message.content);
 			embeds.push(builtEmbed);
-			if (attachment.contentType.includes('video')) {
-				attachments.push(new AttachmentBuilder(attachment.url));
+			if (attach.contentType?.includes('video')) {
+				attachments.push(new AttachmentBuilder(attach.url));
 			}
 		}
-		//* Embeds
-	} else if (message.embeds.length) {
+	}
+	// Embeds (all types, including Twitter)
+	else if (message.embeds.length) {
 		let imageSet = false;
-		for await (const embed of message.embeds) {
-			const builtEmbed = new EmbedBuilder()
-				.setURL(embed.data.url)
-				.setColor(embedColor)
-				.setTimestamp(message.createdAt)
-				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
-			if (embed.data.title) builtEmbed.setTitle(embed.data.title);
-			if (embed.data.image) builtEmbed.setImage(embed.data.image.url);
-			if (embed.data.thumbnail && !embed.data.image) {
-				builtEmbed.setImage(embed.data.thumbnail.url);
+		for (const embed of message.embeds) {
+			const builtEmbed = new EmbedBuilder().setColor(embedColor).setTimestamp(message.createdAt).setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+			if (embed.title) builtEmbed.setTitle(embed.title);
+			if (embed.url) builtEmbed.setURL(embed.url);
+			if (embed.description) builtEmbed.setDescription(embed.description);
+			if (embed.image?.url) builtEmbed.setImage(embed.image.url);
+			if (embed.thumbnail?.url && !embed.image?.url) {
+				builtEmbed.setImage(embed.thumbnail.url);
 				imageSet = true;
 			}
-			if (embed.data.thumbnail && !imageSet) builtEmbed.setThumbnail(embed.data.thumbnail.url);
-			if (embed.data.description) builtEmbed.setDescription(embed.data.description);
-			if (embed.data.type === 'video') {
-				attachments.push(new AttachmentBuilder(embed.data.url));
-			}
+			if (embed.thumbnail?.url && !imageSet) builtEmbed.setThumbnail(embed.thumbnail.url);
 			embeds.push(builtEmbed);
 		}
-		//* Textbased
-	} else {
+	}
+	// Text-based
+	else {
 		const builtEmbed = new EmbedBuilder()
 			.setURL(message.url)
 			.setColor(embedColor)
