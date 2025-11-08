@@ -11,7 +11,7 @@ module.exports = {
 		// Fetch Partials
 		if (reaction.message.partial) await reaction.message.fetch();
 
-		//Definitions
+		// Definitions
 		const message = await reaction.message;
 		const settings = await client.getGuild(message.guild);
 		const starChannel = await message.guild.channels.cache.get(settings.starboardChannelId);
@@ -19,39 +19,31 @@ module.exports = {
 		const starLimit = settings.starboardLimit;
 		const starEmoji = settings.starboardEmoji;
 		if (reaction.emoji.name !== starEmoji) return;
-		const starCount = (await message.reactions.cache.get(starEmoji)?.count) || 0;
+		const starCount = message.reactions.cache.get(starEmoji)?.count || 0;
 
-		// Temporary Definitions
-		let starDbData;
+		// Check if this message is already a star or not.
+		let starDbData = await starboardData.findOneAndUpdate({ guildId: message.guild.id, messageId: message.id }, { $set: { starCount } }, { new: true, upsert: true });
 
-		//! Check if this message is already a star or not.
-		const existingStar = await starboardData.findOne({ guildId: message.guild.id, messageId: message.id });
-
-		if (existingStar) {
-			starDbData = await starboardData.findOneAndUpdate(
-				{ guildId: message.guild.id, messageId: message.id },
-				{ $set: { starCount } },
-				{ new: true, upsert: true }
-			);
-		} else {
-			starDbData = await starboardData.findOneAndUpdate(
-				{ guildId: message.guild.id, messageId: message.id },
-				{ $set: { guildId: message.guild.id, messageId: message.id, channelId: message.channel.id, starCount, isStarred: false } },
-				{ new: true, upsert: true }
-			);
+		// Try to fetch the starboard message
+		let fetchedStar = null;
+		if (starDbData?.starId) {
+			fetchedStar = await starChannel.messages.fetch(starDbData.starId).catch(() => null);
 		}
 
-		//! Check if the star threshhold is below requirement
-		const fetchedStar = await starChannel.messages.fetch(starDbData.starId).catch((e) => e);
-		if (starDbData && starDbData.starCount < starLimit) {
-			//! Delete the message
-			await fetchedStar.delete();
+		// If below threshold, delete starboard message and DB entry
+		if (starDbData.starCount < starLimit) {
+			if (fetchedStar) {
+				await fetchedStar.delete().catch(() => {});
+			}
 			await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
-		} else {
-			if (!fetchedStar.content) return await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
+		} else if (fetchedStar && fetchedStar.content) {
 			await fetchedStar.edit({
 				content: `${starEmoji} ${starCount} | ${message.channel.url}`,
 			});
+		}
+		// If fetchedStar is missing or has no content, clean up DB
+		else if (!fetchedStar || !fetchedStar.content) {
+			await starboardData.deleteOne({ guildId: message.guild.id, messageId: message.id });
 		}
 	},
 };

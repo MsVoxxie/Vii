@@ -69,8 +69,17 @@ module.exports = {
 				}
 			}
 		});
-		baseEmbed.embeds.forEach((e) => embedList.push(e));
-		baseEmbed.attachments.forEach((a) => attachmentList.push(a));
+		if (baseEmbed) {
+			baseEmbed.embeds.forEach((e) => embedList.push(e));
+			baseEmbed.attachments.forEach((a) => attachmentList.push(a));
+		} else {
+			try {
+				await message.reply(`Sorry <@${message.member?.id || user.id}>, there was an error generating the starboard embed for this message. Please try again later.`);
+			} catch (error) {
+				console.warn('No baseEmbed generated for message:', message.id);
+			}
+			return;
+		}
 
 		// Build Button Row
 		const embedButtons = new ActionRowBuilder();

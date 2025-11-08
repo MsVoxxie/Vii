@@ -38,7 +38,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 			}
 		}
 	}
-	// Embeds (all types, including Twitter)
+	// Embeds
 	else if (message.embeds.length) {
 		let imageSet = false;
 		for (const embed of message.embeds) {
