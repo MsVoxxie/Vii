@@ -14,6 +14,7 @@ module.exports = {
 				.addStringOption((option) => option.setName('duration').setDescription('How long the giveaway should last. (1d, 1h, 1m, 1s)').setRequired(true))
 				.addIntegerOption((option) => option.setName('winners').setDescription('How many winners the giveaway should have.').setMinValue(1).setRequired(true))
 				.addStringOption((option) => option.setName('prize').setDescription('What the prize of the giveaway should be.').setRequired(true))
+				.addRoleOption((option) => option.setName('mention_role').setDescription('The role to mention when the giveaway starts.').setRequired(false))
 				.addChannelOption((option) => option.setName('channel').setDescription('The channel to start the giveaway in.').setRequired(false))
 				.addStringOption((option) => option.setName('content').setDescription('The content of the giveaway message.').setRequired(false))
 		)
@@ -60,6 +61,10 @@ module.exports = {
 				const mainContent = interaction.options.getString('content');
 				const channel = interaction.options.getChannel('channel');
 				const showChannel = interaction.options.getChannel('channel') || interaction.channel;
+				const mentionRole = interaction.options.getRole('mention_role');
+				const mentionRoleText = mentionRole ? `<@&${mentionRole.id}>` : '';
+				const giveawayStartMsg = mentionRole ? `## 🎁 **Giveaway Time** 🎁\n### [${mentionRoleText}]` : '## 🎁 **Giveaway Time** 🎁';
+				const giveawayEndMsg = mentionRole ? `## 🎁 **Giveaway Ended** 🎁\n### [${mentionRoleText}]` : '## 🎁 **Giveaway Ended** 🎁';
 
 				// If no channel and no main content
 				if (!channel && !mainContent) {
@@ -75,8 +80,8 @@ module.exports = {
 							embedColor: client.colors.warning,
 						},
 						messages: {
-							giveaway: '🎁 **Giveaway Time** 🎁',
-							giveawayEnded: '🎁 **Giveaway Ended** 🎁',
+							giveaway: giveawayStartMsg,
+							giveawayEnded: giveawayEndMsg,
 							inviteToParticipate: 'React with 🎁 to participate!',
 						},
 					});
@@ -96,8 +101,8 @@ module.exports = {
 							embedColor: client.colors.warning,
 						},
 						messages: {
-							giveaway: '🎁 **Giveaway Time** 🎁',
-							giveawayEnded: '🎁 **Giveaway Ended** 🎁',
+							giveaway: giveawayStartMsg,
+							giveawayEnded: giveawayEndMsg,
 							inviteToParticipate: 'React with 🎁 to participate!',
 						},
 					});
@@ -117,8 +122,8 @@ module.exports = {
 							embedColor: client.colors.warning,
 						},
 						messages: {
-							giveaway: '🎁 **Giveaway Time** 🎁',
-							giveawayEnded: '🎁 **Giveaway Ended** 🎁',
+							giveaway: giveawayStartMsg,
+							giveawayEnded: giveawayEndMsg,
 							inviteToParticipate: 'React with 🎁 to participate!',
 						},
 					});
@@ -138,8 +143,8 @@ module.exports = {
 							embedColor: client.colors.warning,
 						},
 						messages: {
-							giveaway: '🎁 **Giveaway Time** 🎁',
-							giveawayEnded: '🎁 **Giveaway Ended** 🎁',
+							giveaway: giveawayStartMsg,
+							giveawayEnded: giveawayEndMsg,
 							inviteToParticipate: 'React with 🎁 to participate!',
 						},
 					});
