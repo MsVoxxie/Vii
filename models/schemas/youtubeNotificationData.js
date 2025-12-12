@@ -31,6 +31,10 @@ const youtubeNotificationSchema = Schema(
 			},
 			required: false,
 		},
+		consecutive404s: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,

@@ -68,11 +68,13 @@ require('./core/api/internalAPI')(client);
 // Time based functions
 
 // Every Minute
+client.emit('everyMinute');
 cron.schedule('* * * * *', () => {
 	client.emit('everyMinute');
 });
 
 // Every 5 Minutes
+client.emit('everyFiveMinutes');
 cron.schedule('*/5 * * * *', () => {
 	client.emit('everyFiveMinutes');
 });

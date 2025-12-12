@@ -17,6 +17,11 @@ module.exports = {
 				const YOUTUBE_RSS_URL = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel.ytChannelId}`;
 				const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL);
 
+				// Reset consecutive 404 count on any successful fetch
+				if (watchedChannel.consecutive404s > 0) {
+					await youtubeNotificationData.updateOne({ _id: watchedChannel._id }, { $set: { consecutive404s: 0 } }).catch(() => null);
+				}
+
 				if (!channelFeed?.items?.length) return;
 
 				const latestVideo = channelFeed.items[0];
@@ -60,8 +65,29 @@ module.exports = {
 
 				await targetChannel.send(targetMessage).catch(() => null);
 			} catch (error) {
-				// Optional: add logging for visibility
-				console.warn('YouTube watchlist error:', error?.message || error);
+				// Enhanced logging to identify 404 root cause
+				const status = error?.statusCode || error?.status || error?.response?.statusCode || error?.response?.status;
+				const url = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel?.ytChannelId}`;
+				console.warn('YouTube watchlist error:', { ytChannelId: watchedChannel?.ytChannelId, requestUrl: url });
+
+				// If the feed returns 404 repeatedly, remove invalid entries after 3 strikes
+				if (status === 404) {
+					const current = Number.isFinite(watchedChannel?.consecutive404s) ? watchedChannel.consecutive404s : 0;
+					const next = current + 1;
+					if (next >= 3) {
+						await youtubeNotificationData.findOneAndDelete({ _id: watchedChannel._id }).catch(() => null);
+						console.warn('YouTube watchlist removed after 3 consecutive 404s', {
+							guildId: watchedChannel?.guildId,
+							channelId: watchedChannel?.channelId,
+							ytChannelId: watchedChannel?.ytChannelId,
+							requestUrl: url,
+						});
+
+						return; // stop further processing for this item
+					}
+
+					await youtubeNotificationData.updateOne({ _id: watchedChannel._id }, { $set: { consecutive404s: next } }).catch(() => null);
+				}
 			}
 		}
 
