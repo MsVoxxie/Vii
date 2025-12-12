@@ -12,4 +12,5 @@ module.exports = {
 	youtubeNotificationData: require('./schemas/youtubeNotificationData'),
 	roleAssignmentData: require('./schemas/roleAsignmentData'),
 	autoChannelData: require('./schemas/autoChannelData'),
+	pinnedMessageData: require('./schemas/pinnedMessageSchema'),
 };

@@ -46,7 +46,6 @@ module.exports = {
 	async execute(client, interaction, settings) {
 		// Get subcommand and variables
 		const subCommand = interaction.options.getSubcommand();
-		const lastChanceThreshold = 60000000000_000;
 
 		// Switch subcommand
 		switch (subCommand) {
@@ -56,6 +55,8 @@ module.exports = {
 
 				// Get options
 				const duration = ms(interaction.options.getString('duration') || '');
+				// Sane last-chance threshold: up to 5 minutes, but never >= duration
+				const lastChanceThreshold = Math.max(0, Math.min(Math.max(0, duration - 1000), 300000));
 				const winnerCount = interaction.options.getInteger('winners');
 				const prize = interaction.options.getString('prize');
 				const mainContent = interaction.options.getString('content');
