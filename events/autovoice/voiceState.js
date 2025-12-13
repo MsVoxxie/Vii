@@ -10,18 +10,19 @@ module.exports = {
 			(!oldState.channelId && newState.channel.id && !oldState.channel && newState.channel) ||
 			(oldState.channelId && newState.channelId && oldState.channel && newState.channel)
 		) {
-			// Get the auto channel data
-			const findData = await autoChannelData.findOne({ guildId: newState.guild.id, 'masterChannels.masterCategoryId': newState.channel.parent.id });
+			// Check if the joined channel is a master channel
+			const findData = await autoChannelData.findOne({ guildId: newState.guild.id, 'masterChannels.masterChannelId': newState.channelId });
 			if (!findData) return;
-			// Get the correct masterChannel based on the parent id
-			const data = findData.masterChannels.find((channel) => channel.masterCategoryId === newState.channel.parent.id);
+			
+			// Get the specific masterChannel data that matches the joined channel
+			const data = findData.masterChannels.find((mc) => mc.masterChannelId === newState.channelId);
 			if (!data) return;
 
 			// Get the creator channel
 			const creatorChannel = newState.guild.channels.cache.get(data.masterChannelId);
 			if (!creatorChannel) return;
 
-			// Check if the user is in the creator channel
+			// User joined a master channel, create child
 			if (newState.channelId === creatorChannel.id) {
 				// Create the channel
 				const createdChannel = await newState.guild.channels.create({
@@ -29,8 +30,10 @@ module.exports = {
 					type: ChannelType.GuildVoice,
 					parent: creatorChannel.parent,
 					userLimit: data.childDefaultMaxUsers,
-					position: creatorChannel.position + 0,
 				});
+
+				// Position child directly below the master
+				await createdChannel.setPosition(creatorChannel.position + 1 + data.childChannels.length);
 
 				// Dont audit the channel creation
 				createdChannel.shouldAudit = false;

@@ -68,10 +68,19 @@ module.exports = {
 				// Enhanced logging to identify 404 root cause
 				const status = error?.statusCode || error?.status || error?.response?.statusCode || error?.response?.status;
 				const url = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel?.ytChannelId}`;
-				console.warn('YouTube watchlist error:', { ytChannelId: watchedChannel?.ytChannelId, requestUrl: url });
+				const errorMsg = error?.message || String(error);
+				const is404 = status === 404 || errorMsg?.includes('404') || errorMsg?.includes('Status code 404');
+
+				console.warn('YouTube watchlist error:', {
+					ytChannelId: watchedChannel?.ytChannelId,
+					requestUrl: url,
+					status,
+					errorMsg,
+					is404,
+				});
 
 				// If the feed returns 404 repeatedly, remove invalid entries after 3 strikes
-				if (status === 404) {
+				if (is404) {
 					const current = Number.isFinite(watchedChannel?.consecutive404s) ? watchedChannel.consecutive404s : 0;
 					const next = current + 1;
 					if (next >= 3) {

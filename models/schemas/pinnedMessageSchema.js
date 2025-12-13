@@ -13,6 +13,8 @@ const pinnedMessageSchema = Schema(
 		// Running count of messages since last forward
 		counter: { type: Number, default: 0 },
 		lastForwardedAt: { type: Date, default: null },
+		// ID of the last message the bot forwarded (for deletion before next forward)
+		lastForwardedMessageId: { type: String, default: null },
 	},
 	{ timestamps: true }
 );

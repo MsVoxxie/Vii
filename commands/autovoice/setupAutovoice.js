@@ -22,9 +22,9 @@ module.exports = {
 		.addSubcommand((subCommand) =>
 			subCommand
 				.setName('delete')
-				.setDescription('Delete the creator channel for this category.')
+				.setDescription('Delete a specific creator channel.')
 				.addChannelOption((option) =>
-					option.setName('category').setDescription('The category to delete the master channel from').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
+					option.setName('master_channel').setDescription('The master channel to delete').addChannelTypes(ChannelType.GuildVoice).setRequired(true)
 				)
 		)
 		.addSubcommand((subCommand) =>
@@ -32,7 +32,7 @@ module.exports = {
 				.setName('edit_child_name')
 				.setDescription('Edit the default name of the child channels.')
 				.addChannelOption((option) =>
-					option.setName('category').setDescription('The category to edit the child name for').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
+					option.setName('master_channel').setDescription('The master channel to edit the child name for').addChannelTypes(ChannelType.GuildVoice).setRequired(true)
 				)
 				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Template: {USER}').setRequired(true))
 		),
@@ -54,9 +54,7 @@ module.exports = {
 				const masterCategory = interaction.options.getChannel('category');
 				const masterName = interaction.options.getString('master_channel_name');
 
-				// Check if the category is already set up
-				const masterCheck = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterCategoryId': masterCategory.id });
-				if (masterCheck) return interaction.followUp({ content: 'The category is already set up.' });
+				// No check needed - allow multiple master channels per category
 
 				// Create the master channel
 				const childDefaultName = interaction.options.getString('child_default_name');
@@ -95,52 +93,60 @@ module.exports = {
 					});
 				break;
 			case 'delete':
-				// Get the category channel
-				const masterId = interaction.options.getChannel('category');
+				// Get the master channel
+				const masterChannelToDelete = interaction.options.getChannel('master_channel');
 
-				// Check if the category is already set up
-				const check = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterCategoryId': masterId.id });
-				if (!check) return interaction.followUp({ content: 'The category is not set up.' });
+				// Check if this is a master channel
+				const check = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterChannelId': masterChannelToDelete.id });
+				if (!check) return interaction.followUp({ content: 'This channel is not set up as a master channel.' });
 
-				// Delete the voice channel by id
-				const masterChannel = await interaction.guild.channels.cache
-					.get(check.masterChannels[0].masterChannelId)
-					.delete()
-					.then(async () => {
-						// Fetch each child channel and delete it
-						await check.masterChannels[0].childChannels.forEach(async (childChannel) => {
-							if (childChannel) {
-								try {
-									await interaction.guild.channels.cache.get(childChannel.childId).delete();
-								} catch (error) {}
-							}
-						});
-					});
+				// Find the specific master channel data
+				const masterData = check.masterChannels.find((mc) => mc.masterChannelId === masterChannelToDelete.id);
+				if (!masterData) return interaction.followUp({ content: 'Master channel data not found.' });
 
-				// Dont audit the channel deletion
-				if (masterChannel) masterChannel.shouldAudit = false;
+				// Delete all child channels first
+				for (const childChannel of masterData.childChannels) {
+					if (childChannel?.childId) {
+						try {
+							const ch = await interaction.guild.channels.fetch(childChannel.childId);
+							if (ch) await ch.delete();
+						} catch (error) {}
+					}
+				}
 
-				// Delete the master channel
-				await autoChannelData.findOneAndUpdate({ guildId: interaction.guild.id }, { $pull: { masterChannels: { masterCategoryId: masterId.id } } }).then(() => {
-					interaction.followUp({ content: `The master channel has been deleted for ${masterId.name}` });
-				});
+				// Delete the master voice channel
+				try {
+					const masterChannel = await interaction.guild.channels.fetch(masterChannelToDelete.id);
+					if (masterChannel) {
+						masterChannel.shouldAudit = false;
+						await masterChannel.delete();
+					}
+				} catch (error) {}
+
+				// Remove from database
+				await autoChannelData.findOneAndUpdate(
+					{ guildId: interaction.guild.id },
+					{ $pull: { masterChannels: { masterChannelId: masterChannelToDelete.id } } }
+				);
+
+				interaction.followUp({ content: `The master channel **${masterChannelToDelete.name}** and its child channels have been deleted.` });
 				break;
 			case 'edit_child_name':
-				// Get the category channel
-				const categoryId = interaction.options.getChannel('category');
+				// Get the master channel
+				const masterChannelToEdit = interaction.options.getChannel('master_channel');
 				const childEditedName = interaction.options.getString('child_default_name');
 
-				// Check if the category is already set up
-				const checkData = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterCategoryId': categoryId.id });
-				if (!checkData) return interaction.followUp({ content: 'The category is not set up.' });
+				// Check if this is a master channel
+				const checkData = await autoChannelData.findOne({ guildId: interaction.guild.id, 'masterChannels.masterChannelId': masterChannelToEdit.id });
+				if (!checkData) return interaction.followUp({ content: 'This channel is not set up as a master channel.' });
 
-				// Update the child default name
+				// Update the child default name for the specific master channel
 				await autoChannelData.findOneAndUpdate(
-					{ guildId: interaction.guild.id, 'masterChannels.masterCategoryId': categoryId.id },
+					{ guildId: interaction.guild.id, 'masterChannels.masterChannelId': masterChannelToEdit.id },
 					{ $set: { 'masterChannels.$.childDefaultName': childEditedName } }
 				);
 
-				interaction.followUp({ content: `The child default name has been set to **${childEditedName}** for ${categoryId.name}` });
+				interaction.followUp({ content: `The child default name has been set to **${childEditedName}** for master channel **${masterChannelToEdit.name}**` });
 				break;
 		}
 	},

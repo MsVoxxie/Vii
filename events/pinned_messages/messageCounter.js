@@ -16,11 +16,23 @@ module.exports = {
 			for (const cfg of configs) {
 				const next = (cfg.counter ?? 0) + 1;
 				if (next >= cfg.threshold) {
+					let newMessageId = null;
 					try {
+						// Delete previous forwarded message if it exists
+						if (cfg.lastForwardedMessageId) {
+							try {
+								const oldMsg = await message.channel.messages.fetch(cfg.lastForwardedMessageId);
+								if (oldMsg?.deletable) await oldMsg.delete();
+							} catch (_) {
+								// Message may already be deleted or inaccessible
+							}
+						}
+
 						const srcChannel = await client.channels.fetch(cfg.sourceChannelId);
 						const original = await srcChannel.messages.fetch(cfg.messageId, { force: true });
 						if (typeof original.forward === 'function') {
-							await original.forward(message.channel);
+							const forwarded = await original.forward(message.channel);
+							newMessageId = forwarded?.id || null;
 						}
 					} catch (_) {
 						// Ignore forwarding failures but still reset counter to avoid loops
@@ -29,7 +41,7 @@ module.exports = {
 					ops.push({
 						updateOne: {
 							filter: { _id: cfg._id },
-							update: { $set: { counter: 0, lastForwardedAt: new Date() } },
+							update: { $set: { counter: 0, lastForwardedAt: new Date(), lastForwardedMessageId: newMessageId } },
 						},
 					});
 				} else {
