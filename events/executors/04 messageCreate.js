@@ -23,25 +23,22 @@ module.exports = {
 				break;
 
 			case 'fish':
-				msg.channel.send(
-					'[Fi.sh](https://fish.voxxie.me/the/carp/is/a/hardy/greenish/brown/fish/it/is/native/to/eurasia/but/has/been/introduced/into/northamerica/and/elsewhere/a/large-scaled/fish/with/two/barbels/on/each/side/of/its/upper/jaw/the/carp/lives/alone/or/in/small/schools/in/quiet/weedy/mud-bottomed/ponds/lakes/and/rivers/carp.mp4)'
-				);
+				msg.channel.send('[Fi.sh](https://archive.vxie.me/content/vii/videos/replies/carp.mp4)');
 				break;
-
 			case 'plap':
-				msg.channel.send(
-					'[Plap!](https://cdn.discordapp.com/attachments/988469231760838723/1024130111873753108/plap.mp4?ex=6685fa7e&is=6684a8fe&hm=b1b8063e08861bc8f948191c45fbd088cb09e093edf2f4325731e963759319aa&)'
-				);
+				msg.channel.send('[Plap!](https://archive.vxie.me/content/vii/videos/replies/plap.mp4)');
 				break;
 			case 'gorp':
-				msg.channel.send(
-					'[Gorp!](https://cdn.discordapp.com/attachments/988469231760838721/1328879906007945226/DOG_GOES_GORP_1.mp4?ex=67884f5a&is=6786fdda&hm=c0181bc4a9954ea0acbb4e54cd7727bf8b0a3cc7e302f987f99ec4814e3683fd&)'
-				);
+				msg.channel.send('[Gorp!](https://archive.vxie.me/content/vii/videos/replies/gorp.mp4)');
+				break;
+			case 'gup':
+				msg.channel.send('[Gup!](https://archive.vxie.me/content/vii/videos/replies/gup.mp4)');
+				break;
+			case 'toot':
+				msg.channel.send('[TooT!](https://archive.vxie.me/content/vii/videos/replies/toot.mp4)');
 				break;
 			case '💨':
-				msg.channel.send(
-					'[Wake Up](https://cdn.discordapp.com/attachments/694220032284295261/1141529641052557382/8ZhvWM3evLxRGWlZ.mp4?ex=688b6213&is=688a1093&hm=995e09b50862e11a0a63b72109afe4ef10d65c4303934d165123c071ba332792&)'
-				);
+				msg.channel.send('[Wake Up](https://archive.vxie.me/content/vii/videos/replies/wakeup.mp4)');
 				break;
 		}
 	},
