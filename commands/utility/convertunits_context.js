@@ -8,9 +8,12 @@ module.exports = {
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
+
+		// Grab the targetMessage's member
+		const targetMember = await interaction.guild.members.fetch(interaction.targetMessage.author.id).catch(() => null);
+
 		// Message Parser
 		const parseMessage = (data, user) => {
-			const fieldData = [];
 			const concatenated =
 				data
 					.replace('°', '')
@@ -25,7 +28,7 @@ module.exports = {
 					{ name: `From`, value: `${result.map((f) => f.from).join('\n')}`, inline: true },
 					{ name: 'To', value: `${result.map((f) => f.to).join('\n')}`, inline: true }
 				)
-				.setTitle(`${interaction.targetMessage.author.username}`)
+				.setTitle(`${targetMember.displayName}`)
 				.setDescription(data)
 				.setColor(client.colors.vii)
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');

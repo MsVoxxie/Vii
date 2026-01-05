@@ -27,7 +27,7 @@ const unitList = new Map([
 	[
 		'liter',
 		{
-			regex: /([0-9,.]+)(l|liter|liters)/gm,
+			regex: /([0-9,.]+)(l(?![a-z])|liter|liters)/gm,
 			convert: (t) => t * 1000,
 			conversionUnit: 'milliliter',
 		},
