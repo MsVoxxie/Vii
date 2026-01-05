@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, PermissionFlagsBits } = require('discord.js');
 const { Guild } = require('../../models');
 const Logger = require('../../functions/logging/logger');
 
