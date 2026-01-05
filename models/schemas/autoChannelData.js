@@ -5,14 +5,24 @@ const autoChannelSchema = Schema({
 		type: String,
 		required: true,
 	},
-	masterChannels: {
-		type: Array,
-		default: [],
-		childChannels: {
-			type: Array,
-			default: [],
+	masterChannels: [
+		{
+			masterCategoryId: String,
+			masterChannelId: String,
+			childDefaultName: String,
+			childDefaultMaxUsers: Number,
+			channelCounter: {
+				type: Number,
+				default: 1,
+			},
+			childChannels: [
+				{
+					childId: String,
+					createdBy: String,
+				},
+			],
 		},
-	},
+	],
 });
 
 module.exports = model('autoChannelData', autoChannelSchema);

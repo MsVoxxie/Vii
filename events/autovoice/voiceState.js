@@ -24,9 +24,16 @@ module.exports = {
 
 			// User joined a master channel, create child
 			if (newState.channelId === creatorChannel.id) {
-				// Create the channel
+				// Get the current counter value (default to 1 if not set)
+				const currentNum = data.channelCounter || 1;
+				
+				// Create the channel with template replacements
+				let channelName = data.childDefaultName
+					.replace('{USER}', newState.member.displayName)
+					.replace('{NUM}', currentNum.toString());
+				
 				const createdChannel = await newState.guild.channels.create({
-					name: data.childDefaultName.replace('{USER}', newState.member.displayName),
+					name: channelName,
 					type: ChannelType.GuildVoice,
 					parent: creatorChannel.parent,
 					userLimit: data.childDefaultMaxUsers,
@@ -41,6 +48,7 @@ module.exports = {
 				// Send basic information about owner commands to the channel.
 				await createdChannel.send({ content: `Welcome **${newState.member.displayName}**\n You can manage your channel with the /**voice** commands.` });
 
+				// Update database with new child channel and increment counter
 				await autoChannelData.findOneAndUpdate(
 					{ guildId: newState.guild.id, 'masterChannels.masterChannelId': newState.channelId },
 					{
@@ -49,6 +57,9 @@ module.exports = {
 								childId: createdChannel.id,
 								createdBy: newState.member.id,
 							},
+						},
+						$inc: {
+							'masterChannels.$.channelCounter': 1,
 						},
 					},
 					{ new: true, upsert: true }

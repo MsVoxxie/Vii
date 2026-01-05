@@ -14,7 +14,7 @@ module.exports = {
 					option.setName('category').setDescription('The category to set the creator channel to').addChannelTypes(ChannelType.GuildCategory).setRequired(true)
 				)
 				.addStringOption((option) => option.setName('master_channel_name').setDescription('Name of the master channel').setRequired(false))
-				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Template: {USER}').setRequired(false))
+				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Templates: {USER}, {NUM}').setRequired(false))
 				.addNumberOption((option) =>
 					option.setName('child_default_max_users').setDescription('Default max users for the child channels').setMinValue(0).setMaxValue(99).setRequired(false)
 				)
@@ -34,7 +34,7 @@ module.exports = {
 				.addChannelOption((option) =>
 					option.setName('master_channel').setDescription('The master channel to edit the child name for').addChannelTypes(ChannelType.GuildVoice).setRequired(true)
 				)
-				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Template: {USER}').setRequired(true))
+				.addStringOption((option) => option.setName('child_default_name').setDescription('Default name of child channels. Templates: {USER}, {NUM}').setRequired(true))
 		),
 	options: {
 		devOnly: false,
@@ -82,6 +82,7 @@ module.exports = {
 									masterChannelId: masterChannelCreate.id,
 									childDefaultName: childDefaultName || "{USER}'s VC",
 									childDefaultMaxUsers: childDefaultMaxUsers || 0,
+									channelCounter: 1,
 									childChannels: [],
 								},
 							},

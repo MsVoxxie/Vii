@@ -40,6 +40,9 @@ module.exports = {
 			case '💨':
 				msg.channel.send('[Wake Up](https://archive.vxie.me/content/vii/videos/replies/wakeup.mp4)');
 				break;
+			default:
+				msg.reply(`I don\'t think I know that one! I may need to be taught it first!`);
+				break;
 		}
 	},
 };
