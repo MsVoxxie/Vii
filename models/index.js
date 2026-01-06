@@ -13,4 +13,5 @@ module.exports = {
 	roleAssignmentData: require('./schemas/roleAsignmentData'),
 	autoChannelData: require('./schemas/autoChannelData'),
 	pinnedMessageData: require('./schemas/pinnedMessageSchema'),
+	vanityRoles: require('./schemas/vanityRoles'),
 };

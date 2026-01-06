@@ -165,6 +165,17 @@ module.exports = {
 						.setDescription('Toggle between true or false')
 						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
 				)
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('allow_anyone_vanity')
+				.setDescription('Allow anyone to create a personal vanity role.')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('toggle')
+						.setDescription('Toggle between true or false')
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
+				)
 		),
 	options: {
 		devOnly: false,
@@ -336,6 +347,18 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { shouldRoleNotify: toggleSwitch });
 					// Follow up
 					interaction.followUp(`Role notifications are now set to ${toggleSwitch}`);
+				}
+				break;
+
+			// AllowAnyoneVanity
+			case 'allow_anyone_vanity':
+				if (subCommand === 'toggle') {
+					// Get channel
+					const toggleSwitch = interaction.options.getBoolean('toggle');
+					// Set the toggle
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { allowAnyoneVanity: toggleSwitch });
+					// Follow up
+					interaction.followUp(`Allow anyone vanity role is now set to ${toggleSwitch}`);
 				}
 				break;
 

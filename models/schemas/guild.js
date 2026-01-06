@@ -80,6 +80,11 @@ const guildSchema = Schema({
 		default: true,
 		required: false,
 	},
+	allowAnyoneVanity: {
+		type: Boolean,
+		default: false,
+		required: false,
+	},
 });
 
 module.exports = model('Guild', guildSchema);
