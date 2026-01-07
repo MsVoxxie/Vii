@@ -8,6 +8,7 @@ module.exports = {
 		const settings = await client.getGuild(member.guild);
 		const oldInvites = client.invites.get(member.guild.id);
 		let newInvites;
+		let wasTooNew;
 
 		// Fetch Invites
 		if (member.guild.members.me.permissions.has(PermissionFlagsBits.ManageGuild)) {
@@ -51,9 +52,41 @@ module.exports = {
 		if (member.id === client.user.id) return;
 		if (!settings) return;
 
+		// Kicking New Accounts
+		if (settings.kickNewAccounts.enabled) {
+			const accountAgeDays = (Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
+			if (accountAgeDays < settings.kickNewAccounts.kickMaxAgeDays) {
+				try {
+					await member.send(
+						`You have been kicked from **${member.guild.name}** because your account is too new (less than ${settings.kickNewAccounts.kickMaxAgeDays} days old).`
+					);
+				} catch (err) {
+					console.error('Failed to send kick DM:', err);
+				}
+				await member.kick(`Account age less than ${settings.kickNewAccounts.kickMaxAgeDays} days.`);
+				wasTooNew = true;
+			}
+		}
+
 		// Check for Audit Channel to send logs to.
 		const auditLogChannel = await member.guild.channels.cache.get(settings.auditLogId);
 		if (auditLogChannel) {
+			// If the user was too new, log it and return.
+			if (wasTooNew) {
+				const embed = new EmbedBuilder()
+					.setColor(client.colors.vii)
+					.setTitle('Member Kicked - New Account')
+					.setThumbnail(member.displayAvatarURL())
+					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+					.setFooter({ text: `User ID: ${member.id}` })
+					.addFields(
+						{ name: 'Member Name', value: `<@${member.id}>`, inline: true },
+						{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: true },
+						{ name: 'Action', value: 'Kicked for being a new account', inline: true }
+					);
+				return await auditLogChannel.send({ embeds: [embed] });
+			}
+
 			// Build Embed
 			const embed = new EmbedBuilder()
 				.setColor(client.colors.vii)

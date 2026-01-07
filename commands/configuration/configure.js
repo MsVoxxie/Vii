@@ -176,6 +176,31 @@ module.exports = {
 						.setDescription('Toggle between true or false')
 						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
 				)
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('kick_new_accounts')
+				.setDescription('Automatically kick accounts newer than a specified age.')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setage')
+						.setDescription('Set the account age threshold (in days)')
+						.addStringOption((option) =>
+							option
+								.setName('age')
+								.addChoices(
+									{ name: '1 Day', value: '1' },
+									{ name: '3 Days', value: '3' },
+									{ name: '1 Week', value: '7' },
+									{ name: '2 Weeks', value: '14' },
+									{ name: '1 Month', value: '30' },
+									{ name: '3 Months', value: '90' }
+								)
+								.setDescription('The account age threshold in days')
+								.setRequired(true)
+						)
+				)
+				.addSubcommand((subCommand) => subCommand.setName('disable').setDescription('Disable the automatic kick for new accounts'))
 		),
 	options: {
 		devOnly: false,
@@ -439,6 +464,26 @@ module.exports = {
 					// Follow up
 					interaction.followUp({ content: `Invite system removed${errMsg ? `\nHowever, ${errMsg}` : ''}`, flags: MessageFlags.Ephemeral });
 				}
+				break;
+
+			case 'kick_new_accounts':
+				if (subCommand === 'setage') {
+					// Get age
+					const age = interaction.options.getString('age');
+					// Set the age
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': parseInt(age) });
+					// Follow up
+					interaction.followUp(`New account kick age threshold set to ${age} days`);
+				} else if (subCommand === 'disable') {
+					// Disable the kick
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': null });
+					// Follow up
+					interaction.followUp('Automatic kick for new accounts has been disabled');
+				}
+				break;
+
+			default:
+				interaction.followUp('Invalid configuration option.');
 				break;
 		}
 	},

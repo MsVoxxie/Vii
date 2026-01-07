@@ -85,6 +85,19 @@ const guildSchema = Schema({
 		default: false,
 		required: false,
 	},
+	// Special
+	kickNewAccounts: {
+		kickMaxAgeDays: {
+			type: Number || null,
+			default: 0,
+			required: false,
+		},
+		enabled: {
+			type: Boolean,
+			default: false,
+			required: false,
+		},
+	},
 });
 
 module.exports = model('Guild', guildSchema);
