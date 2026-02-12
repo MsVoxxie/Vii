@@ -33,12 +33,16 @@ module.exports = {
 			formattedArray.push(`**${channelName}** **|** \`${channelId}\` **|** <#${channel.channelId}>`);
 		}
 
-		// Create Embed
-		const embed = new EmbedBuilder()
-			.setColor(client.colors.vii)
-			.setTitle('Currently watched channels')
-			.setDescription(formattedArray.map((ch) => ch).join('\n'));
+		   // Create Embed
+		   const embed = new EmbedBuilder()
+			   .setColor(client.colors.vii)
+			   .setTitle('Currently watched channels')
+			   .setDescription(
+				   formattedArray.length > 0
+					   ? formattedArray.join('\n')
+					   : 'No channels are currently being watched.'
+			   );
 
-		interaction.followUp({ embeds: [embed] });
+		   interaction.followUp({ embeds: [embed] });
 	},
 };

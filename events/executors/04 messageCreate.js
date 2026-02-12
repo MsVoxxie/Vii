@@ -23,22 +23,22 @@ module.exports = {
 				break;
 
 			case 'fish':
-				msg.channel.send('[Fi.sh](https://archive.vxie.me/content/vii/videos/replies/carp.mp4)');
+				msg.channel.send('[Fi.sh](https://archive.vxie.me/content/Vii/Videos/Replies/Carp.mp4)');
 				break;
 			case 'plap':
-				msg.channel.send('[Plap!](https://archive.vxie.me/content/vii/videos/replies/plap.mp4)');
+				msg.channel.send('[Plap!](https://archive.vxie.me/content/Vii/Videos/Replies/Plap.mp4)');
 				break;
 			case 'gorp':
-				msg.channel.send('[Gorp!](https://archive.vxie.me/content/vii/videos/replies/gorp.mp4)');
+				msg.channel.send('[Gorp!](https://archive.vxie.me/content/Vii/Videos/Replies/Gorp.mp4)');
 				break;
 			case 'gup':
-				msg.channel.send('[Gup!](https://archive.vxie.me/content/vii/videos/replies/gup.mp4)');
+				msg.channel.send('[Gup!](https://archive.vxie.me/content/Vii/Videos/Replies/Gup.mp4)');
 				break;
 			case 'toot':
-				msg.channel.send('[TooT!](https://archive.vxie.me/content/vii/videos/replies/toot.mp4)');
+				msg.channel.send('[TooT!](https://archive.vxie.me/content/Vii/Videos/Replies/Toot.mp4)');
 				break;
 			case '💨':
-				msg.channel.send('[Wake Up](https://archive.vxie.me/content/vii/videos/replies/wakeup.mp4)');
+				msg.channel.send('[Wake Up](https://archive.vxie.me/content/Vii/Videos/Replies/Wakeup.mp4)');
 				break;
 			default:
 				msg.reply(`I don\'t think I know that one! I may need to be taught it first!`);
