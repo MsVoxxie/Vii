@@ -3,32 +3,30 @@ const generateQuote = require('../../functions/helpers/generateQuote');
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
-		.setName('devctx')
+		.setName('Quote')
 		.setIntegrationTypes([ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall])
 		.setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
 		.setType(ApplicationCommandType.Message),
 	options: {
-		devOnly: true,
+		devOnly: false,
 		disabled: false,
 	},
 	async execute(client, interaction, settings) {
 		await interaction.deferReply();
-		// Support DM-context where `member` may be null by falling back to message author
 		const target = interaction.targetMessage;
 		const member = target.member;
 		const user = target.author;
-
-		// randomize left or right side for side
 		const side = Math.random() < 0.5 ? 'left' : 'right';
+		const cleanMessage = target.cleanContent.replace(/[*_`~|#\-\s]/g, '');
 
 		await generateQuote({
-			text: target.content,
+			text: cleanMessage,
 			authorName: member ? member.displayName : user.username,
 			authorHandle: member ? member.user.username : user.username,
 			avatarURL: member ? member.displayAvatarURL({ extension: 'png', size: 512 }) : user.displayAvatarURL({ extension: 'png', size: 512 }),
 			side: side,
 		}).then((buffer) => {
-			const attachment = new AttachmentBuilder(buffer, { name: 'quote.png' });
+			const attachment = new AttachmentBuilder(buffer, { name: `quote-${target.id}.png` });
 			interaction.editReply({ files: [attachment] });
 		});
 	},
