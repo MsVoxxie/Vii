@@ -17,7 +17,7 @@ module.exports = {
 		const member = target.member;
 		const user = target.author;
 		const side = Math.random() < 0.5 ? 'left' : 'right';
-		const cleanMessage = target.cleanContent.replace(/[*_`~|#\-\s]/g, '');
+		const cleanMessage = target.cleanContent.replace(/[*_`~|#\-]/g, '');
 
 		await generateQuote({
 			text: cleanMessage,
