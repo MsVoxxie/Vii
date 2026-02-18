@@ -164,8 +164,8 @@ module.exports = {
 
 		// Create Buttons
 		const verificationButtons = new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setLabel('Confirm').setStyle(ButtonStyle.Success).setCustomId(`verify_${member.id}`),
-			new ButtonBuilder().setLabel('Deny').setStyle(ButtonStyle.Danger).setCustomId(`deny_${member.id}`)
+			new ButtonBuilder().setLabel('Approve').setStyle(ButtonStyle.Success).setCustomId(`verify_${member.id}`),
+			new ButtonBuilder().setLabel('Deny with Reason').setStyle(ButtonStyle.Danger).setCustomId(`denyreason_${member.id}`)
 		);
 
 		// Send Message
