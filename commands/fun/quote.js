@@ -1,4 +1,4 @@
-const { AttachmentBuilder, ContextMenuCommandBuilder, ApplicationCommandType, ApplicationIntegrationType, InteractionContextType } = require('discord.js');
+const { AttachmentBuilder, ContextMenuCommandBuilder, ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, cleanContent } = require('discord.js');
 const generateQuote = require('../../functions/helpers/generateQuote');
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
 		const member = target.member;
 		const user = target.author;
 		const side = Math.random() < 0.5 ? 'left' : 'right';
-		const cleanMessage = target.cleanContent.replace(/[*_`~|#\-]/g, '');
+		const cleanMessage = cleanContent(target.content).replace(/[*_`~|#\-]/g, '');
 
 		await generateQuote({
 			text: cleanMessage,
