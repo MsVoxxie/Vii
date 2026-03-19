@@ -37,16 +37,28 @@ module.exports = {
 				// Check for valid options
 				if (!interaction.options.getString('messagelink').startsWith('https://discord.com/channels/'))
 					return interaction.followUp({ content: 'The message link you provided is not valid.', flags: MessageFlags.Ephemeral });
-				const emojiTest = new RegExp(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
-				if (emojiTest.test(interaction.options.getString('emoji')) === false)
-					return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', flags: MessageFlags.Ephemeral });
+
+				// Parse emoji input (support unicode and custom guild emojis like <[:a]:name:id>)
+				const emojiInput = interaction.options.getString('emoji').trim();
+				const customEmojiMatch = emojiInput.match(/<(a?):(\w+):(\d+)>/);
+				let emojiId;
+				let reactEmoji;
+				if (customEmojiMatch) {
+					emojiId = customEmojiMatch[3];
+					reactEmoji = customEmojiMatch[0];
+				} else {
+					const emojiTest = new RegExp(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
+					if (emojiTest.test(emojiInput) === false)
+						return interaction.followUp({ content: 'The emoji you provided is not a valid emoji.', flags: MessageFlags.Ephemeral });
+					emojiId = emojiInput;
+					reactEmoji = emojiInput;
+				}
 
 				// Get options
 				const msgLink = interaction.options.getString('messagelink').split('/').slice(5);
 				const msgChan = await interaction.guild.channels.fetch(msgLink[0]);
 				const fetchedMessage = await msgChan.messages.fetch(msgLink[1], { force: true });
 				const roleId = interaction.options.getRole('role');
-				const emojiId = interaction.options.getString('emoji');
 				const uniqueIdentifier = generateId(8);
 
 				// Check that we can add roles to this message
@@ -55,7 +67,9 @@ module.exports = {
 					return interaction.followUp({ content: 'This message has too many reactions already.\nPlease create a new message and try again.', flags: MessageFlags.Ephemeral });
 
 				// Check if this emoji has already been used on this message
-				const checkEmoji = await fetchedMessage.reactions.cache.get(emojiId)?.count;
+				const checkEmoji = fetchedMessage.reactions.cache.find((r) => {
+					return (customEmojiMatch ? r.emoji.id === emojiId : r.emoji.name === emojiId);
+				});
 				if (checkEmoji) return interaction.followUp({ content: 'This emoji is already used for this message.\nPlease try another.', flags: MessageFlags.Ephemeral });
 
 				// Check if this role already exists
@@ -73,8 +87,8 @@ module.exports = {
 						uniqueIdentifier: uniqueIdentifier,
 					})
 					.then(async () => {
-						// Add reaction to message
-						await fetchedMessage.react(emojiId);
+						// Add reaction to message (use original react form for custom emojis)
+						await fetchedMessage.react(reactEmoji);
 
 						// Generate Embed
 						const embed = new EmbedBuilder()

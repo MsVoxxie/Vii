@@ -14,6 +14,8 @@ module.exports = {
 
 		async function processWatchedChannel(watchedChannel) {
 			try {
+				if (!watchedChannel?.ytChannelId) return;
+
 				const YOUTUBE_RSS_URL = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel.ytChannelId}`;
 				const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL);
 
@@ -30,20 +32,39 @@ module.exports = {
 				// Determine if a new upload exists
 				const latestId = latestVideo.id?.split(':')[2];
 				const isNewUpload = !lastCheckedVideo || (latestId && latestId !== lastCheckedVideo.id && new Date(latestVideo.pubDate) > new Date(lastCheckedVideo.publishDate));
-
 				if (!isNewUpload) return;
 
 				// Fetch the guild we're targeting
-				const targetGuild = client.guilds.cache.get(watchedChannel.guildId) || (await client.guilds.fetch(watchedChannel.guildId).catch(() => null));
+				let guildFetchError = null;
+				const targetGuild =
+					client.guilds.cache.get(watchedChannel.guildId) ||
+					(await client.guilds.fetch(watchedChannel.guildId).catch((error) => {
+						guildFetchError = error;
+						return null;
+					}));
 				if (!targetGuild) {
-					await youtubeNotificationData.findOneAndDelete({ _id: watchedChannel._id }).catch(() => null);
+					// Only delete when Discord confirms the guild no longer exists.
+					// Unknown Guild = 10004
+					if (guildFetchError?.code === 10004) {
+						await youtubeNotificationData.findOneAndDelete({ _id: watchedChannel._id }).catch(() => null);
+					}
 					return;
 				}
 
 				// Fetch the channel we're targeting
-				const targetChannel = targetGuild.channels.cache.get(watchedChannel.channelId) || (await targetGuild.channels.fetch(watchedChannel.channelId).catch(() => null));
+				let channelFetchError = null;
+				const targetChannel =
+					targetGuild.channels.cache.get(watchedChannel.channelId) ||
+					(await targetGuild.channels.fetch(watchedChannel.channelId).catch((error) => {
+						channelFetchError = error;
+						return null;
+					}));
 				if (!targetChannel) {
-					await youtubeNotificationData.findOneAndDelete({ _id: watchedChannel._id }).catch(() => null);
+					// Only delete when Discord confirms the channel no longer exists.
+					// Unknown Channel = 10003
+					if (channelFetchError?.code === 10003) {
+						await youtubeNotificationData.findOneAndDelete({ _id: watchedChannel._id }).catch(() => null);
+					}
 					return;
 				}
 
@@ -69,7 +90,7 @@ module.exports = {
 				const status = error?.statusCode || error?.status || error?.response?.statusCode || error?.response?.status;
 				const url = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel?.ytChannelId}`;
 				const errorMsg = error?.message || String(error);
-				const is404 = status === 404 || errorMsg?.includes('404') || errorMsg?.includes('Status code 404');
+				const is404 = status === 404;
 
 				console.warn('YouTube watchlist error:', {
 					ytChannelId: watchedChannel?.ytChannelId,

@@ -14,15 +14,14 @@ module.exports = {
 		// Fetch guild settings
 		const settings = await client.getGuild(message.guild);
 
-		// Fetch the reaciton.
+		// Fetch the reaction (support stored unicode or custom emoji id)
 		const fetchedReaction = await roleAssignmentData.findOne({
 			guildId: message.guild.id,
 			messageId: message.id,
 			channelId: message.channel.id,
-			emojiId: reaction.emoji.name,
+			$or: [{ emojiId: reaction.emoji.id }, { emojiId: reaction.emoji.name }],
 		});
 		if (!fetchedReaction) return;
-		if (reaction.emoji.name !== fetchedReaction.emojiId) return;
 
 		// Define our constants
 		const fetchedRole = await message.guild.roles.fetch(fetchedReaction.roleId);

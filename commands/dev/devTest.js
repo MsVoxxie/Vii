@@ -20,11 +20,12 @@ module.exports = {
 		// interaction.reply({ embeds: [embed] });
 
 		generateQuote({
+			type: 1, // 1 = side-by-side, 2 = full background with quotes
 			text: 'them bitches gay',
 			authorName: interaction.member.displayName,
 			authorHandle: interaction.user.username,
 			avatarURL: interaction.user.displayAvatarURL({ extension: 'png', size: 512 }),
-			// side: 'right',
+			// side: 'right', // only for type 1
 		}).then((buffer) => {
 			const attachment = new AttachmentBuilder(buffer, { name: 'quote.png' });
 			interaction.reply({ files: [attachment] });

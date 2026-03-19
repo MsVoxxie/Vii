@@ -21,7 +21,7 @@ module.exports = {
 
 		await generateQuote({
 			text: cleanMessage,
-			authorName: member ? member.displayName : user.username,
+			authorName: member ? member.displayName : user.displayName,
 			authorHandle: member ? member.user.username : user.username,
 			avatarURL: member ? member.displayAvatarURL({ extension: 'png', size: 512 }) : user.displayAvatarURL({ extension: 'png', size: 512 }),
 			side: side,
