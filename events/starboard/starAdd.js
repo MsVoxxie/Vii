@@ -34,6 +34,7 @@ module.exports = {
 		let starDbData;
 		let starredMessage;
 		let referenceEmbed;
+		let baseEmbed;
 
 		//! Check if this message is already a star or not.
 		const existingStar = await starboardData.findOne({ guildId: message.guild.id, messageId: message.id });
@@ -57,30 +58,25 @@ module.exports = {
 			const tempFetch = await message.guild.members.cache.get(starMessageData.reference.author.id);
 			starMessageData.reference.member = tempFetch;
 			// Build reference embed
-			referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${getDisplayName(starMessageData.reference)}`);
-			referenceEmbed.embeds.forEach((e) => embedList.push(e));
-			referenceEmbed.attachments.forEach((a) => attachmentList.push(a));
+			try {
+				referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${getDisplayName(starMessageData.reference)}`);
+				referenceEmbed.embeds.forEach((e) => embedList.push(e));
+				referenceEmbed.attachments.forEach((a) => attachmentList.push(a));
+			} catch (error) {
+				referenceEmbed = null;
+			}
 		}
 		// Build base embed
-		const baseEmbed = await buildStarEmbed(starMessageData.message, getDisplayName(starMessageData.message), client.colors.starboard).catch(() => {
-			{
-				try {
-					message.reply(`Sorry <@${message.member.id}>, There was an error fetching the content of this post, Please try again later.`);
-					message.reactions.cache.get(starEmoji).users.remove(user.id);
-					return;
-				} catch (error) {
-					null;
-				}
-			}
-		});
-		if (baseEmbed) {
+		try {
+			baseEmbed = await buildStarEmbed(starMessageData.message, getDisplayName(starMessageData.message), client.colors.starboard);
 			baseEmbed.embeds.forEach((e) => embedList.push(e));
 			baseEmbed.attachments.forEach((a) => attachmentList.push(a));
-		} else {
+		} catch (error) {
 			try {
 				await message.reply(`Sorry <@${message.member?.id || user.id}>, there was an error generating the starboard embed for this message. Please try again later.`);
-			} catch (error) {
-				console.warn('No baseEmbed generated for message:', message.id);
+				await message.reactions.cache.get(starEmoji)?.users.remove(user.id).catch(() => null);
+			} catch (replyError) {
+				console.warn('No baseEmbed generated for message:', message.id, error?.message || error);
 			}
 			return;
 		}
@@ -109,6 +105,7 @@ module.exports = {
 				// await message.reply(randomQuip);
 
 				//! Send Embeds
+				embedList.splice(10);
 				if (baseEmbed?.attachments.length || referenceEmbed?.attachments.length) {
 					starredMessage = await starChannel.send({
 						content: `${starEmoji} ${starCount} | ${message.channel.url}`,
