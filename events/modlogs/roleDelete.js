@@ -5,32 +5,39 @@ module.exports = {
 	name: Events.GuildRoleDelete,
 	runType: 'infinity',
 	async execute(client, role) {
-		// Get guild settings
-		const settings = await client.getGuild(role.guild);
-		if (settings.modLogId === null) return;
+		try {
+			// Get guild settings
+			const settings = await client.getGuild(role.guild);
+			if (!settings || settings.modLogId === null) return;
 
-		// Fetch audit log channel
-		const modLogChannel = await role.guild.channels.cache.get(settings.modLogId);
-		if (!modLogChannel) return;
+			// Fetch audit log channel
+			const modLogChannel = role.guild.channels.cache.get(settings.modLogId);
+			if (!modLogChannel) return;
 
-		// Get information
-		let { executor, createdTimestamp } = await getAuditLogs(role.guild, AuditLogEvent.RoleDelete);
-		if (createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			// Get information
+			let auditLog = await getAuditLogs(role.guild, AuditLogEvent.RoleDelete);
+			let { executor, createdTimestamp } = auditLog || {};
+			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
 
-		if (!executor) return;
+			// Create embed
+			const embed = new EmbedBuilder()
+				.setTitle('Role Deleted')
+				.setColor(client.colors.vii)
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.addFields(
+					{ name: 'Role', value: `${role.name}`, inline: true },
+					{ name: 'Deleted By', value: `${executor}`, inline: true },
+					{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
+				);
 
-		// Create embed
-		const embed = new EmbedBuilder()
-			.setTitle('Role Deleted')
-			.setColor(client.colors.vii)
-			.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-			.addFields(
-				{ name: 'Role', value: `${role.name}`, inline: true },
-				{ name: 'Deleted By', value: `${executor}`, inline: true },
-				{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
-			);
-
-		// Send message
-		await modLogChannel.send({ embeds: [embed] });
+			// Send message
+			try {
+				await modLogChannel.send({ embeds: [embed] });
+			} catch (err) {
+				console.error('Failed to send role delete modlog:', err);
+			}
+		} catch (err) {
+			console.error('Error in roleDelete event:', err);
+		}
 	},
 };
