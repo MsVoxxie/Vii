@@ -21,6 +21,8 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 	const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 	const embeds = [];
 	const attachments = [];
+	const avatarURL = message.member?.displayAvatarURL?.() || message.author?.displayAvatarURL?.() || null;
+	const authorData = avatarURL ? { iconURL: avatarURL, name: authorName } : { name: authorName };
 
 	// Attachments
 	if (message.attachments.size) {
@@ -30,7 +32,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 				.setColor(embedColor)
 				.setImage(attach.url)
 				.setTimestamp(message.createdAt)
-				.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+				.setAuthor(authorData);
 			if (message.content) builtEmbed.setDescription(message.content);
 			embeds.push(builtEmbed);
 			if (attach.contentType?.includes('video')) {
@@ -42,7 +44,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 	else if (message.embeds.length) {
 		let imageSet = false;
 		for (const embed of message.embeds) {
-			const builtEmbed = new EmbedBuilder().setColor(embedColor).setTimestamp(message.createdAt).setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+			const builtEmbed = new EmbedBuilder().setColor(embedColor).setTimestamp(message.createdAt).setAuthor(authorData);
 			if (embed.title) builtEmbed.setTitle(embed.title);
 			if (embed.url) builtEmbed.setURL(embed.url);
 			if (embed.description) builtEmbed.setDescription(embed.description);
@@ -62,7 +64,7 @@ async function buildStarEmbed(message, authorName = 'PLACEHOLDER', embedColor = 
 			.setColor(embedColor)
 			.setTimestamp(message.createdAt)
 			.setDescription(message.content)
-			.setAuthor({ iconURL: message.member.displayAvatarURL(), name: authorName });
+			.setAuthor(authorData);
 		embeds.push(builtEmbed);
 	}
 	return { embeds, attachments };

@@ -26,6 +26,10 @@ module.exports = {
 		const embedList = [];
 		const attachmentList = [];
 
+		const getDisplayName = (msg) => {
+			return msg?.member?.displayName || msg?.author?.globalName || msg?.author?.username || 'Unknown User';
+		};
+
 		// Temporary Definitions
 		let starDbData;
 		let starredMessage;
@@ -53,12 +57,12 @@ module.exports = {
 			const tempFetch = await message.guild.members.cache.get(starMessageData.reference.author.id);
 			starMessageData.reference.member = tempFetch;
 			// Build reference embed
-			referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${starMessageData.reference.member.displayName}`);
+			referenceEmbed = await buildStarEmbed(starMessageData.reference, `Replying to ${getDisplayName(starMessageData.reference)}`);
 			referenceEmbed.embeds.forEach((e) => embedList.push(e));
 			referenceEmbed.attachments.forEach((a) => attachmentList.push(a));
 		}
 		// Build base embed
-		const baseEmbed = await buildStarEmbed(starMessageData.message, starMessageData.message.member.displayName, client.colors.starboard).catch(() => {
+		const baseEmbed = await buildStarEmbed(starMessageData.message, getDisplayName(starMessageData.message), client.colors.starboard).catch(() => {
 			{
 				try {
 					message.reply(`Sorry <@${message.member.id}>, There was an error fetching the content of this post, Please try again later.`);
