@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ChannelType, MessageFlags } = require('discord.js');
 const { youtubeNotificationData } = require('../../models/index');
-const Parser = require('rss-parser');
-const parser = new Parser();
+const { fetchYoutubeFeed } = require('../../functions/helpers/fetchYoutubeFeed');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,7 +31,6 @@ module.exports = {
 		const targetYtChannelId = interaction.options.getString('youtube-id');
 		const targetNotificationChannel = interaction.options.getChannel('target-channel');
 		const targetCustomMessage = interaction.options.getString('custom-message');
-		const YOUTUBE_RSS_URL = `https://youtube.com/feeds/videos.xml?channel_id=${targetYtChannelId}`;
 
 		// Check for duplicates
 		const duplicateExists = await youtubeNotificationData.exists({
@@ -42,11 +40,19 @@ module.exports = {
 		if (duplicateExists) return interaction.followUp('This channel is already being watched.\nPlease run **youtube-watch-remove** first.');
 
 		// Define Feed
-		const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL).catch((e) => {
-			interaction.followUp(
-				'Invalid channel ID.\nTo fetch a channel ID, go to the channels **"About"** Section and scroll down to **"Share Channel"** and then click **"Copy channel ID"**.'
-			);
-		});
+		const channelFeed = await fetchYoutubeFeed(targetYtChannelId)
+			.then((result) => result.feed)
+			.catch((error) => {
+				if (error?.status === 404) {
+					interaction.followUp(
+						'Invalid channel ID.\nTo fetch a channel ID, go to the channels **"About"** Section and scroll down to **"Share Channel"** and then click **"Copy channel ID"**.'
+					);
+					return null;
+				}
+
+				interaction.followUp('YouTube returned an unexpected error while validating that channel. Please try again later.');
+				return null;
+			});
 		if (!channelFeed) return;
 
 		// Set Database object

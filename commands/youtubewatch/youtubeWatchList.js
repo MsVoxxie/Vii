@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder, MessageFlags } = require('discord.js');
 const { youtubeNotificationData } = require('../../models/index');
-const Parser = require('rss-parser');
-const parser = new Parser();
+const { fetchYoutubeFeed } = require('../../functions/helpers/fetchYoutubeFeed');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,8 +21,9 @@ module.exports = {
 		const formattedArray = [];
 
 		for (const channel of watchedChannels) {
-			const YOUTUBE_RSS_URL = `https://youtube.com/feeds/videos.xml?channel_id=${channel.ytChannelId}`;
-			const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL);
+			const channelFeed = await fetchYoutubeFeed(channel.ytChannelId)
+				.then((result) => result.feed)
+				.catch(() => null);
 			if (!channelFeed?.items.length) continue;
 
 			// Get channel name and Id

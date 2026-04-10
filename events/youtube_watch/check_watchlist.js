@@ -1,6 +1,5 @@
 const { youtubeNotificationData } = require('../../models/index');
-const Parser = require('rss-parser');
-const parser = new Parser();
+const { buildYoutubeFeedUrl, fetchYoutubeFeed } = require('../../functions/helpers/fetchYoutubeFeed');
 
 module.exports = {
 	name: 'everyFiveMinutes',
@@ -16,8 +15,7 @@ module.exports = {
 			try {
 				if (!watchedChannel?.ytChannelId) return;
 
-				const YOUTUBE_RSS_URL = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel.ytChannelId}`;
-				const channelFeed = await parser.parseURL(YOUTUBE_RSS_URL);
+				const { feed: channelFeed } = await fetchYoutubeFeed(watchedChannel.ytChannelId);
 
 				// Reset consecutive 404 count on any successful fetch
 				if (watchedChannel.consecutive404s > 0) {
@@ -88,7 +86,7 @@ module.exports = {
 			} catch (error) {
 				// Enhanced logging to identify 404 root cause
 				const status = error?.statusCode || error?.status || error?.response?.statusCode || error?.response?.status;
-				const url = `https://youtube.com/feeds/videos.xml?channel_id=${watchedChannel?.ytChannelId}`;
+				const url = error?.url || buildYoutubeFeedUrl(watchedChannel?.ytChannelId);
 				const errorMsg = error?.message || String(error);
 				const is404 = status === 404;
 
