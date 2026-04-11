@@ -15,9 +15,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the audit log channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the audit log to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the audit log to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the audit log channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the audit log channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -27,9 +27,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the mod log channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the mod log to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the mod log to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the mod log channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the mod log channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -39,9 +39,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the verification channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the verification channel to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the verification channel to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the verification channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the verification channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -64,8 +64,8 @@ module.exports = {
 									{ name: '10 Uses', value: '10' },
 									{ name: '25 Uses', value: '25' },
 									{ name: '50 Uses', value: '50' },
-									{ name: '100 Uses', value: '100' }
-								)
+									{ name: '100 Uses', value: '100' },
+								),
 						)
 						.addStringOption((option) =>
 							option
@@ -78,11 +78,11 @@ module.exports = {
 									{ name: '12 Hours', value: '43200' },
 									{ name: '1 Day', value: '86400' },
 									{ name: '7 Days', value: '604800' },
-									{ name: 'Never Expire', value: '0' }
-								)
-						)
+									{ name: 'Never Expire', value: '0' },
+								),
+						),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('remove').setDescription('Remove the invite system'))
+				.addSubcommand((subCommand) => subCommand.setName('remove').setDescription('Remove the invite system')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -92,9 +92,9 @@ module.exports = {
 					subCommand
 						.setName('setrole')
 						.setDescription('Set the verified role')
-						.addRoleOption((option) => option.setName('role').setDescription('The role to set the verified role to').setRequired(true))
+						.addRoleOption((option) => option.setName('role').setDescription('The role to set the verified role to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removerole').setDescription('Remove the verified role'))
+				.addSubcommand((subCommand) => subCommand.setName('removerole').setDescription('Remove the verified role')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -104,9 +104,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the welcome channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the welcome channel to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the welcome channel to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the welcome channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the welcome channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -116,9 +116,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the leave channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the leave channel to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the leave channel to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the leave channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the leave channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -129,8 +129,8 @@ module.exports = {
 						.setName('setmessage')
 						.setDescription('Set the welcome message')
 						.addStringOption((option) => option.setName('message').setDescription('Templates: {SERVER_NAME} {USER_NAME} {USER_MENTION}').setRequired(true))
-						.addStringOption((option) => option.setName('image').setDescription('Image URL to send with the message').setRequired(false))
-				)
+						.addStringOption((option) => option.setName('image').setDescription('Image URL to send with the message').setRequired(false)),
+				),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -140,9 +140,9 @@ module.exports = {
 					subCommand
 						.setName('setchannel')
 						.setDescription('Set the level channel')
-						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the level channel to').setRequired(true))
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set the level channel to').setRequired(true)),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the level channel'))
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the level channel')),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -152,8 +152,8 @@ module.exports = {
 					subCommand
 						.setName('toggle')
 						.setDescription('Toggle between true or false')
-						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
-				)
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?')),
+				),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -163,8 +163,8 @@ module.exports = {
 					subCommand
 						.setName('toggle')
 						.setDescription('Toggle between true or false')
-						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
-				)
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?')),
+				),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -174,8 +174,8 @@ module.exports = {
 					subCommand
 						.setName('toggle')
 						.setDescription('Toggle between true or false')
-						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?'))
-				)
+						.addBooleanOption((option) => option.setName('toggle').setDescription('Is this system enabled or disabled?')),
+				),
 		)
 		.addSubcommandGroup((subGroup) =>
 			subGroup
@@ -194,13 +194,13 @@ module.exports = {
 									{ name: '1 Week', value: '7' },
 									{ name: '2 Weeks', value: '14' },
 									{ name: '1 Month', value: '30' },
-									{ name: '3 Months', value: '90' }
+									{ name: '3 Months', value: '90' },
 								)
 								.setDescription('The account age threshold in days')
-								.setRequired(true)
-						)
+								.setRequired(true),
+						),
 				)
-				.addSubcommand((subCommand) => subCommand.setName('disable').setDescription('Disable the automatic kick for new accounts'))
+				.addSubcommand((subCommand) => subCommand.setName('disable').setDescription('Disable the automatic kick for new accounts')),
 		),
 	options: {
 		devOnly: false,
@@ -406,7 +406,7 @@ module.exports = {
 						.setColor('Green')
 						.setTitle('Invite System Setup')
 						.setDescription(
-							`Invite system setup in ${inviteChannel} with the following settings:\n\n**Embed Message:** ${embedMessage}\n**Max Uses:** ${maxUses}\n**Max Age:** ${maxAge}`
+							`Invite system setup in ${inviteChannel} with the following settings:\n\n**Embed Message:** ${embedMessage}\n**Max Uses:** ${maxUses}\n**Max Age:** ${maxAge}`,
 						);
 
 					// Create the Invite Embed and Button
@@ -428,7 +428,7 @@ module.exports = {
 								inviteEmbedId: inviteMessage.id,
 								inviteMaxUses: maxUses,
 								inviteMaxAge: maxAge,
-							}
+							},
 						);
 
 						// Send confirmation message
@@ -471,12 +471,12 @@ module.exports = {
 					// Get age
 					const age = interaction.options.getString('age');
 					// Set the age
-					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': parseInt(age) });
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': parseInt(age), 'kickNewAccounts.enabled': true });
 					// Follow up
 					interaction.followUp(`New account kick age threshold set to ${age} days`);
 				} else if (subCommand === 'disable') {
 					// Disable the kick
-					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': null });
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': null, 'kickNewAccounts.enabled': false });
 					// Follow up
 					interaction.followUp('Automatic kick for new accounts has been disabled');
 				}
