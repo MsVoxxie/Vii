@@ -15,7 +15,7 @@ module.exports = async (client, min = 5, max = 25) => {
 		// Get the guild level channel
 		const guildSettings = await Guild.findOne({ guildId: guild.id });
 		// Check if the guild has a level channel
-		if (!guildSettings.levelChannelId) continue;
+		if (!guildSettings?.levelChannelId) continue;
 
 		const channels = await guild.channels.cache.filter((c) => c.isVoiceBased());
 		// Loop over all channels
@@ -56,6 +56,7 @@ module.exports = async (client, min = 5, max = 25) => {
 				if (didUserLevel.leveled) {
 					// Get the guild level channel
 					const levelChannel = await guild.channels.cache.get(guildSettings.levelChannelId);
+					if (!levelChannel) continue;
 					// Calculate the amount of xp needed to level up
 					const xpNeeded = calculateLevelXp(dbResults.level + 1);
 					const calcXp = xpNeeded - didUserLevel.xp;

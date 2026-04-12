@@ -211,6 +211,9 @@ module.exports = {
 		const subGroup = interaction.options.getSubcommandGroup();
 		const subCommand = interaction.options.getSubcommand();
 
+		// Ensure guild settings exist before applying updates.
+		await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { $setOnInsert: { guildId: interaction.guild.id } }, { upsert: true, new: true });
+
 		// Defer, Things take time.
 		await interaction.deferReply();
 

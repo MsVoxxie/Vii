@@ -17,7 +17,7 @@ module.exports = {
 		// Get the guild level channel
 		const guildSettings = await Guild.findOne({ guildId: message.guild.id });
 		// Check if the guild has a level channel
-		if (!guildSettings.levelChannelId) return;
+		if (!guildSettings?.levelChannelId) return;
 		
 		// Grant the user xp
 		const dbResults = await grantUserXp(client, message, 15, 25);
@@ -29,6 +29,7 @@ module.exports = {
 		if (didUserLevel.leveled) {
 			// Get the level channel
 			const levelChannel = await client.channels.cache.get(guildSettings.levelChannelId);
+			if (!levelChannel) return;
 			// Calculate the amount of xp needed to level up
 			const xpNeeded = calculateLevelXp(dbResults.level + 1);
 			const calcXp = xpNeeded - didUserLevel.xp;
