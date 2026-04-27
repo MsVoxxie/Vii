@@ -20,6 +20,7 @@ module.exports = {
 			// Declarations
 			const oldAvatar = oldMember.displayAvatarURL();
 			const newAvatar = newMember.displayAvatarURL();
+			let changed = false;
 
 			// Create Embed
 			const embed = new EmbedBuilder()
@@ -31,18 +32,32 @@ module.exports = {
 
 			// Avatar
 			if (oldAvatar !== newAvatar) {
+				changed = true;
 				embed.setTitle('Member Avatar Updated');
 				embed.addFields({ name: 'Avatar', value: `[**[Before]**](${oldAvatar}) **›** [**[After]**](${newAvatar})`, inline: false });
 			}
 
 			// Username
 			if (oldMember.user.username !== newMember.user.username) {
+				changed = true;
 				embed.setTitle('Member Username Updated');
 				embed.addFields({ name: 'Username', value: `${oldMember.user.username} **›** ${newMember.user.username}`, inline: false });
 			}
 
+			// Global Display Name
+			if (oldMember.user.globalName !== newMember.user.globalName) {
+				changed = true;
+				embed.setTitle('Member Display Name Updated');
+				embed.addFields({
+					name: 'Display Name',
+					value: `${oldMember.user.globalName ?? oldMember.user.username} **›** ${newMember.user.globalName ?? newMember.user.username}`,
+					inline: false,
+				});
+			}
+
 			// Nickname
 			if (oldMember.nickname !== newMember.nickname) {
+				changed = true;
 				// Get information
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 				let { executor } = auditLog || {};
@@ -66,6 +81,7 @@ module.exports = {
 
 			// Timeout
 			if (oldMember.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
+				changed = true;
 				// Get information
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 				let { executor, reason } = auditLog || {};
@@ -107,6 +123,7 @@ module.exports = {
 			});
 
 			if (oldMember.roles.cache.size > newMember.roles.cache.size) {
+				changed = true;
 				// Get information
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 				let { executor } = auditLog || {};
@@ -127,6 +144,7 @@ module.exports = {
 			}
 
 			if (oldMember.roles.cache.size < newMember.roles.cache.size) {
+				changed = true;
 				// Get information
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 				let { executor } = auditLog || {};
@@ -145,6 +163,28 @@ module.exports = {
 					}
 				);
 			}
+
+			// Server Boost
+			if (oldMember.premiumSinceTimestamp !== newMember.premiumSinceTimestamp) {
+				changed = true;
+				if (newMember.premiumSinceTimestamp) {
+					embed.setTitle('Member Started Boosting');
+					embed.addFields({ name: 'Boosting Since', value: client.relTimestamp(newMember.premiumSinceTimestamp), inline: false });
+				} else {
+					embed.setTitle('Member Stopped Boosting');
+					embed.addFields({ name: 'Boosted Since', value: client.relTimestamp(oldMember.premiumSinceTimestamp), inline: false });
+				}
+			}
+
+			// Membership Screening (Pending)
+			if (oldMember.pending !== newMember.pending) {
+				changed = true;
+				embed.setTitle('Member Passed Membership Screening');
+				embed.addFields({ name: 'Screening', value: `${oldMember.pending ? 'Pending' : 'Passed'} **›** ${newMember.pending ? 'Pending' : 'Passed'}`, inline: false });
+			}
+
+			// Skip if no recognised change was detected
+			if (!changed) return;
 
 			// Send Message
 			try {
