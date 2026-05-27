@@ -27,6 +27,9 @@ const guildSchema = Schema({
 	levelChannelId: {
 		type: String,
 	},
+	botNetChannelId: {
+		type: String,
+	},
 	starboardChannelId: {
 		type: String,
 	},

@@ -201,6 +201,18 @@ module.exports = {
 						),
 				)
 				.addSubcommand((subCommand) => subCommand.setName('disable').setDescription('Disable the automatic kick for new accounts')),
+		)
+		.addSubcommandGroup((subGroup) =>
+			subGroup
+				.setName('botnet')
+				.setDescription('Configure the bot-net trap channel')
+				.addSubcommand((subCommand) =>
+					subCommand
+						.setName('setchannel')
+						.setDescription('Set the bot-net trap channel')
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to set as bot-net trap').setRequired(true)),
+				)
+				.addSubcommand((subCommand) => subCommand.setName('removechannel').setDescription('Remove the bot-net trap channel')),
 		),
 	options: {
 		devOnly: false,
@@ -482,6 +494,49 @@ module.exports = {
 					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { 'kickNewAccounts.kickMaxAgeDays': null, 'kickNewAccounts.enabled': false });
 					// Follow up
 					interaction.followUp('Automatic kick for new accounts has been disabled');
+				}
+				break;
+
+			case 'botnet':
+				if (subCommand === 'setchannel') {
+					const botNetChannel = interaction.options.getChannel('channel');
+					if (!botNetChannel.isTextBased()) return interaction.followUp('Channel must be a text channel');
+
+					const botMember = interaction.guild.members.me;
+					if (!botMember) return interaction.followUp('Unable to verify my permissions right now. Please try again.');
+
+					const missingPermissions = [];
+					if (!botMember.permissions.has(PermissionFlagsBits.BanMembers)) {
+						missingPermissions.push('Ban Members (server permission)');
+					}
+
+					const channelPermissions = botNetChannel.permissionsFor(botMember);
+					if (!channelPermissions?.has(PermissionFlagsBits.ViewChannel)) {
+						missingPermissions.push('View Channel (channel permission)');
+					}
+					if (!channelPermissions?.has(PermissionFlagsBits.SendMessages)) {
+						missingPermissions.push('Send Messages (channel permission)');
+					}
+
+					if (missingPermissions.length) {
+						return interaction.followUp(`I cannot set this as a bot-net channel because I am missing: ${missingPermissions.join(', ')}`);
+					}
+
+					try {
+						await botNetChannel.send({
+							content:
+								'# ⚠️ IMPORTANT, PLEASE READ! ⚠️\n### Do not send messages in this channel unless you want to be banned. You will not be warned, you will not be unbanned. You have been warned!\n***DO NOT POST IN THIS CHANNEL UNLESS YOU WANT TO BE BANNED!***',
+						});
+					} catch (error) {
+						console.error('Error sending bot-net warning message:', error);
+						return interaction.followUp('I could not send the required warning message in that channel. Please check my channel permissions and try again.');
+					}
+
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { botNetChannelId: botNetChannel.id });
+					interaction.followUp(`Bot-net trap channel set to ${botNetChannel}`);
+				} else if (subCommand === 'removechannel') {
+					await Guild.findOneAndUpdate({ guildId: interaction.guild.id }, { botNetChannelId: null });
+					interaction.followUp('Bot-net trap channel removed');
 				}
 				break;
 
