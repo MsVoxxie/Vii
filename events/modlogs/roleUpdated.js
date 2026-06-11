@@ -22,15 +22,22 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(oldRole.guild, AuditLogEvent.RoleUpdate);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
-			if (!executor) return;
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
+
+			// Use the new role color as embed color
+			const embedColor = newRole.color !== 0 ? newRole.color : client.colors.warning;
 
 			// Create embed
 			const embed = new EmbedBuilder()
 				.setTitle('Role Updated')
-				.setColor(client.colors.vii)
+				.setColor(embedColor)
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-				.setDescription(`**Role:** ${oldRole}\n**Updated by:** ${executor}\n**Updated:** ${client.relTimestamp(Date.now())}`);
+				.setFooter({ text: `Role ID: ${newRole.id}` })
+				.setTimestamp()
+				.addFields(
+				{ name: 'Role', value: `<@&${newRole.id}>`, inline: false },
+				{ name: 'Updated By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false }
+				);
 
 			// Role Name
 			if (oldRole.name !== newRole.name) {

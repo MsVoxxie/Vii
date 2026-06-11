@@ -40,6 +40,11 @@ module.exports = {
 			case '💨':
 				msg.channel.send('[Wake Up](https://archive.vxie.me/content/Vii/Videos/Replies/Wakeup.mp4)');
 				break;
+				case 'ough':
+				msg.channel.send('[Ough...](https://archive.vxie.me/content/Vii/Videos/Replies/Ough....mp4)');
+				break;
+				case '👅':
+				msg.channel.send('[Blelelelele!](https://archive.vxie.me/content/Vii/Videos/Replies/Belelele.mp4)');
 			default:
 				msg.reply(`I don\'t think I know that one! I may need to be taught it first!`);
 				break;

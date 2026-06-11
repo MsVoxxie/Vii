@@ -17,18 +17,23 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(emoji.guild, AuditLogEvent.EmojiUpdate);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
 
 			// Build Embed
 			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
+				.setColor(client.colors.warning)
 				.setTitle('Emoji Updated')
-				.setThumbnail(emoji.imageURL())
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+				.setThumbnail(newEmoji.imageURL())
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Emoji ID: ${emoji.id}` })
+				.setTimestamp();
 
-			if (emoji.name) embed.addFields({ name: 'New Name', value: newEmoji.name, inline: true });
-			embed.addFields({ name: 'Updated', value: client.relTimestamp(Date.now()), inline: true });
-			if (executor) embed.addFields({ name: 'Updated By', value: `${executor}`, inline: true });
+			if (emoji.name !== newEmoji.name) embed.addFields({ name: 'Name', value: `:${emoji.name}: **›** :${newEmoji.name}:`, inline: false });
+			else embed.addFields({ name: 'Name', value: `:${newEmoji.name}:`, inline: false });
+			embed.addFields({ name: 'Preview', value: newEmoji.toString(), inline: false });
+			if (executor) embed.addFields({ name: 'Updated By', value: `<@${executor.id}>`, inline: false });
+			else embed.addFields({ name: 'Updated By', value: 'Unknown', inline: false });
+			embed.addFields({ name: 'Updated', value: client.relTimestamp(Date.now()), inline: false });
 
 			// Send message
 			try {

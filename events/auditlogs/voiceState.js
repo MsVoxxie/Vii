@@ -42,12 +42,16 @@ module.exports = {
 					// Build Embed
 					const embed = new EmbedBuilder()
 						.setTitle('User Joined Voice Channel')
-						.setColor(client.colors.vii)
+						.setColor(client.colors.success)
+						.setAuthor({ name: `${member?.user.tag ?? member?.id}`, iconURL: member?.displayAvatarURL() })
 						.setThumbnail(member?.displayAvatarURL())
 						.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+						.setFooter({ text: `User ID: ${member?.id}` })
+						.setTimestamp()
 						.addFields(
+							{ name: 'Member', value: `<@${member?.id}>`, inline: false },
 							{ name: 'Joined Channel', value: newState.channel?.url || 'Unknown', inline: false },
-							{ name: 'User Joined', value: `<@${member?.id}>`, inline: false },
+							{ name: 'Category', value: newState.channel?.parent?.name || 'None', inline: false },
 							{ name: 'Connected', value: client.relTimestamp(Date.now()), inline: false }
 						);
 
@@ -75,15 +79,19 @@ module.exports = {
 					// Build Embed
 					const embed = new EmbedBuilder()
 						.setTitle('User Left Voice Channel')
-						.setColor(client.colors.vii)
+						.setColor(client.colors.error)
+						.setAuthor({ name: `${member?.user.tag ?? member?.id}`, iconURL: member?.displayAvatarURL() })
 						.setThumbnail(member?.displayAvatarURL())
 						.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+						.setFooter({ text: `User ID: ${member?.id}` })
+						.setTimestamp()
 						.addFields(
+							{ name: 'Member', value: `<@${member?.id}>`, inline: false },
 							{ name: 'Left Channel', value: oldState.channel?.url || 'Unknown', inline: false },
-							{ name: 'User Left', value: `<@${member?.id}>`, inline: false },
+							{ name: 'Category', value: oldState.channel?.parent?.name || 'None', inline: false },
 							{ name: 'Disconnected', value: client.relTimestamp(Date.now()), inline: false },
 							{
-								name: 'Connection Duration',
+								name: 'Session Duration',
 								value: `\`${client.getDuration(newData?.voiceState?.joinDate, newData?.voiceState?.leaveDate)?.join(' ') || 'Less than 1s'}\``,
 								inline: false,
 							}
@@ -100,7 +108,39 @@ module.exports = {
 			if (oldState.channelId && newState.channelId && oldState.channel && newState.channel) {
 				try {
 					// False positive check
-					if (oldState.channelId === newState.channelId) return;
+					if (oldState.channelId === newState.channelId) {
+						// Check for server mute/deafen changes while staying in same channel
+						const muteChanged = oldState.serverMute !== newState.serverMute;
+						const deafChanged = oldState.serverDeaf !== newState.serverDeaf;
+
+						if (muteChanged || deafChanged) {
+							const changes = [];
+							if (muteChanged) changes.push(newState.serverMute ? '🔇 Server Muted' : '🔊 Server Unmuted');
+							if (deafChanged) changes.push(newState.serverDeaf ? '🔕 Server Deafened' : '🔔 Server Undeafened');
+
+							const embed = new EmbedBuilder()
+								.setTitle(`Voice State Updated - ${changes.join(', ')}`)
+								.setColor(client.colors.warning)
+								.setAuthor({ name: `${member?.user.tag ?? member?.id}`, iconURL: member?.displayAvatarURL() })
+								.setThumbnail(member?.displayAvatarURL())
+								.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+								.setFooter({ text: `User ID: ${member?.id}` })
+								.setTimestamp()
+								.addFields(
+								{ name: 'Member', value: `<@${member?.id}>`, inline: false },
+								{ name: 'Channel', value: newState.channel?.url || 'Unknown', inline: false }
+							);
+
+							if (muteChanged) embed.addFields({ name: 'Server Mute', value: `${oldState.serverMute ? 'Muted' : 'Unmuted'} **›** ${newState.serverMute ? 'Muted' : 'Unmuted'}`, inline: false });
+							if (deafChanged) embed.addFields({ name: 'Server Deafen', value: `${oldState.serverDeaf ? 'Deafened' : 'Undeafened'} **›** ${newState.serverDeaf ? 'Deafened' : 'Undeafened'}`, inline: false });
+							try {
+								await auditLogChannel.send({ embeds: [embed] });
+							} catch (err) {
+								console.error('Error sending voice state change embed:', err);
+							}
+						}
+						return;
+					}
 
 					// Old Date
 					const oldData = await userData.findOne({ guildId: guildId, userId: userId }).lean();
@@ -117,15 +157,18 @@ module.exports = {
 					const embed = new EmbedBuilder()
 						.setTitle('User Switched Voice Channels')
 						.setColor(client.colors.vii)
+						.setAuthor({ name: `${member?.user.tag ?? member?.id}`, iconURL: member?.displayAvatarURL() })
 						.setThumbnail(member?.displayAvatarURL())
 						.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+						.setFooter({ text: `User ID: ${member?.id}` })
+						.setTimestamp()
 						.addFields(
-							{ name: 'Left Channel', value: oldState.channel?.url || 'Unknown', inline: false },
-							{ name: 'Joined Channel', value: newState.channel?.url || 'Unknown', inline: false },
-							{ name: 'User Switched', value: `<@${member?.id}>`, inline: false },
+							{ name: 'Member', value: `<@${member?.id}>`, inline: false },
+							{ name: 'From', value: oldState.channel?.url || 'Unknown', inline: false },
+							{ name: 'To', value: newState.channel?.url || 'Unknown', inline: false },
 							{ name: 'Switched', value: client.relTimestamp(Date.now()), inline: false },
 							{
-								name: 'Connection Duration',
+								name: 'Time in Previous Channel',
 								value: `\`${client.getDuration(oldVoice?.joinDate, Date.now())?.join(' ') || 'Less than 1s'}\``,
 								inline: false,
 							}

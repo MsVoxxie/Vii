@@ -20,14 +20,18 @@ module.exports = {
 
 			// Build Embed
 			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
+				.setColor(client.colors.success)
 				.setTitle('Emoji Created')
 				.setThumbnail(emoji.imageURL())
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Emoji ID: ${emoji.id}` })
+				.setTimestamp();
 
-			if (emoji.name) embed.addFields({ name: 'Name', value: emoji.name, inline: true });
-			embed.addFields({ name: 'Created', value: client.relTimestamp(Date.now()), inline: true });
-			if (executor) embed.addFields({ name: 'Created By', value: `<@${executor.id}>`, inline: true });
+			embed.addFields({ name: 'Name', value: `:${emoji.name}:`, inline: false });
+			embed.addFields({ name: 'Animated', value: emoji.animated ? 'Yes' : 'No', inline: false });
+			if (executor) embed.addFields({ name: 'Created By', value: `<@${executor.id}>`, inline: false });
+			embed.addFields({ name: 'Preview', value: emoji.toString(), inline: false });
+			embed.addFields({ name: 'Created', value: client.relTimestamp(Date.now()), inline: false });
 
 			// Send message
 			try {

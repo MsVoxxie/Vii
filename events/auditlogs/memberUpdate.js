@@ -18,36 +18,40 @@ module.exports = {
 			if (!auditLogChannel) return;
 
 			// Declarations
-			const oldAvatar = oldMember.displayAvatarURL();
-			const newAvatar = newMember.displayAvatarURL();
+			const oldAvatar = oldMember.displayAvatarURL({ size: 256 });
+			const newAvatar = newMember.displayAvatarURL({ size: 256 });
 			let changed = false;
+			const changesList = [];
 
 			// Create Embed
 			const embed = new EmbedBuilder()
-				.setTitle('Member Updated Generic [Unhandled]')
-				.setColor(client.colors.vii)
+				.setColor(client.colors.warning)
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-				.setDescription(`**Member:** ${oldMember.displayName}\n**Updated:** ${client.relTimestamp(Date.now())}`)
-				.setThumbnail(oldAvatar);
+				.setFooter({ text: `User ID: ${newMember.id}` })
+				.setTimestamp();
 
 			// Avatar
 			if (oldAvatar !== newAvatar) {
 				changed = true;
-				embed.setTitle('Member Avatar Updated');
-				embed.addFields({ name: 'Avatar', value: `[**[Before]**](${oldAvatar}) **›** [**[After]**](${newAvatar})`, inline: false });
+				changesList.push('Avatar');
+				embed
+					.setThumbnail(newAvatar)
+					.addFields({ name: 'Avatar', value: `[**Before**](${oldAvatar}) **›** [**After**](${newAvatar})`, inline: false });
+			} else {
+				embed.setThumbnail(newMember.displayAvatarURL());
 			}
 
 			// Username
 			if (oldMember.user.username !== newMember.user.username) {
 				changed = true;
-				embed.setTitle('Member Username Updated');
+				changesList.push('Username');
 				embed.addFields({ name: 'Username', value: `${oldMember.user.username} **›** ${newMember.user.username}`, inline: false });
 			}
 
 			// Global Display Name
 			if (oldMember.user.globalName !== newMember.user.globalName) {
 				changed = true;
-				embed.setTitle('Member Display Name Updated');
+				changesList.push('Display Name');
 				embed.addFields({
 					name: 'Display Name',
 					value: `${oldMember.user.globalName ?? oldMember.user.username} **›** ${newMember.user.globalName ?? newMember.user.username}`,
@@ -58,22 +62,19 @@ module.exports = {
 			// Nickname
 			if (oldMember.nickname !== newMember.nickname) {
 				changed = true;
-				// Get information
+				changesList.push('Nickname');
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 				let { executor } = auditLog || {};
 
-				embed.setTitle('Member Nickname Updated');
 				embed.addFields(
 					{
 						name: 'Nickname',
-						value: `${oldMember.nickname === null ? `${oldMember.displayName}` : oldMember.nickname} **›** ${
-							newMember.nickname === null ? `${newMember.displayName}` : newMember.nickname
-						}`,
+						value: `${oldMember.nickname ?? oldMember.user.username} **›** ${newMember.nickname ?? newMember.user.username}`,
 						inline: false,
 					},
 					{
-						name: 'Nickname Updated By',
-						value: `${executor ? `<@${executor.id}>` : `<@${oldMember.id}>`}`,
+						name: 'Changed By',
+						value: executor ? `<@${executor.id}>` : `<@${newMember.id}> (self)`,
 						inline: false,
 					}
 				);
@@ -82,85 +83,51 @@ module.exports = {
 			// Timeout
 			if (oldMember.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
 				changed = true;
-				// Get information
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberUpdate);
 				let { executor, reason } = auditLog || {};
+				const isTimedOut = newMember.communicationDisabledUntilTimestamp !== null;
 
-				embed.setTitle('Member Timeout Updated');
-				embed.addFields(
-					{
-						name: 'Timeout',
-						value: `Ending **›** ${newMember.communicationDisabledUntilTimestamp === null ? 'Now' : client.relTimestamp(newMember.communicationDisabledUntilTimestamp)}`,
-						inline: false,
-					},
-					{
-						name: 'Reason',
-						value: `${reason ? reason : 'No Reason Provided'}`,
-						inline: false,
-					},
-					{
-						name: 'Timeout Updated By',
-						value: `${executor ? `<@${executor.id}>` : 'Timeout has expired'}`,
-						inline: false,
-					}
-				);
+				if (isTimedOut) {
+					changesList.push('Timed Out');
+					embed.addFields(
+						{ name: 'Timed Out Until', value: client.relTimestamp(newMember.communicationDisabledUntilTimestamp), inline: false },
+						{ name: 'Timed Out By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false },
+						{ name: 'Reason', value: reason || 'No reason provided', inline: false }
+					);
+				} else {
+					changesList.push('Timeout Removed');
+					embed.addFields(
+						{ name: 'Timeout', value: 'Removed', inline: false },
+						{ name: 'Removed By', value: executor ? `<@${executor.id}>` : 'Timeout expired', inline: false }
+					);
+				}
 			}
 
 			// Roles
-			let removedRoles = [];
-			let addedRoles = [];
+			const removedRoles = oldMember.roles.cache.filter((r) => !newMember.roles.cache.has(r.id) && r.id !== oldMember.guild.id);
+			const addedRoles = newMember.roles.cache.filter((r) => !oldMember.roles.cache.has(r.id) && r.id !== newMember.guild.id);
 
-			oldMember.roles.cache.forEach((role) => {
-				if (!newMember.roles.cache.has(role.id)) {
-					removedRoles.push(role);
-				}
-			});
-
-			newMember.roles.cache.forEach((role) => {
-				if (!oldMember.roles.cache.has(role.id)) {
-					addedRoles.push(role);
-				}
-			});
-
-			if (oldMember.roles.cache.size > newMember.roles.cache.size) {
+			if (removedRoles.size > 0) {
 				changed = true;
-				// Get information
+				changesList.push('Roles Removed');
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 				let { executor } = auditLog || {};
 
-				embed.setTitle('Member Roles Updated');
 				embed.addFields(
-					{
-						name: 'Removed Roles',
-						value: removedRoles.map((p) => p).join(', '),
-						inline: true,
-					},
-					{
-						name: 'Roles Removed By',
-						value: `<@${executor?.id || 'Unknown'}>`,
-						inline: true,
-					}
+					{ name: 'Roles Removed', value: removedRoles.map((r) => `<@&${r.id}>`).join(', '), inline: false },
+					{ name: 'Removed By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false }
 				);
 			}
 
-			if (oldMember.roles.cache.size < newMember.roles.cache.size) {
+			if (addedRoles.size > 0) {
 				changed = true;
-				// Get information
+				changesList.push('Roles Added');
 				let auditLog = await getAuditLogs(oldMember.guild, AuditLogEvent.MemberRoleUpdate);
 				let { executor } = auditLog || {};
 
-				embed.setTitle('Member Roles Updated');
 				embed.addFields(
-					{
-						name: 'Added Roles',
-						value: addedRoles.map((p) => p).join(', '),
-						inline: true,
-					},
-					{
-						name: 'Roles Added By',
-						value: `<@${executor?.id || 'Unknown'}>`,
-						inline: true,
-					}
+					{ name: 'Roles Added', value: addedRoles.map((r) => `<@&${r.id}>`).join(', '), inline: false },
+					{ name: 'Added By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false }
 				);
 			}
 
@@ -168,23 +135,27 @@ module.exports = {
 			if (oldMember.premiumSinceTimestamp !== newMember.premiumSinceTimestamp) {
 				changed = true;
 				if (newMember.premiumSinceTimestamp) {
-					embed.setTitle('Member Started Boosting');
+					changesList.push('Started Boosting');
 					embed.addFields({ name: 'Boosting Since', value: client.relTimestamp(newMember.premiumSinceTimestamp), inline: false });
 				} else {
-					embed.setTitle('Member Stopped Boosting');
-					embed.addFields({ name: 'Boosted Since', value: client.relTimestamp(oldMember.premiumSinceTimestamp), inline: false });
+					changesList.push('Stopped Boosting');
+					embed.addFields({ name: 'Was Boosting Since', value: client.relTimestamp(oldMember.premiumSinceTimestamp), inline: false });
 				}
 			}
 
 			// Membership Screening (Pending)
 			if (oldMember.pending !== newMember.pending) {
 				changed = true;
-				embed.setTitle('Member Passed Membership Screening');
-				embed.addFields({ name: 'Screening', value: `${oldMember.pending ? 'Pending' : 'Passed'} **›** ${newMember.pending ? 'Pending' : 'Passed'}`, inline: false });
+				changesList.push('Passed Screening');
+				embed.addFields({ name: 'Membership Screening', value: 'Pending **›** Passed', inline: false });
 			}
 
 			// Skip if no recognised change was detected
 			if (!changed) return;
+
+			// Build title and description from collected changes
+			const title = changesList.length === 1 ? `Member ${changesList[0]}` : `Member Updated — ${changesList.join(', ')}`;
+			embed.setTitle(title).setDescription(`**Member:** <@${newMember.id}>`);
 
 			// Send Message
 			try {

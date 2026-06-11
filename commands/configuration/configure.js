@@ -525,7 +525,7 @@ module.exports = {
 					try {
 						await botNetChannel.send({
 							content:
-								'# ⚠️ IMPORTANT, PLEASE READ! ⚠️\n### Do not send messages in this channel unless you want to be banned. You will not be warned, you will not be unbanned. You have been warned!\n***DO NOT POST IN THIS CHANNEL UNLESS YOU WANT TO BE BANNED!***',
+								'# ⚠️ IMPORTANT, PLEASE READ! ⚠️\n### Do not send messages in this channel. You will not be warned, you will not be unbanned!\n***THIS IS A BOT TRAP, DO NOT POST IN THIS CHANNEL UNLESS YOU WANT TO BE BANNED!***',
 						});
 					} catch (error) {
 						console.error('Error sending bot-net warning message:', error);

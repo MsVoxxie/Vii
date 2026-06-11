@@ -58,9 +58,12 @@ module.exports = {
 			if (member.id === client.user.id) return;
 			if (!settings) return;
 
+			// Account age calculation
+			const accountAgeDays = Math.floor((Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24));
+			const isNewAccount = accountAgeDays < 7;
+
 			// Kicking New Accounts
 			if (settings.kickNewAccounts?.enabled) {
-				const accountAgeDays = (Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
 				if (accountAgeDays < settings.kickNewAccounts.kickMaxAgeDays) {
 					try {
 						await member.send(
@@ -85,15 +88,18 @@ module.exports = {
 				// If the user was too new, log it and return.
 				if (wasTooNew) {
 					const embed = new EmbedBuilder()
-						.setColor(client.colors.vii)
+						.setColor(client.colors.error)
 						.setTitle('Member Kicked - New Account')
+						.setAuthor({ name: `${member.user.tag} (${member.id})`, iconURL: member.displayAvatarURL() })
 						.setThumbnail(member.displayAvatarURL())
 						.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
 						.setFooter({ text: `User ID: ${member.id}` })
+						.setTimestamp()
 						.addFields(
-							{ name: 'Member Name', value: `<@${member.id}>`, inline: true },
-							{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: true },
-							{ name: 'Action', value: 'Kicked for being a new account', inline: true }
+							{ name: 'Member', value: `<@${member.id}>`, inline: false },
+							{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: false },
+							{ name: 'Account Age', value: `${accountAgeDays} day${accountAgeDays !== 1 ? 's' : ''} old`, inline: false },
+							{ name: 'Action', value: `Kicked — account under ${settings.kickNewAccounts.kickMaxAgeDays} days old`, inline: false }
 						);
 					try {
 						return await auditLogChannel.send({ embeds: [embed] });
@@ -103,18 +109,32 @@ module.exports = {
 					return;
 				}
 
+				// Build invite display
+				let inviteDisplay;
+				if (usedInvite.isVanity) {
+					inviteDisplay = `Vanity URL (\`${usedInvite.code}\`)`;
+				} else if (usedInvite.code !== 'Unknown') {
+					inviteDisplay = `[discord.gg/${usedInvite.code}](https://discord.gg/${usedInvite.code})`;
+				} else {
+					inviteDisplay = 'Unknown';
+				}
+
 				// Build Embed
 				const embed = new EmbedBuilder()
-					.setColor(client.colors.vii)
+					.setColor(client.colors.success)
 					.setTitle('Member Joined')
+					.setAuthor({ name: `${member.user.tag} (${member.id})`, iconURL: member.displayAvatarURL() })
 					.setThumbnail(member.displayAvatarURL())
 					.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
-					.setFooter({ text: `User ID: ${member.id}` })
+					.setFooter({ text: `User ID: ${member.id} • Member #${member.guild.memberCount.toLocaleString()}` })
+					.setTimestamp()
 					.addFields(
-						{ name: 'Member Name', value: `<@${member.id}>`, inline: true },
-						{ name: 'Joined', value: client.relTimestamp(Date.now()), inline: true },
-						{ name: 'Invite Used', value: usedInvite.code || 'Unknown', inline: true },
-						{ name: 'Inviter', value: inviter.id ? `<@${inviter.id}>` : 'Unknown', inline: true }
+							{ name: 'Member', value: `<@${member.id}>`, inline: false },
+							{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: false },
+							{ name: 'Account Age', value: `${isNewAccount ? '⚠️ ' : ''}${accountAgeDays} day${accountAgeDays !== 1 ? 's' : ''} old`, inline: false },
+							{ name: 'Invite Used', value: inviteDisplay, inline: false },
+							{ name: 'Invited By', value: inviter.id ? `<@${inviter.id}>` : usedInvite.isVanity ? 'Vanity URL' : 'Unknown', inline: false },
+							{ name: 'Server Members', value: `${member.guild.memberCount.toLocaleString()} members`, inline: false }
 					);
 
 				// Send message

@@ -17,18 +17,20 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(invite.guild, AuditLogEvent.InviteDelete);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
 
 			// Create embed
 			const embed = new EmbedBuilder()
 				.setTitle('Invite Deleted')
-				.setColor(client.colors.vii)
+				.setColor(client.colors.error)
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Code: ${invite.code}` })
+				.setTimestamp()
 				.addFields(
-					{ name: 'Invite Code', value: `\`${invite.code}\``, inline: true },
-					{ name: 'Invite Uses', value: `${invite.uses === null ? '0' : invite.uses}`, inline: true },
-					{ name: 'Deleted By', value: `${executor}`, inline: true },
-					{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true }
+					{ name: 'Invite Code', value: `\`${invite.code}\``, inline: false },
+				{ name: 'Total Uses', value: `${invite.uses ?? 0}`, inline: false },
+				{ name: 'Deleted By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false },
+					{ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: false }
 				);
 
 			// Send message

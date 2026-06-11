@@ -18,6 +18,7 @@ module.exports = {
 			await childChannels[0].forEach(async (childChannel) => {
 				if (childChannel) {
 					try {
+						client.autoVoiceChannels.add(childChannel.childId);
 						await channel.guild.channels.cache.get(childChannel.childId).delete();
 					} catch (error) {}
 				}

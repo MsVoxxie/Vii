@@ -53,6 +53,7 @@ client.giveawayManager = new GiveawaysManager(client, {
 client.commands = new Collection();
 client.invites = new Collection();
 client.events = new Collection();
+client.autoVoiceChannels = new Set();
 
 // Load Database
 client.mongoose = require('./core/loaders/mongooseLoader');

@@ -7,8 +7,12 @@ module.exports = {
 	runType: 'infinity',
 	async execute(client, channel) {
 		try {
-			// Check if we should audit
-			if (!channel.shouldAudit) return;
+			// Check if we should audit (opt-out: skip only if explicitly set false)
+			if (channel.shouldAudit === false) return;
+			if (client.autoVoiceChannels.has(channel.id)) {
+				client.autoVoiceChannels.delete(channel.id);
+				return;
+			}
 
 			// Get guild settings
 			const settings = await client.getGuild(channel.guild);
@@ -21,19 +25,25 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(channel.guild, AuditLogEvent.ChannelDelete);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
 
 			const channelType = getChannelType(channel);
 
 			// Build Embed
-			const embed = new EmbedBuilder().setColor(client.colors.vii).setTitle('Channel Deleted').setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+			const embed = new EmbedBuilder()
+				.setColor(client.colors.error)
+				.setTitle('Channel Deleted')
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Channel ID: ${channel.id}` })
+				.setTimestamp();
 
-			if (channel.name) embed.addFields({ name: 'Channel Name', value: channel.name, inline: true });
-			if (channelType) embed.addFields({ name: 'Channel Type', value: channelType, inline: true });
-			if (channel.id) embed.addFields({ name: 'Channel ID', value: channel.id, inline: true });
-			if (channel.parent) embed.addFields({ name: 'Parent Channel', value: channel.parent.name, inline: true });
-			embed.addFields({ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true });
-			if (executor) embed.addFields({ name: 'Deleted By', value: `${executor}`, inline: true });
+			if (channel.name) embed.addFields({ name: 'Channel Name', value: `#${channel.name}`, inline: false });
+			if (channelType) embed.addFields({ name: 'Type', value: channelType, inline: false });
+			if (channel.parent) embed.addFields({ name: 'Category', value: channel.parent.name, inline: false });
+			if (executor) embed.addFields({ name: 'Deleted By', value: `<@${executor.id}>`, inline: false });
+			else embed.addFields({ name: 'Deleted By', value: 'Unknown', inline: false });
+			embed.addFields({ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: false });
+			if (channel.topic) embed.addFields({ name: 'Topic (before deletion)', value: channel.topic.slice(0, 1024), inline: false });
 
 			// Send message
 			try {

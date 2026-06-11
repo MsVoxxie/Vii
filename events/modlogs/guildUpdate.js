@@ -21,30 +21,60 @@ module.exports = {
 
 			// Build Embed
 			const embed = new EmbedBuilder()
-				.setTitle('Guild Updated')
-				.setColor(client.colors.vii)
+				.setTitle('Server Updated')
+				.setColor(client.colors.warning)
 				.setThumbnail(newGuild.iconURL())
-				.setDescription(`**Updated by:** <@${executor.id}>\n**Updated:** ${client.relTimestamp(Date.now())}`)
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Server ID: ${newGuild.id}` })
+				.setTimestamp()
+				.addFields(
+					{ name: 'Updated By', value: `<@${executor.id}>`, inline: false },
+					{ name: 'Updated', value: client.relTimestamp(Date.now()), inline: false }
+				);
 
 			// Guild Icon
 			if (oldGuild.iconURL() !== newGuild.iconURL()) {
-				embed.addFields({ name: 'Icon', value: `[**Before**](${oldGuild.iconURL()}) **›** [**After**](${newGuild.iconURL()})` });
+				embed.addFields({ name: 'Icon', value: `[**Before**](${oldGuild.iconURL() || 'None'}) **›** [**After**](${newGuild.iconURL() || 'None'})`, inline: false });
 			}
 
 			// Guild Name
 			if (oldGuild.name !== newGuild.name) {
-				embed.addFields({ name: 'Name', value: `__${oldGuild.name}__ **›** __${newGuild.name}__` });
+				embed.addFields({ name: 'Name', value: `${oldGuild.name} **›** ${newGuild.name}`, inline: false });
 			}
 
-			// Guild Timeout
+			// Guild Description
+			if (oldGuild.description !== newGuild.description) {
+				embed.addFields({ name: 'Description', value: `${oldGuild.description || 'None'} **›** ${newGuild.description || 'None'}`, inline: false });
+			}
+
+			// Verification Level
+			const verificationLevels = ['None', 'Low', 'Medium', 'High', 'Very High'];
+			if (oldGuild.verificationLevel !== newGuild.verificationLevel) {
+				embed.addFields({
+					name: 'Verification Level',
+					value: `${verificationLevels[oldGuild.verificationLevel] ?? oldGuild.verificationLevel} **›** ${verificationLevels[newGuild.verificationLevel] ?? newGuild.verificationLevel}`,
+					inline: false,
+				});
+			}
+
+			// MFA Level
+			if (oldGuild.mfaLevel !== newGuild.mfaLevel) {
+				embed.addFields({ name: '2FA Requirement', value: `${oldGuild.mfaLevel === 1 ? 'Required' : 'Not Required'} **›** ${newGuild.mfaLevel === 1 ? 'Required' : 'Not Required'}`, inline: false });
+			}
+
+			// AFK Timeout
 			if (oldGuild.afkTimeout !== newGuild.afkTimeout) {
-				embed.addFields({ name: 'AFK Timeout', value: `${oldGuild.afkTimeout / 60} minutes **›** ${newGuild.afkTimeout / 60} minutes` });
+				embed.addFields({ name: 'AFK Timeout', value: `${oldGuild.afkTimeout / 60} min **›** ${newGuild.afkTimeout / 60} min`, inline: false });
 			}
 
-			// Guild AFK Channel
-			if (oldGuild.afkChannel !== newGuild.afkChannel) {
-				embed.addFields({ name: 'AFK Channel', value: `${oldGuild.afkChannel} **›** ${newGuild.afkChannel}` });
+			// AFK Channel
+			if (oldGuild.afkChannelId !== newGuild.afkChannelId) {
+				embed.addFields({ name: 'AFK Channel', value: `${oldGuild.afkChannel ?? 'None'} **›** ${newGuild.afkChannel ?? 'None'}`, inline: false });
+			}
+
+			// Banner
+			if (oldGuild.bannerURL() !== newGuild.bannerURL()) {
+				embed.addFields({ name: 'Banner', value: `[**Before**](${oldGuild.bannerURL() ?? 'None'}) **›** [**After**](${newGuild.bannerURL() ?? 'None'})`, inline: false });
 			}
 
 			// Send message

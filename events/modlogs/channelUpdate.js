@@ -8,8 +8,9 @@ module.exports = {
 	runType: 'infinity',
 	async execute(client, oldChannel, newChannel) {
 		try {
-			// Check if we should audit
-			if (!oldChannel.shouldAudit || !newChannel.shouldAudit) return;
+			// Check if we should audit (opt-out: skip only if explicitly set false)
+			if (oldChannel.shouldAudit === false || newChannel.shouldAudit === false) return;
+			if (client.autoVoiceChannels.has(newChannel.id)) return;
 
 			// Get guild settings
 			const settings = await client.getGuild(oldChannel.guild);
@@ -25,60 +26,78 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(oldChannel.guild, AuditLogEvent.ChannelUpdate);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
 			const channelType = getChannelType(newChannel);
 
 			// Create embed
 			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
+				.setColor(client.colors.warning)
 				.setTitle('Channel Updated')
 				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Channel ID: ${newChannel.id}` })
+				.setTimestamp()
 				.addFields(
-					{ name: 'Channel Type', value: channelType, inline: true },
-					{ name: 'Updated', value: client.relTimestamp(Date.now()), inline: true },
-					{ name: 'Updated By', value: `${executor}`, inline: true }
+					{ name: 'Channel', value: newChannel.url || `#${newChannel.name}`, inline: false },
+				{ name: 'Type', value: channelType, inline: false },
+				{ name: 'Updated By', value: executor ? `<@${executor.id}>` : 'Unknown', inline: false }
 				);
+
+			// Track if anything meaningful changed
+			let changed = false;
 
 			// Channel Name
 			if (oldChannel.name !== newChannel.name) {
+				changed = true;
 				embed.addFields({ name: 'Name', value: `${oldChannel.name} **›** ${newChannel.name}`, inline: false });
 			}
 
 			// Channel Type
 			if (oldChannel.type !== newChannel.type) {
-				embed.addFields({ name: 'Type', value: `${oldChannel.type} **›** ${newChannel.type}`, inline: false });
+				changed = true;
+				embed.addFields({ name: 'Type Changed', value: `${getChannelType(oldChannel)} **›** ${channelType}`, inline: false });
 			}
 
 			// Channel Topic
 			if (oldChannel.topic !== newChannel.topic) {
+				changed = true;
 				const oldTopic = oldChannel.topic?.length > 500 ? format(oldChannel.topic, 490) : oldChannel.topic;
 				const newTopic = newChannel.topic?.length > 500 ? format(newChannel.topic, 490) : newChannel.topic;
-
-				embed.addFields({ name: 'Topic', value: `${oldTopic?.length === 0 ? 'None' : oldTopic} **›** ${newTopic?.length === 0 ? 'None' : newTopic}`, inline: false });
+				embed.addFields({ name: 'Topic', value: `${oldTopic || 'None'} **›** ${newTopic || 'None'}`, inline: false });
 			}
 
 			// Channel Parent
-			if (oldChannel.parent !== newChannel.parent) {
+			if (oldChannel.parent?.id !== newChannel.parent?.id) {
+				changed = true;
 				embed.addFields({ name: 'Category', value: `${oldChannel.parent?.name || 'None'} **›** ${newChannel.parent?.name || 'None'}`, inline: false });
 			}
 
-			// Channel Ratelimit
+			// NSFW
+			if (oldChannel.nsfw !== newChannel.nsfw) {
+				changed = true;
+				embed.addFields({ name: 'NSFW', value: `${oldChannel.nsfw ? 'Yes' : 'No'} **›** ${newChannel.nsfw ? 'Yes' : 'No'}`, inline: false });
+			}
+
+			// Channel Slowmode
 			if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+				changed = true;
 				const oldRLPU = oldChannel.rateLimitPerUser === 0 ? 'Off' : `${oldChannel.rateLimitPerUser}s`;
 				const newRLPU = newChannel.rateLimitPerUser === 0 ? 'Off' : `${newChannel.rateLimitPerUser}s`;
-
 				embed.addFields({ name: 'Slowmode', value: `${oldRLPU} **›** ${newRLPU}`, inline: false });
 			}
 
 			// Channel Bitrate
 			if (oldChannel.bitrate !== newChannel.bitrate) {
-				embed.addFields({ name: 'Bitrate', value: `${(oldChannel.bitrate || 0) / 1000 || '0'}Kbps **›** ${(newChannel.bitrate || 0) / 1000 || '0'}Kbps`, inline: false });
+				changed = true;
+				embed.addFields({ name: 'Bitrate', value: `${(oldChannel.bitrate || 0) / 1000}kbps **›** ${(newChannel.bitrate || 0) / 1000}kbps`, inline: false });
 			}
 
 			// Channel User Limit
 			if (oldChannel.userLimit !== newChannel.userLimit) {
-				embed.addFields({ name: 'User Limit', value: `${oldChannel.userLimit || 'Unlimited'} Users **›** ${newChannel.userLimit || 'Unlimited'} Users`, inline: false });
+				changed = true;
+				embed.addFields({ name: 'User Limit', value: `${oldChannel.userLimit || 'Unlimited'} **›** ${newChannel.userLimit || 'Unlimited'}`, inline: false });
 			}
+
+			if (!changed) return;
 
 			try {
 				await modLogChannel.send({ embeds: [embed] });

@@ -67,7 +67,8 @@ module.exports = {
 					parent: masterCategory,
 				});
 
-				// Dont audit the channel creation
+				// Register immediately before any further awaits so the channelCreate gateway event sees it
+				client.autoVoiceChannels.add(masterChannelCreate.id);
 				masterChannelCreate.shouldAudit = false;
 
 				// Save data to the database
@@ -109,6 +110,7 @@ module.exports = {
 				for (const childChannel of masterData.childChannels) {
 					if (childChannel?.childId) {
 						try {
+							client.autoVoiceChannels.add(childChannel.childId);
 							const ch = await interaction.guild.channels.fetch(childChannel.childId);
 							if (ch) await ch.delete();
 						} catch (error) {}
@@ -119,6 +121,7 @@ module.exports = {
 				try {
 					const masterChannel = await interaction.guild.channels.fetch(masterChannelToDelete.id);
 					if (masterChannel) {
+						client.autoVoiceChannels.add(masterChannel.id);
 						masterChannel.shouldAudit = false;
 						await masterChannel.delete();
 					}

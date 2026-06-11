@@ -39,11 +39,12 @@ module.exports = {
 					userLimit: data.childDefaultMaxUsers,
 				});
 
+				// Register immediately before any further awaits so the channelCreate gateway event sees it
+				client.autoVoiceChannels.add(createdChannel.id);
+				createdChannel.shouldAudit = false;
+
 				// Position child directly below the master
 				await createdChannel.setPosition(creatorChannel.position + 1 + data.childChannels.length);
-
-				// Dont audit the channel creation
-				createdChannel.shouldAudit = false;
 
 				// Send basic information about owner commands to the channel.
 				await createdChannel.send({ content: `Welcome **${newState.member.displayName}**\n You can manage your channel with the /**voice** commands.` });
@@ -86,6 +87,7 @@ module.exports = {
 			if (oldState.channelId === childData.childId) {
 				if (oldState.channel?.members.size === 0) {
 					const childChannel = oldState.guild.channels.cache.get(oldState.channelId);
+					client.autoVoiceChannels.add(oldState.channelId);
 					await childChannel.delete();
 
 					// Remove the channel from the children array

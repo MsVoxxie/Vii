@@ -17,18 +17,22 @@ module.exports = {
 			// Get information
 			let auditLog = await getAuditLogs(emoji.guild, AuditLogEvent.EmojiDelete);
 			let { executor, createdTimestamp } = auditLog || {};
-			if (!createdTimestamp || createdTimestamp > Date.now() - 5000) executor = 'Unknown';
+			if (!executor || !createdTimestamp || Date.now() - createdTimestamp > 5000) executor = null;
 
 			// Build Embed
 			const embed = new EmbedBuilder()
-				.setColor(client.colors.vii)
+				.setColor(client.colors.error)
 				.setTitle('Emoji Deleted')
 				.setThumbnail(emoji.imageURL())
-				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png');
+				.setImage('https://vii.voxxie.me/v1/client/static/util/divider.png')
+				.setFooter({ text: `Emoji ID: ${emoji.id}` })
+				.setTimestamp();
 
-			if (emoji.name) embed.addFields({ name: 'Name', value: emoji.name, inline: true });
-			embed.addFields({ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: true });
-			if (executor) embed.addFields({ name: 'Deleted By', value: `${executor}`, inline: true });
+			embed.addFields({ name: 'Name', value: `:${emoji.name}:`, inline: false });
+			embed.addFields({ name: 'Animated', value: emoji.animated ? 'Yes' : 'No', inline: false });
+			if (executor) embed.addFields({ name: 'Deleted By', value: `<@${executor.id}>`, inline: false });
+			else embed.addFields({ name: 'Deleted By', value: 'Unknown', inline: false });
+			embed.addFields({ name: 'Deleted', value: client.relTimestamp(Date.now()), inline: false });
 
 			// Send message
 			try {
