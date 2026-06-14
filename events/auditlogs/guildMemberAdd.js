@@ -67,7 +67,7 @@ module.exports = {
 				if (accountAgeDays < settings.kickNewAccounts.kickMaxAgeDays) {
 					try {
 						await member.send(
-							`You have been kicked from **${member.guild.name}** because your account is too new (less than ${settings.kickNewAccounts.kickMaxAgeDays} days old).`
+							`You have been kicked from **${member.guild.name}** because your account is too new (less than ${settings.kickNewAccounts.kickMaxAgeDays} days old).`,
 						);
 					} catch (err) {
 						console.error('Failed to send kick DM:', err);
@@ -99,7 +99,7 @@ module.exports = {
 							{ name: 'Member', value: `<@${member.id}>`, inline: false },
 							{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: false },
 							{ name: 'Account Age', value: `${accountAgeDays} day${accountAgeDays !== 1 ? 's' : ''} old`, inline: false },
-							{ name: 'Action', value: `Kicked — account under ${settings.kickNewAccounts.kickMaxAgeDays} days old`, inline: false }
+							{ name: 'Action', value: `Kicked — account under ${settings.kickNewAccounts.kickMaxAgeDays} days old`, inline: false },
 						);
 					try {
 						return await auditLogChannel.send({ embeds: [embed] });
@@ -114,7 +114,7 @@ module.exports = {
 				if (usedInvite.isVanity) {
 					inviteDisplay = `Vanity URL (\`${usedInvite.code}\`)`;
 				} else if (usedInvite.code !== 'Unknown') {
-					inviteDisplay = `[discord.gg/${usedInvite.code}](https://discord.gg/${usedInvite.code})`;
+					inviteDisplay = `https://discord.gg/${usedInvite.code}`;
 				} else {
 					inviteDisplay = 'Unknown';
 				}
@@ -129,12 +129,12 @@ module.exports = {
 					.setFooter({ text: `User ID: ${member.id} • Member #${member.guild.memberCount.toLocaleString()}` })
 					.setTimestamp()
 					.addFields(
-							{ name: 'Member', value: `<@${member.id}>`, inline: false },
-							{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: false },
-							{ name: 'Account Age', value: `${isNewAccount ? '⚠️ ' : ''}${accountAgeDays} day${accountAgeDays !== 1 ? 's' : ''} old`, inline: false },
-							{ name: 'Invite Used', value: inviteDisplay, inline: false },
-							{ name: 'Invited By', value: inviter.id ? `<@${inviter.id}>` : usedInvite.isVanity ? 'Vanity URL' : 'Unknown', inline: false },
-							{ name: 'Server Members', value: `${member.guild.memberCount.toLocaleString()} members`, inline: false }
+						{ name: 'Member', value: `<@${member.id}>`, inline: false },
+						{ name: 'Account Created', value: client.relTimestamp(member.user.createdTimestamp), inline: false },
+						{ name: 'Account Age', value: `${isNewAccount ? '⚠️ ' : ''}${accountAgeDays} day${accountAgeDays !== 1 ? 's' : ''} old`, inline: false },
+						{ name: 'Invite Used', value: inviteDisplay, inline: false },
+						{ name: 'Invited By', value: inviter.id ? `<@${inviter.id}>` : usedInvite.isVanity ? 'Vanity URL' : 'Unknown', inline: false },
+						{ name: 'Server Members', value: `${member.guild.memberCount.toLocaleString()} members`, inline: false },
 					);
 
 				// Send message
@@ -153,7 +153,10 @@ module.exports = {
 				const welcomeMessage = welcomeText.replace('{SERVER_NAME}', member.guild.name).replace('{USER_NAME}', member.displayName).replace('{USER_MENTION}', member);
 
 				// Build Embed
-				const embed = new EmbedBuilder().setAuthor({ iconURL: member.displayAvatarURL(), name: member.displayName }).setColor(client.colors.vii).setDescription(welcomeMessage);
+				const embed = new EmbedBuilder()
+					.setAuthor({ iconURL: member.displayAvatarURL(), name: member.displayName })
+					.setColor(client.colors.vii)
+					.setDescription(welcomeMessage);
 
 				if (settings.welcomeImage) {
 					embed.setImage(settings.welcomeImage);
@@ -217,7 +220,7 @@ module.exports = {
 			// Create Buttons
 			const verificationButtons = new ActionRowBuilder().addComponents(
 				new ButtonBuilder().setLabel('Approve').setStyle(ButtonStyle.Success).setCustomId(`verify_${member.id}`),
-				new ButtonBuilder().setLabel('Deny with Reason').setStyle(ButtonStyle.Danger).setCustomId(`denyreason_${member.id}`)
+				new ButtonBuilder().setLabel('Deny with Reason').setStyle(ButtonStyle.Danger).setCustomId(`denyreason_${member.id}`),
 			);
 
 			// Send Message
